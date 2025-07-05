@@ -5,21 +5,36 @@ on: [push]
 env:
   PLUGIN_NAME: nix.nvim
 
+permissions:
+  contents: write
+
 jobs:
   docs:
     runs-on: ubuntu-latest
     name: emmylua to vimdoc
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Generating help
         run: |
           curl -Lq https://github.com/numToStr/lemmy-help/releases/latest/download/lemmy-help-x86_64-unknown-linux-gnu.tar.gz | tar xz
           ./lemmy-help -c -a lua/nix/{init,commands,utils}.lua > doc/${{env.PLUGIN_NAME}}.txt
 
-      - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
         with:
-          branch: ${{ github.head_ref }}
-          commit_message: "chore(docs): auto-generate vimdoc"
-          file_pattern: doc/*.txt
+          commit-message: "chore(docs): auto-generate vimdoc"
+          title: "Auto-generate vimdoc documentation"
+          body: |
+            This is an automated pull request to update the vimdoc documentation.
+            
+            ## Changes
+            - Updated `doc/${{ env.PLUGIN_NAME }}.txt` with latest code documentation
+            - Generated using lemmy-help from lua source files
+            
+            ## Notes
+            This PR was automatically created by the docs generation workflow.
+          branch: "docs/auto-update-vimdoc"
+          delete-branch: true
