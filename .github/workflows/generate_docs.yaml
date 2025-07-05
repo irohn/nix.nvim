@@ -7,11 +7,11 @@ env:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   docs:
     runs-on: ubuntu-latest
-    name: emmylua to vimdoc
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,11 +29,9 @@ jobs:
           title: "Auto-generate vimdoc documentation"
           body: |
             This is an automated pull request to update the vimdoc documentation.
-            
             ## Changes
             - Updated `doc/${{ env.PLUGIN_NAME }}.txt` with latest code documentation
             - Generated using lemmy-help from lua source files
-            
             ## Notes
             This PR was automatically created by the docs generation workflow.
           branch: "docs/auto-update-vimdoc"
