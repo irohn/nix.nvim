@@ -158,7 +158,7 @@ M.search = function(search_string, nixpkgs_url, callback)
     "nix-command flakes",
     "search",
     nixpkgs_url,
-    search_string,
+    "^" .. search_string .. "$",
     "--json"
   }
 
