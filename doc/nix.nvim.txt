@@ -1,12 +1,15 @@
-M.get_binary()                                                    *M.get_binary*
-     Get the binary path for a built nix package
-     @param package string The name of the package to find the binary for
-     @return string|nil The full path to the binary, or nil if not found
-
-
 M.get_installed_packages()                            *M.get_installed_packages*
      Get all installed packages from the data directory
      @return table List of package names that are installed
+
+
+NixConfig                                                          *M.NixConfig*
+
+
+M.set({opts})                                                            *M.set*
+
+    Parameters: ~
+        {opts}  (NixConfig)
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:
