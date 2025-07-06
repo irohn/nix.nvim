@@ -18,7 +18,7 @@ jobs:
       - name: Generating help
         run: |
           curl -Lq https://github.com/numToStr/lemmy-help/releases/latest/download/lemmy-help-x86_64-unknown-linux-gnu.tar.gz | tar xz
-          ./lemmy-help -c -a lua/nix/{init,commands,utils}.lua > doc/${{env.PLUGIN_NAME}}.txt
+          find lua/nix -name "*.lua" -type f | xargs ./lemmy-help -c -a > doc/${{env.PLUGIN_NAME}}.txt
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -26,3 +26,4 @@ jobs:
           branch: ${{ github.head_ref }}
           commit_message: "chore(docs): auto-generate vimdoc"
           file_pattern: doc/*.txt
+
