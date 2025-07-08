@@ -3,12 +3,24 @@ local uv = vim.uv or vim.loop
 
 local M = {}
 
+--- Get package directory
+--- @param package_name string Name of the package
+--- @return string|nil Path to the package directory or nil if not found
+M.get_package_dir = function(package_name)
+	local package_dir = config.data_dir .. "/packages/" .. package_name
+	-- Check if the package directory exists
+	if vim.fn.isdirectory(package_dir) == 1 then
+		return package_dir
+	end
+	return nil
+end
+
 --- Get al binaries of a package
 --- @param package_name string Name of the package
 --- @return table List of binaries for the package
 --- @return string|nil Error message if the package is not found
 M.get_package_binaries = function(package_name)
-	local package_dir = config.data_dir .. "/packages/" .. package_name
+	local package_dir = M.get_package_dir(package_name)
 	-- check if package_dir includes a result directory or multiple result-bin result-doc etc... directories
 	-- if it does, use the result-bin/bin directory
 	-- if it does not, use the result/bin directory
@@ -67,7 +79,7 @@ end
 --- @param package_name string Name of the package
 --- @return string|nil Nix store path of the package or nil if not found
 M.get_package_store_path = function(package_name)
-	local package_dir = config.data_dir .. "/packages/" .. package_name
+	local package_dir = M.get_package_dir(package_name)
 	local store_path = package_dir .. "/result"
 	if vim.fn.isdirectory(store_path) ~= 1 then
 		store_path = package_dir .. "/result-bin"
