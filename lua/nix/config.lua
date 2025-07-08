@@ -14,7 +14,7 @@ local DEFAULT_CONFIG = {
     -- Setting this to true will use 'nix-command' and 'flakes'
     -- and will run commands like `nix build` instead `nix-build`
     ---@type boolean
-    flakes = false
+    flakes = true
   },
 
   -- Nixpkgs instance configuration

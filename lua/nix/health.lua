@@ -22,21 +22,13 @@ local dependencies = {
 			},
 		},
 	},
-	{
-		name = "Flake",
-		url = "https://nixos.wiki/wiki/flakes",
-		package = {
-			bin = "flake",
-			optional = true,
-		},
-	},
 }
 
 local M = {}
 
 M.check = function()
 	-- Operating System Check
-	start("Check operating system")
+	start("Operating System")
 	if is_win then
 		error(
 			"This plugin does not support Windows. Consider using WSL (Windows Subsystem for Linux) to run Neovim with Nix support."
@@ -46,7 +38,7 @@ M.check = function()
 	ok("Operating system check passed.")
 
 	-- Dependency Checks
-	start("Check required dependencies")
+	start("Dependencies")
 	for _, dep in ipairs(dependencies) do
 		local name = dep.name
 		local package = dep.package
@@ -81,6 +73,20 @@ M.check = function()
 			else
 				ok(string.format("%s is installed.", name))
 			end
+		end
+	end
+
+	-- Feature Checks
+	start("Features")
+	local flake_output = vim.fn.system("nix flake --version")
+	if vim.v.shell_error ~= 0 then
+		warn("Nix flakes are not enabled. Some features may not work.")
+	else
+		local flake_version = flake_output:match("(%d+%.%d+%.%d+)")
+		if flake_version then
+			ok(string.format("Nix flakes are enabled (version %s).", flake_version))
+		else
+			warn("Nix flakes are enabled, but version could not be determined.")
 		end
 	end
 end

@@ -5,15 +5,20 @@ local M = {}
 
 ---@param opts NixConfig | nil
 function M.setup(opts)
-  if opts then
-    config.set(opts)
-  end
+	if opts then
+		config.set(opts)
+	end
 
-  -- Mark that setup has been called explicitly
-  vim.g.nix_nvim_setup_called = true
+	-- Create the packages directory if it doesn't exist
+	local data_dir = config.current.data_dir
+	local packages_dir = data_dir .. "/packages"
+	vim.fn.mkdir(packages_dir, "p")
 
-  -- Initialize user commands
-  user_commands.setup()
+	-- Initialize user commands
+	user_commands.setup()
+
+	-- Mark that setup has been called explicitly
+	vim.g.nix_nvim_setup_called = true
 end
 
 return M
