@@ -60,6 +60,21 @@ M.package = function(package_name)
 	}
 end
 
+M.build = function(package_name)
+	local commands = require("nix.api.commands")
+	local package_info, err = M.package(package_name)
+	if not package_info then
+		return nil, err
+	end
+
+	local ok, build_err = pcall(commands.build, package_name)
+	if not ok then
+		return nil, string.format("Failed to build package '%s': %s", package_name, build_err)
+	end
+
+	return package_info
+end
+
 return M
 
 -- vim: ts=2 sts=2 sw=2 et
