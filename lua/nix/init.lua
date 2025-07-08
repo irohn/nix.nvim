@@ -44,7 +44,7 @@ end
 ---@return string|nil Error message if package not found
 M.package = function(package_name)
 	local utils = require("nix.api.utils")
-	local package_dir = utils.get_package_dir(package_name)
+	local package_dir = utils.get_package_dir(package_name) or config.current.data_dir .. "/packages/" .. package_name
 	if vim.fn.isdirectory(package_dir) == 0 then
 		return nil, string.format("Package '%s' is not installed", package_name)
 	end
@@ -53,7 +53,7 @@ M.package = function(package_name)
 	local store_path = utils.get_package_store_path(package_name)
 
 	return {
-    name = package_name,
+		name = package_name,
 		dir = package_dir,
 		binaries = binaries,
 		store_path = store_path,
