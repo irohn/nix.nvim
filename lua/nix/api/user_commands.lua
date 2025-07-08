@@ -322,9 +322,15 @@ function M.setup()
 					end,
 				}, function(choice)
 					if choice then
-						-- User selected a package, could potentially do something with it
-						-- For now, just show a message
-						notify("Selected: " .. choice)
+						local package_store_path = utils.get_package_store_path(choice)
+						local binaries = utils.get_package_binaries(choice)
+						local message = string.format(
+							"Package: %s\nStore Path: %s\nBinaries: %s",
+							choice,
+							package_store_path,
+							table.concat(binaries, ", ")
+						)
+						notify(message)
 					end
 				end)
 			end
@@ -337,6 +343,7 @@ function M.setup()
 	M.register_alias("delete", "remove")
 	M.register_alias("gc", "garbage-collect")
 	M.register_alias("ls", "list")
+	M.register_alias("inspect", "list")
 
 	-- Create the main Nix user command
 	vim.api.nvim_create_user_command("Nix", nix_command_handler, {
