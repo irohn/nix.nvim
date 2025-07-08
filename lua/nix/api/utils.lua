@@ -19,7 +19,11 @@ M.get_package_binaries = function(package_name)
 	-- Get all entries in the bin directory
 	local entries = vim.fn.readdir(bin_dir)
 	for _, entry in ipairs(entries) do
-		table.insert(binaries, entry)
+		local full_path = bin_dir .. "/" .. entry
+		-- Only add if it's executable
+		if vim.fn.executable(full_path) == 1 then
+			table.insert(binaries, entry)
+		end
 	end
 
 	return binaries
