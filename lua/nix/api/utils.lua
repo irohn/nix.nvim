@@ -8,7 +8,15 @@ local M = {}
 --- @return table List of binaries for the package
 --- @return string|nil Error message if the package is not found
 M.get_package_binaries = function(package_name)
-	local bin_dir = config.data_dir .. "/packages/" .. package_name .. "/bin"
+	local package_dir = config.data_dir .. "/packages/" .. package_name
+	-- check if package_dir includes a result directory or multiple result-bin result-doc etc... directories
+	-- if it does, use the result-bin/bin directory
+	-- if it does not, use the result/bin directory
+	local bin_dir = package_dir .. "/result/bin"
+	if vim.fn.isdirectory(bin_dir) ~= 1 then
+		bin_dir = package_dir .. "/result-bin/bin"
+	end
+
 	local binaries = {}
 
 	-- Check if the package directory exists
@@ -22,7 +30,7 @@ M.get_package_binaries = function(package_name)
 		local full_path = bin_dir .. "/" .. entry
 		-- Only add if it's executable
 		if vim.fn.executable(full_path) == 1 then
-			table.insert(binaries, entry)
+			table.insert(binaries, full_path)
 		end
 	end
 
@@ -59,7 +67,12 @@ end
 --- @param package_name string Name of the package
 --- @return string|nil Nix store path of the package or nil if not found
 M.get_package_store_path = function(package_name)
-	local store_path = config.data_dir .. "/packages/" .. package_name
+	local package_dir = config.data_dir .. "/packages/" .. package_name
+	local store_path = package_dir .. "/result"
+	if vim.fn.isdirectory(store_path) ~= 1 then
+		store_path = package_dir .. "/result-bin"
+	end
+
 	-- Use readlink to get the actual path if it's a symlink
 	if vim.fn.isdirectory(store_path) == 1 or vim.fn.getftype(store_path) == "link" then
 		return uv.fs_readlink(store_path)

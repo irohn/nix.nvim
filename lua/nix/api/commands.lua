@@ -12,7 +12,7 @@ function M.build(package, data_dir, flakes, nixpkgs_url)
 	data_dir = data_dir or config.data_dir
 	flakes = flakes or config.experimental_feature.flakes
 	nixpkgs_url = nixpkgs_url or config.nixpkgs.url
-	local outlink = data_dir .. "/packages/" .. package
+	local outlink = data_dir .. "/packages/" .. package .. "/result"
 	local cmd
 
 	if flakes then
@@ -64,28 +64,38 @@ end
 --- @param data_dir? string The directory to delete from (defaults to config.data_dir)
 M.delete = function(package, data_dir)
 	data_dir = data_dir or config.data_dir
-	local outlink = data_dir .. "/" .. package
+	local package_dir = data_dir .. "/packages/" .. package
 
-	-- check if outlink exists
-	local outlink_exists = vim.fn.isdirectory(outlink) == 1 or vim.fn.filereadable(outlink) == 1
-	if not outlink_exists then
+	-- loop over all entries in the package directory
+	-- and delete all symlinks there
+	-- then delete the package directory itself using vim.fn.delete
+	if vim.fn.isdirectory(package_dir) ~= 1 then
 		vim.schedule(function()
-			notify(string.format("%s not found at %s", package, outlink), vim.log.levels.WARN)
+			notify(string.format("Package %s not found in %s", package, package_dir), vim.log.levels.WARN)
 		end)
 		return
 	end
 
-	-- remove the symlink
-	local success = vim.fn.delete(outlink)
-	if success == 0 then
-		vim.schedule(function()
-			notify(string.format("Removed %s from %s", package, outlink))
-		end)
-	else
-		vim.schedule(function()
-			notify(string.format("Failed to delete %s from %s", package, outlink), vim.log.levels.ERROR)
-		end)
+	-- Get all entries in the package directory
+	local entries = vim.fn.readdir(package_dir)
+	for _, entry in ipairs(entries) do
+		local entry_path = package_dir .. "/" .. entry
+		-- Check if it's a symlink and delete it
+		if vim.fn.getftype(entry_path) == "link" then
+			vim.fn.delete(entry_path)
+		end
 	end
+
+	-- Delete the package directory itself
+	local success = vim.fn.delete(package_dir, "rf")
+
+	vim.schedule(function()
+		if success == 0 then
+			notify(string.format("Successfully deleted package %s", package))
+		else
+			notify(string.format("Failed to delete package %s", package), vim.log.levels.ERROR)
+		end
+	end)
 end
 
 --- Run nix-store garbage collection to clean up unused packages

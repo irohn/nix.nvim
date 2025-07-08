@@ -17,18 +17,18 @@ function M.setup(opts)
 	-- Initialize user commands
 	user_commands.setup()
 
-	-- Build ensure_installed packages
-	if config.current.ensure_installed and #config.current.ensure_installed > 0 then
-		for _, package in ipairs(config.current.ensure_installed) do
-			local ok, err = pcall(require("nix.api.commands").build, package)
-			if not ok then
-				vim.notify(
-					string.format("Failed to ensure installed package '%s': %s", package, err),
-					vim.log.levels.ERROR
-				)
-			end
-		end
-	end
+	-- -- Build ensure_installed packages
+	-- if config.current.ensure_installed and #config.current.ensure_installed > 0 then
+	-- 	for _, package in ipairs(config.current.ensure_installed) do
+	-- 		local ok, err = pcall(require("nix.api.commands").build, package)
+	-- 		if not ok then
+	-- 			vim.notify(
+	-- 				string.format("Failed to ensure installed package '%s': %s", package, err),
+	-- 				vim.log.levels.ERROR
+	-- 			)
+	-- 		end
+	-- 	end
+	-- end
 
 	-- Mark that setup has been called explicitly
 	vim.g.nix_nvim_setup_called = true
