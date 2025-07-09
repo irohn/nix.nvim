@@ -4,16 +4,6 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 
 > This plugin is very experimental and still in active development, use at your own risk!
 
-## Features
-
-- **Package Management**: Install, list, and remove Nix packages with simple commands
-- **Multiple Output Support**: Handles packages with multiple outputs (bin, doc, man) correctly
-- **Ensure Installed**: Automatically install specified packages on startup
-- **Health Check**: Built-in health check to verify Nix installation and configuration
-- **Flakes Support**: Full support for Nix flakes (experimental feature)
-- **Command Aliases**: Convenient aliases for common operations
-- **Auto-completion**: Tab completion for commands and package names
-
 ## Requirements
 
 - **Neovim** 0.7.0 or later
@@ -22,9 +12,8 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 
 ## Installation
 
-### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 <details open>
-  <summary>Code</summary>
+  <summary><a href="https://github.com/folke/lazy.nvim">lazy.nvim</a> (recommended)</summary>
 
 ```lua
 {
@@ -38,9 +27,8 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 ```
 </details>
 
-### Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
-<details open>
-  <summary>Code</summary>
+<details>
+  <summary><a href="https://github.com/wbthomason/packer.nvim">packer.nvim</a></summary>
 
 ```lua
 use {
@@ -52,9 +40,8 @@ use {
 ```
 </details>
 
-### Using [vim-plug](https://github.com/junegunn/vim-plug)
-<details open>
-  <summary>Code</summary>
+<details>
+  <summary><a href="https://github.com/junegunn/vim-plug">vim-plug</a></summary>
 
 ```vim
 Plug 'irohn/nix.nvim'
@@ -64,6 +51,8 @@ require("nix").setup()
 EOF
 ```
 </details>
+
+It is recommended to run `:checkhealth nix` after installation
 
 ## Configuration
 
@@ -95,22 +84,18 @@ The plugin comes with sensible defaults, but you can customize it:
 
 ## Usage
 
-### Commands
-
 All commands are available through the `:Nix` command with various subcommands:
 
-#### Install Packages
-
 ```vim
-:Nix install <package_name>
+:Nix install <package_name>    " Install a package from nixpkgs
 :Nix i <package_name>          " Alias for install
-:Nix list
+:Nix list                      " List all installed packages
 :Nix ls                        " Alias for list
 :Nix inspect                   " Alias for list
-:Nix remove <package_name>
+:Nix remove <package_name>     " Remove an installed package
 :Nix rm <package_name>         " Alias for remove
 :Nix delete <package_name>     " Alias for remove
-:Nix garbage-collect
+:Nix garbage-collect           " Clean up unused packages and free disk space
 :Nix gc                        " Alias for garbage-collect
 :Nix help                      " Show general help
 :Nix help <subcommand>         " Show help for specific subcommand
@@ -119,42 +104,28 @@ All commands are available through the `:Nix` command with various subcommands:
 ## Integration with other plugins
 
 <details>
-  <summary>[conform.nvim](https://github.com/stevearc/conform.nvim)</summary>
+  <summary><a href="https://github.com/stevearc/conform.nvim">conform.nvim</a></summary>
 
 ```lua
 local get_cmd = function(cmd)
-	return function()
-		if vim.fn.executable(cmd) == 1 then return cmd end
-		local ok, nix = pcall(require, "nix")
-		return ok and nix.package(cmd) and (nix.package(cmd).binaries[1] or nix.package(cmd).dir .. "/result/bin/" .. cmd) or cmd
-	end
+  return function()
+    if vim.fn.executable(cmd) == 1 then return cmd end
+    local ok, nix = pcall(require, "nix")
+    return ok and nix.package(cmd) and (nix.package(cmd).binaries[1] or nix.package(cmd).dir .. "/result/bin/" .. cmd) or cmd
+  end
 end
 
 return {
-	{
-		"stevearc/conform.nvim",
-		opts = {
-			formatters = { stylua = { command = get_cmd("stylua") } },
-			formatters_by_ft = { lua = { "stylua" } }
-		},
-	},
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters = { stylua = { command = get_cmd("stylua") } },
+      formatters_by_ft = { lua = { "stylua" } }
+    },
+  },
 }
 ```
 </details>
-
-## Health Check
-
-Run the health check to verify your Nix installation:
-
-```vim
-:checkhealth nix
-```
-
-This will verify:
-- Operating system compatibility
-- Nix installation and version
-- Nix flakes support
-- Plugin configuration
 
 ## TODO
 - [ ] Create a GUI for interacting with nix.nvim
