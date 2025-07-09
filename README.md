@@ -128,6 +128,8 @@ return {
 </details>
 
 ## TODO
+- [x] Add integration with Conform
+- [ ] Add integration with builtin LSP / lspconfig
 - [ ] Create a GUI for interacting with nix.nvim
 - [ ] Add an option to allow the use of nix-env / nix profile (add packages to PATH)
 - [ ] Take advantage of existing nix files in directories (for project specific dependencies)
