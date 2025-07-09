@@ -3,19 +3,14 @@ local user_commands = require("nix.api.user_commands")
 
 local M = {}
 
----@param opts NixConfig | nil
-function M.setup(opts)
-	if opts then
-		config.set(opts)
-	end
-
-	-- Create the packages directory if it doesn't exist
+--- Process ensure_installed packages
+--- Builds all packages listed in config.current.ensure_installed that are not already installed
+function M.ensure_installed()
 	local data_dir = config.current.data_dir
 	local packages_dir = data_dir .. "/packages"
-	vim.fn.mkdir(packages_dir, "p")
 
-	-- Initialize user commands
-	user_commands.setup()
+	-- Create the packages directory if it doesn't exist
+	vim.fn.mkdir(packages_dir, "p")
 
 	-- Build ensure_installed packages
 	if config.current.ensure_installed and #config.current.ensure_installed > 0 then
@@ -32,6 +27,24 @@ function M.setup(opts)
 			end
 		end
 	end
+end
+
+---@param opts NixConfig | nil
+function M.setup(opts)
+	if opts then
+		config.set(opts)
+	end
+
+	-- Create the packages directory if it doesn't exist
+	local data_dir = config.current.data_dir
+	local packages_dir = data_dir .. "/packages"
+	vim.fn.mkdir(packages_dir, "p")
+
+	-- Initialize user commands
+	user_commands.setup()
+
+	-- Process ensure_installed packages
+	M.ensure_installed()
 
 	-- Mark that setup has been called explicitly
 	vim.g.nix_nvim_setup_called = true
