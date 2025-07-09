@@ -23,9 +23,10 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 ## Installation
 
 ### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+<details open>
+  <summary>Code</summary>
 
 ```lua
-
 {
   "irohn/nix.nvim",
   config = function()
@@ -35,8 +36,11 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
   end,
 }
 ```
+</details>
 
 ### Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
+<details open>
+  <summary>Code</summary>
 
 ```lua
 use {
@@ -46,8 +50,11 @@ use {
   end
 }
 ```
+</details>
 
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
+<details open>
+  <summary>Code</summary>
 
 ```vim
 Plug 'irohn/nix.nvim'
@@ -56,6 +63,7 @@ lua << EOF
 require("nix").setup()
 EOF
 ```
+</details>
 
 ## Configuration
 
@@ -96,42 +104,14 @@ All commands are available through the `:Nix` command with various subcommands:
 ```vim
 :Nix install <package_name>
 :Nix i <package_name>          " Alias for install
-```
-
-If no package name is provided, you'll be prompted to enter one.
-
-#### List Installed Packages
-
-```vim
 :Nix list
 :Nix ls                        " Alias for list
 :Nix inspect                   " Alias for list
-```
-
-Shows an interactive list of installed packages with details.
-
-#### Remove Packages
-
-```vim
 :Nix remove <package_name>
 :Nix rm <package_name>         " Alias for remove
 :Nix delete <package_name>     " Alias for remove
-```
-
-If no package name is provided, you'll get an interactive selection menu.
-
-#### Garbage Collection
-
-```vim
 :Nix garbage-collect
 :Nix gc                        " Alias for garbage-collect
-```
-
-Runs Nix garbage collection to clean up unused packages.
-
-#### Help
-
-```vim
 :Nix help                      " Show general help
 :Nix help <subcommand>         " Show help for specific subcommand
 ```
@@ -140,6 +120,7 @@ Runs Nix garbage collection to clean up unused packages.
 
 <details>
   <summary>[conform.nvim](https://github.com/stevearc/conform.nvim)</summary>
+
 ```lua
 local get_cmd = function(cmd)
 	return function()
@@ -175,24 +156,6 @@ This will verify:
 - Nix flakes support
 - Plugin configuration
 
-## How It Works
-
-### Package Installation
-- Uses `nix build` (or `nix-build` for legacy) to install packages
-- Creates symlinks in the plugin's data directory
-- Supports packages with multiple outputs correctly
-
-### Package Management
-- Handles cleanup of all package outputs when removing
-
-### Directory Structure
-```
-~/.local/share/nvim/nix.nvim/
-├── packages/           # Symlinks to installed packages
-│   ├── shellcheck-bin  # Binary output
-│   ├── shellcheck-doc  # Documentation output
-└────── shellcheck-man  # Manual pages output
-```
 ## TODO
 - [ ] Create a GUI for interacting with nix.nvim
 - [ ] Add an option to allow the use of nix-env / nix profile (add packages to PATH)
