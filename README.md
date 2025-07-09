@@ -11,7 +11,6 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 - **Ensure Installed**: Automatically install specified packages on startup
 - **Health Check**: Built-in health check to verify Nix installation and configuration
 - **Flakes Support**: Full support for Nix flakes (experimental feature)
-- **Metadata Tracking**: Tracks installed packages and their outputs for reliable management
 - **Command Aliases**: Convenient aliases for common operations
 - **Auto-completion**: Tab completion for commands and package names
 
@@ -177,13 +176,10 @@ This will verify:
 ### Package Installation
 - Uses `nix build` (or `nix-build` for legacy) to install packages
 - Creates symlinks in the plugin's data directory
-- Tracks package metadata including all outputs (bin, doc, man, etc.)
 - Supports packages with multiple outputs correctly
 
 ### Package Management
-- Maintains metadata files to track what was installed
 - Handles cleanup of all package outputs when removing
-- Provides fallback support for packages installed before metadata tracking
 
 ### Directory Structure
 ```
@@ -191,14 +187,13 @@ This will verify:
 ├── packages/           # Symlinks to installed packages
 │   ├── shellcheck-bin  # Binary output
 │   ├── shellcheck-doc  # Documentation output
-│   └── shellcheck-man  # Manual pages output
-└── metadata/           # Package tracking information
-    └── shellcheck.json # Metadata for shellcheck package
+└────── shellcheck-man  # Manual pages output
 ```
 ## TODO
 - [ ] Create a GUI for interacting with nix.nvim
 - [ ] Add an option to allow the use of nix-env / nix profile (add packages to PATH)
 - [ ] Take advantage of existing nix files in directories (for project specific dependencies)
+- [ ] Add packages metadata (idk what its useful for yet but it probably will be)
 - [ ] Add nix repl buffer / command (maybe?)
 
 ## Troubleshooting
