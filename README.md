@@ -2,6 +2,8 @@
 
 A Neovim plugin that provides seamless integration with the Nix package manager, allowing you to install, manage, and use Nix packages directly from within Neovim.
 
+> This plugin is very experimental and still in active development, use at your own risk!
+
 ## Features
 
 - **Package Management**: Install, list, and remove Nix packages with simple commands
@@ -60,31 +62,27 @@ EOF
 The plugin comes with sensible defaults, but you can customize it:
 
 ```lua
-require("nix").setup({
+{
   -- Data directory for storing packages (defaults to stdpath("data")/nix.nvim)
   data_dir = vim.fn.stdpath("data") .. "/nix.nvim",
   
   -- Packages to automatically install on startup
-  ensure_installed = {
-    "hello",
-    "shellcheck", 
-    "nixpkgs-fmt",
-  },
+  ensure_installed = {},
   
   -- Experimental features
   experimental_feature = {
     -- Enable Nix flakes support (default: true)
-    flakes = true,
+    flakes = false,
   },
   
   -- Nixpkgs configuration
   nixpkgs = {
-    -- Nixpkgs URL/channel to use (default: "nixpkgs")
+    -- Nixpkgs URL/channel to use (default: "nixpkgs" = system channel / flake input)
     url = "nixpkgs",
     -- For latest nixpkgs:
     -- url = "https://github.com/NixOS/nixpkgs/archive/master.tar.gz"
   },
-})
+}
 ```
 
 ## Usage
@@ -198,9 +196,10 @@ This will verify:
     └── shellcheck.json # Metadata for shellcheck package
 ```
 ## TODO
-- [] Create a GUI for interacting with nix.nvim
-- [] Redirect common LSPs cmd to the nix store instead of using PATH
-- [] Add option to allow the use of nix-env (low priority)
+- [ ] Create a GUI for interacting with nix.nvim
+- [ ] Add an option to allow the use of nix-env / nix profile (add packages to PATH)
+- [ ] Take advantage of existing nix files in directories (for project specific dependencies)
+- [ ] Add nix repl buffer / command (maybe?)
 
 ## Troubleshooting
 
@@ -217,6 +216,7 @@ If flakes-related commands fail:
    ```
    experimental-features = nix-command flakes
    ```
+3. See the [flakes](https://wiki.nixos.org/wiki/Flakes) wiki for more information.
 
 ### Permission Issues
 If you encounter permission errors:
