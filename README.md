@@ -26,7 +26,7 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 
 ```lua
 {
-  "your-username/nix.nvim",
+  "irohn/nix.nvim",
   config = function()
     require("nix").setup({
       -- Configuration options (see below)
@@ -39,7 +39,7 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 
 ```lua
 use {
-  "your-username/nix.nvim",
+  "irohn/nix.nvim",
   config = function()
     require("nix").setup()
   end
@@ -49,7 +49,7 @@ use {
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
 
 ```vim
-Plug 'your-username/nix.nvim'
+Plug 'irohn/nix.nvim'
 
 lua << EOF
 require("nix").setup()
