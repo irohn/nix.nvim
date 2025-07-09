@@ -25,6 +25,7 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
 ### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
+
 {
   "irohn/nix.nvim",
   config = function()
@@ -135,27 +136,30 @@ Runs Nix garbage collection to clean up unused packages.
 :Nix help <subcommand>         " Show help for specific subcommand
 ```
 
-### Programmatic API
+## Integration with other plugins
 
-You can also use the plugin programmatically in your Lua configuration:
-
+<details>
+  <summary>[conform.nvim](https://github.com/stevearc/conform.nvim)</summary>
 ```lua
-local nix = require("nix")
-
--- Get package information
-local package_info = nix.package("shellcheck")
-if package_info then
-  print("Package dir: " .. package_info.dir)
-  print("Binaries: " .. table.concat(package_info.binaries, ", "))
-  print("Store path: " .. package_info.store_path)
+local get_cmd = function(cmd)
+	return function()
+		if vim.fn.executable(cmd) == 1 then return cmd end
+		local ok, nix = pcall(require, "nix")
+		return ok and nix.package(cmd) and (nix.package(cmd).binaries[1] or nix.package(cmd).dir .. "/result/bin/" .. cmd) or cmd
+	end
 end
 
--- Install a package programmatically
-local success, err = nix.build("hello")
-if not success then
-  print("Failed to install: " .. err)
-end
+return {
+	{
+		"stevearc/conform.nvim",
+		opts = {
+			formatters = { stylua = { command = get_cmd("stylua") } },
+			formatters_by_ft = { lua = { "stylua" } }
+		},
+	},
+}
 ```
+</details>
 
 ## Health Check
 
