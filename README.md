@@ -25,6 +25,7 @@ A Neovim plugin that provides seamless integration with the Nix package manager,
   end,
 }
 ```
+
 </details>
 
 <details>
@@ -38,6 +39,7 @@ use {
   end
 }
 ```
+
 </details>
 
 <details>
@@ -50,6 +52,7 @@ lua << EOF
 require("nix").setup()
 EOF
 ```
+
 </details>
 
 It is recommended to run `:checkhealth nix` after installation
@@ -62,16 +65,16 @@ The plugin comes with sensible defaults, but you can customize it:
 {
   -- Data directory for storing packages (defaults to stdpath("data")/nix.nvim)
   data_dir = vim.fn.stdpath("data") .. "/nix.nvim",
-  
+
   -- Packages to automatically install on startup
   ensure_installed = {},
-  
+
   -- Experimental features
   experimental_feature = {
     -- Enable Nix flakes support (default: true)
     flakes = false,
   },
-  
+
   -- Nixpkgs configuration
   nixpkgs = {
     -- Nixpkgs URL/channel to use (default: "nixpkgs" = system channel / flake input)
@@ -104,32 +107,134 @@ All commands are available through the `:Nix` command with various subcommands:
 ## Integration with other plugins
 
 <details>
-  <summary><a href="https://github.com/stevearc/conform.nvim">conform.nvim</a></summary>
+  <summary><a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a> and <a href="https://github.com/stevearc/conform.nvim">conform.nvim</a></summary>
+
+This example integrates lsp and autocompletion.
+You can put this directly in your `init.lua` or require it from a file.
+The important thing is to run this code **after** you installed the plugins
 
 ```lua
-local get_cmd = function(cmd)
-  return function()
-    if vim.fn.executable(cmd) == 1 then return cmd end
-    local ok, nix = pcall(require, "nix")
-    return ok and nix.package(cmd) and (nix.package(cmd).binaries[1] or nix.package(cmd).dir .. "/result/bin/" .. cmd) or cmd
-  end
+local nix = require("nix")
+
+local conform_setup = { formatters = {}, formatters_by_ft = {} }
+local enabled_servers = {}
+
+local function find_nix_path(bin)
+	local package_info = nix.package_info(bin)
+	if package_info then
+		if package_info.binaries and #package_info.binaries == 1 then
+			return package_info.binaries[1]
+		else
+			local cmd = { "fd", "--type", "f", "--glob", bin, package_info.dir }
+			local result = vim.system(cmd, { text = true }):wait()
+			if result.code == 0 and result.stdout and result.stdout ~= "" then
+				local paths = vim.split(vim.trim(result.stdout), "\n")
+				if #paths > 0 then
+					return paths[1]
+				end
+			end
+			-- Fallback to find
+			cmd = { "find", package_info.dir, "-type", "f", "-name", bin }
+			result = vim.system(cmd, { text = true }):wait()
+			if result.code == 0 and result.stdout and result.stdout ~= "" then
+				local paths = vim.split(vim.trim(result.stdout), "\n")
+				if #paths > 0 then
+					return paths[1]
+				end
+			end
+			return package_info.dir .. "/result/bin/" .. bin
+		end
+	end
+	return bin
 end
 
-return {
-  {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters = { stylua = { command = get_cmd("stylua") } },
-      formatters_by_ft = { lua = { "stylua" } }
-    },
-  },
+local filetypes = {
+	lua = {
+		language_server = {
+			lua_ls = {
+				bin = "lua-language-server",
+				config = {
+					on_init = function(client)
+						if client.workspace_folders then
+							local path = client.workspace_folders[1].name
+							if
+								path ~= vim.fn.stdpath("config")
+								and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+							then
+								return
+							end
+						end
+
+						client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+							runtime = {
+								version = "LuaJIT",
+								path = {
+									"lua/?.lua",
+									"lua/?/init.lua",
+								},
+							},
+							-- Make the server aware of Neovim runtime files
+							workspace = {
+								checkThirdParty = false,
+								library = {
+									vim.env.VIMRUNTIME,
+									"${3rd}/luv/library",
+									"${3rd}/busted/library",
+									vim.fn.stdpath("data") .. "/lazy",
+								},
+							},
+						})
+					end,
+					settings = {
+						Lua = {},
+					},
+				},
+			},
+		},
+		formatters = {
+			stylua = {
+				command = "stylua",
+			},
+		},
+	},
 }
+
+for ft in pairs(filetypes) do
+	if filetypes[ft].language_server then
+		for server, opts in pairs(filetypes[ft].language_server) do
+			local bin = find_nix_path(opts.bin or server)
+			local config = opts.config or {}
+			config["cmd"] = { bin }
+			vim.lsp.config(server, config)
+			table.insert(enabled_servers, server)
+		end
+	end
+
+	-- conform
+	if filetypes[ft].formatters then
+		conform_setup.formatters_by_ft[ft] = vim.tbl_keys(filetypes[ft].formatters)
+	end
+
+	for formatter, config in pairs(filetypes[ft].formatters or {}) do
+		local bin = find_nix_path(config.bin or formatter)
+		local cmd = { bin }
+		conform_setup.formatters[formatter] = { command = cmd[1] }
+	end
+end
+
+vim.lsp.enable(enabled_servers)
+require("conform").setup(conform_setup)
+
+-- vim: ts=2 sts=2 sw=2 et
+
 ```
+
 </details>
 
 ## TODO
+
 - [x] Add integration with Conform
-- [ ] Add integration with builtin LSP / lspconfig
+- [x] Add integration with builtin LSP / lspconfig
 - [ ] Create a GUI for interacting with nix.nvim
 - [ ] Add an option to allow the use of nix-env / nix profile (add packages to PATH)
 - [ ] Take advantage of existing nix files in directories (for project specific dependencies)
@@ -139,13 +244,17 @@ return {
 ## Troubleshooting
 
 ### Nix Not Found
+
 If you get "Nix is not installed" error:
+
 1. Install Nix from https://nixos.org/download/
 2. Ensure `nix` is in your PATH
 3. Run `:checkhealth nix` to verify installation
 
 ### Flakes Not Working
+
 If flakes-related commands fail:
+
 1. Enable experimental features in your Nix configuration
 2. Add to `~/.config/nix/nix.conf`:
    ```
@@ -154,7 +263,9 @@ If flakes-related commands fail:
 3. See the [flakes](https://wiki.nixos.org/wiki/Flakes) wiki for more information.
 
 ### Permission Issues
+
 If you encounter permission errors:
+
 1. Ensure your user has permission to use Nix
 2. Check that the data directory is writable
 3. Verify Nix daemon is running (if using multi-user installation)
@@ -166,4 +277,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
