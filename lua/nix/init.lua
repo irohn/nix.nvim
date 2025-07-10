@@ -55,7 +55,7 @@ end
 ---@param package_name string Name of the package
 ---@return table|nil Package information with keys: dir, binaries, store_path, or nil if not found
 ---@return string|nil Error message if package not found
-M.package = function(package_name)
+M.package_info = function(package_name)
 	local utils = require("nix.api.utils")
 	local package_dir = utils.get_package_dir(package_name) or config.current.data_dir .. "/packages/" .. package_name
 	if vim.fn.isdirectory(package_dir) == 0 then
