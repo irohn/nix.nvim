@@ -6,13 +6,19 @@ local DEFAULT_CONFIG = {
 	---@type string
 	data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data")),
 
-	ensure_installed = {
-		-- List of packages to ensure are installed
-		-- This will be used to build packages on startup
-		-- If a package is not found, it will be built automatically
-		-- Example: "hello", "git", "nixpkgs-fmt"
-		---@type string[]
-	},
+	-- List of packages to ensure are in the nix store
+	-- This will be used to build packages on startup
+	-- If a package is not found, it will be built automatically
+	-- Example: "hello", "git", "nixpkgs-fmt"
+	---@type string[]
+	ensure_in_store = {},
+
+	-- List of packages to ensure are in the user's profile or for non flakes in nix-env
+	-- This will be used to ensure that the packages are available PATH
+	-- If a package is not found, it will be installed automatically to the user's profile
+	-- Example: "hello", "git", "nixpkgs-fmt"
+	--- @type string[]
+	ensure_in_env = {},
 
 	-- Experimental features configuration
 	---@type table<string, boolean>

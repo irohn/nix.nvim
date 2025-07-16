@@ -67,7 +67,7 @@ The plugin comes with sensible defaults, but you can customize it:
   data_dir = vim.fn.stdpath("data") .. "/nix.nvim",
 
   -- Packages to automatically install on startup
-  ensure_installed = {},
+  ensure_in_store = {},
 
   -- Experimental features
   experimental_feature = {

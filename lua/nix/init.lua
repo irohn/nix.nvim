@@ -3,24 +3,24 @@ local user_commands = require("nix.api.user_commands")
 
 local M = {}
 
---- Process ensure_installed packages
---- Builds all packages listed in config.current.ensure_installed that are not already installed
-function M.ensure_installed()
+--- Process ensure_in_store packages
+--- Builds all packages listed in config.current.ensure_in_store that are not already installed
+function M.ensure_in_store()
 	local data_dir = config.current.data_dir
 	local packages_dir = data_dir .. "/packages"
 
 	-- Create the packages directory if it doesn't exist
 	vim.fn.mkdir(packages_dir, "p")
 
-	-- Build ensure_installed packages
-	if config.current.ensure_installed and #config.current.ensure_installed > 0 then
-		for _, package in ipairs(config.current.ensure_installed) do
+	-- Build ensure_in_store packages
+	if config.current.ensure_in_store and #config.current.ensure_in_store > 0 then
+		for _, package in ipairs(config.current.ensure_in_store) do
 			local package_path = packages_dir .. "/" .. package
 			if vim.fn.isdirectory(package_path) == 0 then
 				local ok, err = pcall(require("nix.api.commands").build, package)
 				if not ok then
 					vim.notify(
-						string.format("Failed to install an ensure_installed package '%s': %s", package, err),
+						string.format("Failed to install an ensure_in_store package '%s': %s", package, err),
 						vim.log.levels.ERROR
 					)
 				end
@@ -43,8 +43,8 @@ function M.setup(opts)
 	-- Initialize user commands
 	user_commands.setup()
 
-	-- Process ensure_installed packages
-	M.ensure_installed()
+	-- Process ensure_in_store packages
+	M.ensure_in_store()
 
 	-- Mark that setup has been called explicitly
 	vim.g.nix_nvim_setup_called = true
