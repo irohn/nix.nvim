@@ -15,7 +15,7 @@ local config = {
 	width = 60,
 	height = 20,
 	border = "rounded",
-	title = " LSP Server Manager ",
+	title = " Nix LSP Server Manager ",
 	help_text = {
 		"Keybindings:",
 		"  i - Enable server",
