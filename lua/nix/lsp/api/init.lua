@@ -1,33 +1,33 @@
-local data_file = require('nix.config').config.data_dir .. '/language-servers.json'
+local data_file = require("nix.config").config.data_dir .. "/language-servers.json"
 
 local M = {}
 
 -- UI methods - delegate to the UI module (loaded lazily to avoid circular dependencies)
 function M.open()
-  require('nix.ui.lsp').open()
+	require("nix.ui.lsp").open()
 end
 
 function M.close()
-  require('nix.ui.lsp').close()
+	require("nix.ui.lsp").close()
 end
 
 function M.toggle()
-  require('nix.ui.lsp').toggle()
+	require("nix.ui.lsp").toggle()
 end
 
 -- Get enabled language servers from the data file.
 ---@return string[]
 function M.get_enabled_servers()
-  local content = table.concat(vim.fn.readfile(data_file), "\n")
-  return vim.json.decode(content) or {}
+	local content = table.concat(vim.fn.readfile(data_file), "\n")
+	return vim.json.decode(content) or {}
 end
 
 -- Get all servers available from 'nix.lsp.servers.servers'.
 -- This does not check if the server is enabled or not.
 ---@return string[]
 function M.get_all_servers()
-  local servers = require("nix.lsp.servers").names
-  return servers
+	local servers = require("nix.lsp.servers").names
+	return servers
 end
 
 -- Write the given servers to the data file.
@@ -35,14 +35,14 @@ end
 ---@param servers table<string> A table of server names to write to the data file.
 ---@return boolean changed, string? err
 function M.write_to_data_file(servers)
-  if type(servers) ~= 'table' then
-    vim.notify('Expected a table of servers to write to data file', vim.log.levels.ERROR)
-    return false, 'Invalid servers table'
-  end
+	if type(servers) ~= "table" then
+		vim.notify("Expected a table of servers to write to data file", vim.log.levels.ERROR)
+		return false, "Invalid servers table"
+	end
 
-  local content = vim.json.encode(servers)
-  vim.fn.writefile({ content }, data_file, 'b')
-  return true
+	local content = vim.json.encode(servers)
+	vim.fn.writefile({ content }, data_file, "b")
+	return true
 end
 
 -- Enable a list of servers and write them to the data file.
@@ -50,54 +50,56 @@ end
 ---@param servers table<string> A table of server names to enable.
 ---@return boolean changed, string? err
 function M.enable_servers(servers)
-  if type(servers) ~= 'table' then
-    vim.notify('Expected a table of servers to enable', vim.log.levels.ERROR)
-    return false, 'Invalid servers table'
-  end
+	if type(servers) ~= "table" then
+		vim.notify("Expected a table of servers to enable", vim.log.levels.ERROR)
+		return false, "Invalid servers table"
+	end
 
-  local enabled_servers = M.get_enabled_servers()
-  for _, server in ipairs(servers) do
-    -- Only call vim.lsp.enable if available (might not be in headless mode)
-    if vim.lsp and vim.lsp.enable then
-      vim.lsp.enable(server, true)
-    end
-    if not vim.tbl_contains(enabled_servers, server) then
-      table.insert(enabled_servers, server)
-    end
-  end
+	local enabled_servers = M.get_enabled_servers()
+	for _, server in ipairs(servers) do
+		-- Only call vim.lsp.enable if available (might not be in headless mode)
+		if vim.lsp and vim.lsp.enable then
+			vim.lsp.enable(server, true)
+		end
+		if not vim.tbl_contains(enabled_servers, server) then
+			table.insert(enabled_servers, server)
+		end
+	end
 
-  local changed, err = M.write_to_data_file(enabled_servers)
-  if not changed then
-    vim.notify('Failed to write to data file: ' .. (err or ''), vim.log.levels.ERROR)
-  end
+	local changed, err = M.write_to_data_file(enabled_servers)
+	if not changed then
+		vim.notify("Failed to write to data file: " .. (err or ""), vim.log.levels.ERROR)
+	end
 
-  return changed, err
+	return changed, err
 end
 
 -- Disable a list of servers and remove them from the data file.
 ---@param servers table<string> A table of server names to disable.
 ---@return boolean changed, string? err
 function M.disable_servers(servers)
-  if type(servers) ~= 'table' then
-    vim.notify('Expected a table of servers to disable', vim.log.levels.ERROR)
-    return false, 'Invalid servers table'
-  end
+	if type(servers) ~= "table" then
+		vim.notify("Expected a table of servers to disable", vim.log.levels.ERROR)
+		return false, "Invalid servers table"
+	end
 
-  local enabled_servers = M.get_enabled_servers()
-  for _, server in ipairs(servers) do
-    -- Only call vim.lsp.enable if available (might not be in headless mode)
-    if vim.lsp and vim.lsp.enable then
-      vim.lsp.enable(server, false)
-    end
-    enabled_servers = vim.tbl_filter(function(s) return s ~= server end, enabled_servers)
-  end
+	local enabled_servers = M.get_enabled_servers()
+	for _, server in ipairs(servers) do
+		-- Only call vim.lsp.enable if available (might not be in headless mode)
+		if vim.lsp and vim.lsp.enable then
+			vim.lsp.enable(server, false)
+		end
+		enabled_servers = vim.tbl_filter(function(s)
+			return s ~= server
+		end, enabled_servers)
+	end
 
-  local changed, err = M.write_to_data_file(enabled_servers)
-  if not changed then
-    vim.notify('Failed to write to data file: ' .. (err or ''), vim.log.levels.ERROR)
-  end
+	local changed, err = M.write_to_data_file(enabled_servers)
+	if not changed then
+		vim.notify("Failed to write to data file: " .. (err or ""), vim.log.levels.ERROR)
+	end
 
-  return changed, err
+	return changed, err
 end
 
 return M
