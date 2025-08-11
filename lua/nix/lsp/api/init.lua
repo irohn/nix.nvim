@@ -13,7 +13,7 @@ end
 -- This does not check if the server is enabled or not.
 ---@return string[]
 function M.get_all_servers()
-  local servers = require("nix.lsp.servers").servers_names
+  local servers = require("nix.lsp.servers").names
   return servers
 end
 

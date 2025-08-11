@@ -1,6 +1,6 @@
 local M = {}
 
-M.servers = {
+M.configs = {
   basedpyright = {
     cmd = { 'basedpyright-langserver', '--stdio' },
     nix_package_name = 'basedpyright',
@@ -11,10 +11,10 @@ M.servers = {
   },
 }
 
-M.servers_names = vim.tbl_keys(M.servers)
+M.names = vim.tbl_keys(M.configs)
 
 function M.configure()
-  for server, config in pairs(M.servers) do
+  for server, config in pairs(M.configs) do
     require("nix.lsp").config(server, config.nix_package_name, config.cmd)
   end
 end
