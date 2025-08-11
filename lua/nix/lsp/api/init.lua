@@ -57,7 +57,10 @@ function M.enable_servers(servers)
 
   local enabled_servers = M.get_enabled_servers()
   for _, server in ipairs(servers) do
-    vim.lsp.enable(server, true)
+    -- Only call vim.lsp.enable if available (might not be in headless mode)
+    if vim.lsp and vim.lsp.enable then
+      vim.lsp.enable(server, true)
+    end
     if not vim.tbl_contains(enabled_servers, server) then
       table.insert(enabled_servers, server)
     end
@@ -82,7 +85,10 @@ function M.disable_servers(servers)
 
   local enabled_servers = M.get_enabled_servers()
   for _, server in ipairs(servers) do
-    vim.lsp.enable(server, false)
+    -- Only call vim.lsp.enable if available (might not be in headless mode)
+    if vim.lsp and vim.lsp.enable then
+      vim.lsp.enable(server, false)
+    end
     enabled_servers = vim.tbl_filter(function(s) return s ~= server end, enabled_servers)
   end
 
