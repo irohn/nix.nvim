@@ -39,8 +39,8 @@ local function create_window()
   -- Create buffer if it doesn't exist
   if not state.buf or not vim.api.nvim_buf_is_valid(state.buf) then
     state.buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(state.buf, 'bufhidden', 'wipe')
-    vim.api.nvim_buf_set_option(state.buf, 'filetype', 'nix-lsp-manager')
+    vim.api.nvim_set_option_value('bufhidden', 'wipe', {buf = state.buf})
+    vim.api.nvim_set_option_value('filetype', 'nix-lsp-manager', {buf = state.buf})
   end
   
   -- Window options
@@ -60,8 +60,8 @@ local function create_window()
   state.win = vim.api.nvim_open_win(state.buf, true, opts)
   
   -- Set window options
-  vim.api.nvim_win_set_option(state.win, 'winblend', 10)
-  vim.api.nvim_win_set_option(state.win, 'winhighlight', 'Normal:Normal,FloatBorder:FloatBorder')
+  vim.api.nvim_set_option_value('winblend', 10, {win = state.win})
+  vim.api.nvim_set_option_value('winhighlight', 'Normal:Normal,FloatBorder:FloatBorder', {win = state.win})
   
   return state.buf, state.win
 end
@@ -91,10 +91,10 @@ local function update_display()
   end
   
   -- Set buffer content
-  vim.api.nvim_buf_set_option(state.buf, 'modifiable', true)
+  vim.api.nvim_set_option_value('modifiable', true, {buf = state.buf})
   vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(state.buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(state.buf, 'readonly', true)
+  vim.api.nvim_set_option_value('modifiable', false, {buf = state.buf})
+  vim.api.nvim_set_option_value('readonly', true, {buf = state.buf})
 end
 
 -- Get server name from current line
@@ -120,8 +120,8 @@ local function show_help()
   local help_lines = vim.tbl_extend("force", {config.title}, {""}, config.help_text)
   
   vim.api.nvim_buf_set_lines(help_buf, 0, -1, false, help_lines)
-  vim.api.nvim_buf_set_option(help_buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(help_buf, 'readonly', true)
+  vim.api.nvim_set_option_value('modifiable', false, {buf = help_buf})
+  vim.api.nvim_set_option_value('readonly', true, {buf = help_buf})
   
   local help_width = 40
   local help_height = #help_lines + 2
