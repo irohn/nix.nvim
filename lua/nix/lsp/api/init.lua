@@ -2,6 +2,19 @@ local data_file = require('nix.config').config.data_dir .. '/language-servers.js
 
 local M = {}
 
+-- UI methods - delegate to the UI module (loaded lazily to avoid circular dependencies)
+function M.open()
+  require('nix.ui.lsp').open()
+end
+
+function M.close()
+  require('nix.ui.lsp').close()
+end
+
+function M.toggle()
+  require('nix.ui.lsp').toggle()
+end
+
 -- Get enabled language servers from the data file.
 ---@return string[]
 function M.get_enabled_servers()
