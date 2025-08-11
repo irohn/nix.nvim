@@ -2,62 +2,62 @@ local M = {}
 
 M.configs = {
   ansiblels = {
-    cmd = { 'ansible-language-server', '--stdio' },
+    cmd = { "ansible-language-server", "--stdio" },
   },
   basedpyright = {
-    cmd = { 'basedpyright-langserver', '--stdio' },
-    nix_package_name = 'basedpyright',
+    cmd = { "basedpyright-langserver", "--stdio" },
+    nix_package_name = "basedpyright",
   },
   bashls = {
-    cmd = { 'bash-language-server', 'start' },
+    cmd = { "bash-language-server", "start" },
   },
   clangd = {
-    cmd = { 'clangd' },
-    nix_package_name = 'llvmPackages_21.clang-tools',
+    cmd = { "clangd" },
+    nix_package_name = "llvmPackages_21.clang-tools",
   },
   cmake = {
-    cmd = { 'cmake-language-server' },
+    cmd = { "cmake-language-server" },
   },
   cssls = {
-    cmd = { 'vscode-css-language-server', '--stdio' },
-    nix_package_name = 'vscode-langservers-extracted',
+    cmd = { "vscode-css-language-server", "--stdio" },
+    nix_package_name = "vscode-langservers-extracted",
   },
   docker_language_server = {
-    cmd = { 'docker-language-server', 'start', '--stdio' },
+    cmd = { "docker-language-server", "start", "--stdio" },
   },
   earthlyls = {
-    cmd = { 'earthlyls' },
+    cmd = { "earthlyls" },
   },
   gopls = {
-    cmd = { 'gopls' },
+    cmd = { "gopls" },
   },
   helm_ls = {
-    cmd = { 'helm_ls', 'serve' },
-    nix_package_name = 'helm-ls',
+    cmd = { "helm_ls", "serve" },
+    nix_package_name = "helm-ls",
   },
   html = {
-    cmd = { 'vscode-html-language-server', '--stdio' },
-    nix_package_name = 'vscode-langservers-extracted',
+    cmd = { "vscode-html-language-server", "--stdio" },
+    nix_package_name = "vscode-langservers-extracted",
   },
   jsonls = {
-    cmd = { 'vscode-json-language-server', '--stdio' },
-    nix_package_name = 'vscode-langservers-extracted',
+    cmd = { "vscode-json-language-server", "--stdio" },
+    nix_package_name = "vscode-langservers-extracted",
   },
   lua_ls = {
-    cmd = { 'lua-language-server' },
+    cmd = { "lua-language-server" },
   },
   nixd = {
-    cmd = { 'nixd' },
+    cmd = { "nixd" },
   },
   rust_analyzer = {
-    cmd = { 'rust-analyzer' },
-    nix_package_name = 'rustup',
+    cmd = { "rust-analyzer" },
+    nix_package_name = "rustup",
   },
   ts_ls = {
-    { 'typescript-language-server', '--stdio' },
+    cmd = { "typescript-language-server", "--stdio" },
   },
   yamlls = {
-    cmd = { 'yaml-language-server', '--stdio' },
+    cmd = { "yaml-language-server", "--stdio" },
   },
 }
 
@@ -65,7 +65,12 @@ M.names = vim.tbl_keys(M.configs)
 
 function M.configure()
   for server, config in pairs(M.configs) do
-    require('nix.lsp').config(server, config.cmd, config.nix_package_name)
+    if not config.cmd then
+      vim.notify("No command specified for LSP server: " .. server, vim.log.levels.ERROR)
+      vim.notify("Skipping configuration for " .. server, vim.log.levels.WARN)
+    end
+
+    require("nix.lsp").config(server, config.cmd, config.nix_package_name or config.cmd[1])
   end
 end
 

@@ -9,8 +9,6 @@ M.config = function(lsp_name, args, pkg)
     return
   end
 
-  pkg = pkg or args[1]
-
   local cmd = command(pkg, args or {})
   vim.lsp.config(lsp_name, {
     cmd = cmd,
