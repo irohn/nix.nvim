@@ -29,16 +29,21 @@ M.enable = function(lsp_name)
 end
 
 -- Load or restart LSP servers from the data_file
-M.load = function(data_file)
+M.load = function(data_file, enable_all)
+  enable_all = enable_all or false
   if vim.fn.filereadable(data_file) == 0 then
     vim.fn.writefile({ '[]' }, data_file)
   end
 
-  local servers = vim.fn.json_decode(vim.fn.readfile(data_file))
+  local servers = {}
+  if enable_all then
+    servers = require("nix.lsp.api").get_all_servers()
+  else
+    servers = vim.fn.json_decode(vim.fn.readfile(data_file))
+  end
+
   if #servers > 0 then
-    for _, server in ipairs(servers) do
-      M.enable(server)
-    end
+    require("nix.lsp.api").enable_servers(servers)
   end
 end
 

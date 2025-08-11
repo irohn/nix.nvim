@@ -19,6 +19,9 @@ M.command = function(pkg, args)
   return cmd
 end
 
+-- Expose the API for the LSP module
+M.lsp = require('nix.lsp.api')
+
 ---@param opts NixConfig | nil
 M.setup = function(opts)
   if vim.fn.executable('nix') ~= 1 then
@@ -35,7 +38,7 @@ M.setup = function(opts)
 
   if config.lsp.enabled then
     local data_file = config.data_dir .. '/language-servers.json'
-    require("nix.lsp").load(data_file)
+    require("nix.lsp").load(data_file, config.lsp.enable_all)
   end
 end
 

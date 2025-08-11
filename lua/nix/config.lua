@@ -5,13 +5,16 @@ M.DEFAULT_CONFIG = {
   ---@type string
   -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
   data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data")),
-
   ---@type table
   -- LSP module configuration
   lsp = {
     ---@type boolean
     -- Enable the LSP modlue to automatically load LSP servers
     enabled = true,
+    ---@type boolean
+    -- Enable all the LSP servers by default (not recommended)
+    -- This will enable all the servers configured in the `nix.lsp.servers` module
+    enable_all = false,
   },
 }
 
