@@ -1,0 +1,6 @@
+# Neovim binary (for testing only)
+nvim-linux64/
+nvim-linux64.tar.gz
+
+# Temporary test files
+/tmp/
