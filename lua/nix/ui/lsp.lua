@@ -20,6 +20,7 @@ local config = {
     "Keybindings:",
     "  i - Enable server",
     "  x - Disable server",
+    "  Enter - Toggle server",
     "  ? - Show this help",
     "  q - Close window",
     "",
@@ -217,6 +218,20 @@ local function disable_server()
   end
 end
 
+-- Toggle server at current line
+local function toggle_server()
+  local server = get_server_from_line()
+  if not server then
+    vim.notify("No server found on current line", vim.log.levels.WARN)
+    return
+  end
+  if vim.tbl_contains(state.enabled_servers, server) then
+    disable_server()
+  else
+    enable_server()
+  end
+end
+
 -- Set up keybindings
 local function setup_keybindings()
   if not state.buf then
@@ -230,6 +245,9 @@ local function setup_keybindings()
 
   -- Disable server
   vim.keymap.set("n", "x", disable_server, opts)
+
+  -- Toggle server
+  vim.keymap.set("n", "<Enter>", toggle_server, opts)
 
   -- Show help
   vim.keymap.set("n", "?", show_help, opts)
