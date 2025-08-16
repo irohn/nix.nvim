@@ -104,7 +104,7 @@ function M.enable_servers(servers)
     return false, "Invalid servers table"
   end
 
-  local enabled_servers = M.get_enabled_servers()
+  local enabled_servers = M.get_enabled_servers(config.lsp.cache_file)
 
   for _, server in ipairs(servers) do
     -- Only call vim.lsp.enable if available (might not be in headless mode)
@@ -129,7 +129,7 @@ function M.disable_servers(servers)
     return false, "Invalid servers table"
   end
 
-  local enabled_servers = M.get_enabled_servers()
+  local enabled_servers = M.get_enabled_servers(config.lsp.cache_file)
   for _, server in ipairs(servers) do
     -- Only call vim.lsp.enable if available (might not be in headless mode)
     if vim.lsp and vim.lsp.enable then
