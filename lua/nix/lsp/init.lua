@@ -270,29 +270,4 @@ function M.setup(opts)
   return final, nil
 end
 
--- Configure an LSP server with nix shell command
--- This function is used by the servers module to set up server configurations
----@param lsp_name string
----@param cmd string[]
----@param pkg string
-function M.config(lsp_name, cmd, pkg)
-  if not lsp_name then
-    vim.notify("LSP name must be provided", vim.log.levels.ERROR)
-    return
-  end
-
-  -- Use the build_nix_shell_cmd from init module to avoid circular dependency
-  local shell_cmd, err = require("nix").build_nix_shell_cmd(pkg, cmd)
-  if not shell_cmd then
-    vim.notify(("Failed to build nix shell command for %s: %s"):format(lsp_name, err or "unknown error"), vim.log.levels.ERROR)
-    return
-  end
-
-  if vim.lsp and vim.lsp.config then
-    vim.lsp.config(lsp_name, {
-      cmd = shell_cmd,
-    })
-  end
-end
-
 return M
