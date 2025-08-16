@@ -20,10 +20,6 @@ Use the power of nix to run applications without installing them!
 vim.pack.add({
   { src = "https://github.com/irohn/nix.nvim" },
 })
-
-require("nix").setup({
-  lsp = { enabled = true }
-})
 ```
 
 </details>
@@ -35,8 +31,7 @@ require("nix").setup({
 ```lua
 {
   "irohn/nix.nvim",
-  lazy = false,
-  opts = { lsp = { enabled = true } }
+  lazy = false
 }
 ```
 
@@ -100,6 +95,7 @@ require("nix").setup {
 ```
 
 ### LSP Manager
+I added a simple LSP Manager so you can enable/disable servers easily, note that this works on all lsp servers you have configured via the ./lsp directory in any runtime path. This works best with a plugin like [lspconfig](https://github.com/neovim/nvim-lspconfig) that adds default servers to your configuration. the ./lsp directory in this repo will overwrite the `cmd` field for each configured LSP, however if you already have the LSP installed and it is not in this repository, you can still enable it! use the `:checkhealth lsp` to make sure you have the binary installed.
 If you want to enable the LSP Manager module you will need to specificly enable it, here is how I do it in my config:
 
 ```lua
@@ -111,6 +107,8 @@ require("nix").setup({
 
 vim.keymap.set("n", "<leader>l", require("nix").lsp.toggle)
 ```
+
+Use the `?` key in the LSP Manager buffer to see the keybindgs
 
 ### Nixpkgs
 By default this plugin uses your system's nixpkgs channel, and does not allow unfree packages.
