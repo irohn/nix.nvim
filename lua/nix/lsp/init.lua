@@ -1,4 +1,5 @@
 local utils = require("nix.utils")
+local config = require("nix.config").config
 
 local M = {}
 
@@ -87,6 +88,66 @@ function M.get_runtime_lsp_server_names(force_rescan)
   return names
 end
 
+function M.get_enabled_servers(cache_file)
+  -- Read existing cached servers
+  local lines, rerr = utils.read_lines(cache_file)
+  if not lines then
+    return {}, rerr
+  end
+  local cached = M.decode_server_list(table.concat(lines, "\n"), cache_file)
+  return cached
+end
+
+function M.enable_servers(servers)
+  if type(servers) ~= "table" then
+    vim.notify("Expected a table of servers to enable", vim.log.levels.ERROR)
+    return false, "Invalid servers table"
+  end
+
+  local enabled_servers = M.get_enabled_servers()
+
+  for _, server in ipairs(servers) do
+    -- Only call vim.lsp.enable if available (might not be in headless mode)
+    if vim.lsp and vim.lsp.enable then
+      vim.lsp.enable(server, true)
+    end
+    if not vim.tbl_contains(enabled_servers, server) then
+      table.insert(enabled_servers, server)
+    end
+  end
+  local changed, err = M.write_server_list(config.lsp.cache_file, enabled_servers)
+  if not changed then
+    vim.notify("Failed to write to data file: " .. (err or ""), vim.log.levels.ERROR)
+  end
+
+  return changed, err
+end
+
+function M.disable_servers(servers)
+  if type(servers) ~= "table" then
+    vim.notify("Expected a table of servers to disable", vim.log.levels.ERROR)
+    return false, "Invalid servers table"
+  end
+
+  local enabled_servers = M.get_enabled_servers()
+  for _, server in ipairs(servers) do
+    -- Only call vim.lsp.enable if available (might not be in headless mode)
+    if vim.lsp and vim.lsp.enable then
+      vim.lsp.enable(server, false)
+    end
+    enabled_servers = vim.tbl_filter(function(s)
+      return s ~= server
+    end, enabled_servers)
+  end
+
+  local changed, err = M.write_server_list(config.lsp.cache_file, enabled_servers)
+  if not changed then
+    vim.notify("Failed to write to data file: " .. (err or ""), vim.log.levels.ERROR)
+  end
+
+  return changed, err
+end
+
 ---Setup cached LSP servers based on configuration.
 ---
 --- Behavior (opts.enabled):
@@ -134,12 +195,7 @@ function M.setup(opts)
     end
   end
 
-  -- Read existing cached servers
-  local lines, rerr = utils.read_lines(cache_file)
-  if not lines then
-    return {}, rerr
-  end
-  local cached = M.decode_server_list(table.concat(lines, "\n"), cache_file)
+  local cached = M.get_enabled_servers(cache_file)
 
   -- Early exit if disabled
   if mode == false or mode == nil then
