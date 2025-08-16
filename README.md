@@ -39,7 +39,7 @@ vim.pack.add({
 
 ### What is this plugin?
 First, this is a collection of lsp configurations that modifies the `cmd` attribute to use a nix shell instead of directly calling the binary for the LSP.
-As a result, this plugin gives you an API to generate a nix command to run binaries, for example, say you are creating a plugin that needs the app `cowsay` to run, you could generate a shell command that anyone can call as long as they have nix installed, for example, run thge following vim command:
+As a result, this plugin gives you an API to generate a nix command to run binaries, for example, say you are creating a plugin that needs the app `cowsay` to run, you could generate a shell command that anyone can call as long as they have nix installed, for example, run the following vim command:
 
 ```lua
 lua vim.notify(vim.system(require('nix').build_nix_shell_cmd('cowsay', {'cowsay', 'Nix is Awesome!'})):wait().stdout)
