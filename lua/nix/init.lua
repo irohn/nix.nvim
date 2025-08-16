@@ -1,45 +1,66 @@
+local lsp = require("nix.lsp")
+
 local M = {}
 
-M.command = function(pkg, args)
-	local cmd = {
-		"nix",
-		"--experimental-features",
-		"nix-command flakes",
-		"shell",
-		"nixpkgs#" .. pkg,
-		"--command",
-	}
-	if #args > 0 then
-		for _, arg in ipairs(args) do
-			table.insert(cmd, arg)
-		end
-	else
-		vim.notify("No arguments provided for nix command", vim.log.levels.WARN)
-	end
-	return cmd
+---@param package string
+---@param cmd? string|table<string>
+---@param nixpkgs? NixConfig.nixpkgs
+---@return table<string>
+function M.cmd(package, cmd, nixpkgs)
+  if not package then
+    vim.notify("Package must be specified", vim.log.levels.ERROR)
+    return {}
+  end
+  cmd = cmd or package
+  nixpkgs = nixpkgs or require("nix.config").config.nixpkgs
+
+  local command = {}
+  table.insert(command, "nix")
+  table.insert(command, "--experimental-features")
+  table.insert(command, "nix-command flakes")
+  table.insert(command, "shell")
+  if nixpkgs.allow_unfree then
+    table.insert(command, "--impure")
+  end
+  table.insert(command, string.format("%s#%s", nixpkgs.url, package))
+  table.insert(command, "--command")
+  if type(cmd) == "string" then
+    table.insert(command, cmd)
+  elseif type(cmd) == "table" then
+    for _, c in ipairs(cmd) do
+      table.insert(command, c)
+    end
+  else
+    vim.notify(
+      string.format("Invalid cmd type for package '%s': %s", package, vim.inspect(cmd)),
+      vim.log.levels.ERROR
+    )
+    return {}
+  end
+
+  return command
 end
 
--- Expose the API for the LSP module
-M.lsp = require("nix.lsp.api")
-
 ---@param opts NixConfig | nil
-M.setup = function(opts)
-	if vim.fn.executable("nix") ~= 1 then
-		vim.notify("Nix is not installed. Please install Nix to use this plugin.", vim.log.levels.ERROR)
-		return
-	end
+---@return nil
+--- Setup function for the Nix plugin.
+function M.setup(opts)
+  if vim.fn.executable("nix") ~= 1 then
+    vim.notify("Nix is not installed. Please install Nix to use this plugin.", vim.log.levels.ERROR)
+    return
+  end
 
-	if opts then
-		require("nix.config").setup(opts)
-	end
-	local config = require("nix.config").config
+  if opts then
+    require("nix.config").setup(opts)
+  end
+  local config = require("nix.config").config
 
-	vim.fn.mkdir(config.data_dir, "p")
+  vim.fn.mkdir(config.data_dir, "p")
+  vim.env.NIXPKGS_ALLOW_UNFREE = config.nixpkgs.allow_unfree and 1 or 0
 
-	if config.lsp.enabled then
-		local data_file = config.data_dir .. "/language-servers.json"
-		require("nix.lsp").load(data_file, config.lsp.enable_all)
-	end
+  if config.lsp.enabled then
+    lsp.setup(config.lsp)
+  end
 end
 
 return M
