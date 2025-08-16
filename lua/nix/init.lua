@@ -72,6 +72,9 @@ function M.setup(opts)
   end
 end
 
+-- Expose the LSP API
+M.lsp = require("nix.lsp.api")
+
 return M
 
 -- vim: ts=2 sts=2 sw=2 et
