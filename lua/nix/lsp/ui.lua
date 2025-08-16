@@ -22,15 +22,8 @@ local config = {
     enabled = "✓",
     disabled = "○",
   },
-  keys = {
-    ["<ESC>"] = { function() M.close() end, "Close LSP Manager" },
-    ["<C-c>"] = { function() M.close() end, "Close LSP Manager" },
-    ["q"] = { function() M.close() end, "Close LSP Manager" },
-    ["<Enter>"] = { function() toggle_server() end, "Toggle Server" },
-    ["i"] = { function() enable_server() end, "Enable Server" },
-    ["d"] = { function() disable_server() end, "Disable Server" },
-    ["?"] = { function() show_help() end, "Help Window" },
-  },
+  -- Keys will be set up dynamically after function declarations
+  keys = {},
 }
 
 -- Create the floating window
@@ -138,7 +131,7 @@ local function get_server_from_line()
 end
 
 -- Enable server at current line
-function enable_server()
+local function enable_server()
   local server = get_server_from_line()
   if not server then
     vim.notify("No server found on current line", vim.log.levels.WARN)
@@ -163,7 +156,7 @@ function enable_server()
 end
 
 -- Disable server at current line
-function disable_server()
+local function disable_server()
   local server = get_server_from_line()
   if not server then
     vim.notify("No server found on current line", vim.log.levels.WARN)
@@ -188,7 +181,7 @@ function disable_server()
 end
 
 -- Toggle server at current line
-function toggle_server()
+local function toggle_server()
   local server = get_server_from_line()
   if not server then
     vim.notify("No server found on current line", vim.log.levels.WARN)
@@ -202,7 +195,7 @@ function toggle_server()
 end
 
 -- Show help in a new floating window
-function show_help()
+local function show_help()
   -- Close existing help window if open
   if state.help_win and vim.api.nvim_win_is_valid(state.help_win) then
     vim.api.nvim_win_close(state.help_win, true)
@@ -269,6 +262,19 @@ function show_help()
   vim.keymap.set("n", "?", close_help, help_opts)
 end
 
+-- Set up the default keybindings (called after function declarations)
+local function setup_default_keybindings()
+  config.keys = {
+    ["<ESC>"] = { function() M.close() end, "Close LSP Manager" },
+    ["<C-c>"] = { function() M.close() end, "Close LSP Manager" },
+    ["q"] = { function() M.close() end, "Close LSP Manager" },
+    ["<Enter>"] = { toggle_server, "Toggle Server" },
+    ["i"] = { enable_server, "Enable Server" },
+    ["d"] = { disable_server, "Disable Server" },
+    ["?"] = { show_help, "Help Window" },
+  }
+end
+
 -- Set up keybindings
 local function setup_keybindings()
   if not state.buf then
@@ -284,6 +290,9 @@ local function setup_keybindings()
     end
   end
 end
+
+-- Initialize default keybindings
+setup_default_keybindings()
 
 -- Open the LSP manager window
 function M.open()
@@ -339,7 +348,19 @@ end
 function M.setup(opts)
   if opts then
     config = vim.tbl_deep_extend("force", config, opts)
+    -- If new keybindings are provided, ensure they can reference the local functions
+    if opts.keys then
+      for key, binding in pairs(opts.keys) do
+        config.keys[key] = binding
+      end
+    end
   end
 end
+
+-- Export internal functions for advanced customization
+M.enable_server = enable_server
+M.disable_server = disable_server
+M.toggle_server = toggle_server
+M.show_help = show_help
 
 return M

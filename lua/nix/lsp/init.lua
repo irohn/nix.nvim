@@ -281,8 +281,8 @@ function M.config(lsp_name, cmd, pkg)
     return
   end
 
-  local nix = require("nix")
-  local shell_cmd, err = nix.build_nix_shell_cmd(pkg, cmd)
+  -- Use the build_nix_shell_cmd from init module to avoid circular dependency
+  local shell_cmd, err = require("nix").build_nix_shell_cmd(pkg, cmd)
   if not shell_cmd then
     vim.notify(("Failed to build nix shell command for %s: %s"):format(lsp_name, err or "unknown error"), vim.log.levels.ERROR)
     return
