@@ -1,3 +1,3 @@
 return {
-  cmd = require("nix").cmd("cmake-language-server")
+  cmd = require("nix").build_nix_shell_cmd("cmake-language-server")
 }

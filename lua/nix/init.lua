@@ -2,48 +2,57 @@ local lsp = require("nix.lsp")
 
 local M = {}
 
----@param package string
----@param cmd? string|table<string>
----@param nixpkgs? NixConfig.nixpkgs
----@return table<string>
-function M.cmd(package, cmd, nixpkgs)
-  if not package then
-    vim.notify("Package must be specified", vim.log.levels.ERROR)
-    return {}
+---@param pkg string
+---@param cmd? string|string[]
+---@param nixpkgs? NixConfigNixpkgs
+---@return string[]|nil argv  -- list of args or nil on error
+---@return string? err
+function M.build_nix_shell_cmd(pkg, cmd, nixpkgs)
+  if type(pkg) ~= "string" or pkg == "" then
+    return nil, "Package must be a non-empty string"
   end
-  cmd = cmd or package
-  nixpkgs = nixpkgs or require("nix.config").config.nixpkgs
 
-  local command = {}
-  table.insert(command, "nix")
-  table.insert(command, "--experimental-features")
-  table.insert(command, "nix-command flakes")
-  table.insert(command, "shell")
-  if nixpkgs.allow_unfree then
-    table.insert(command, "--impure")
+  local cfg = nixpkgs or require("nix.config").config.nixpkgs
+  cmd = cmd or pkg
+
+  -- Base command
+  local argv = {
+    "nix",
+    "--experimental-features", "nix-command flakes",
+    "shell",
+  }
+
+  if cfg.allow_unfree then
+    argv[#argv + 1] = "--impure"
   end
-  table.insert(command, string.format("%s#%s", nixpkgs.url, package))
-  table.insert(command, "--command")
-  if type(cmd) == "string" then
-    table.insert(command, cmd)
-  elseif type(cmd) == "table" then
-    for _, c in ipairs(cmd) do
-      table.insert(command, c)
-    end
+
+  argv[#argv + 1] = string.format("%s#%s", cfg.url, pkg)
+  argv[#argv + 1] = "--command"
+
+  local t = type(cmd)
+  if t == "string" then
+    argv[#argv + 1] = cmd
+  elseif t == "table" then
+    vim.list_extend(argv, cmd)
   else
-    vim.notify(
-      string.format("Invalid cmd type for package '%s': %s", package, vim.inspect(cmd)),
-      vim.log.levels.ERROR
-    )
-    return {}
+    return nil, ("Invalid cmd type (%s); must be string or list of strings"):format(t)
   end
 
-  return command
+  return argv
 end
 
----@param opts NixConfig | nil
+---Setup function for the Nix plugin.
+---
+--- Behavior (opts):
+--- - If `opts` is provided, it will be used to configure the plugin.
+--- - If `opts` is not provided, the plugin will use its default configuration.
+---
+--- This function checks if Nix is installed, sets up the data directory,
+--- and configures enabled features.
+---
+--- No return value.
+---@param opts NixConfig
 ---@return nil
---- Setup function for the Nix plugin.
 function M.setup(opts)
   if vim.fn.executable("nix") ~= 1 then
     vim.notify("Nix is not installed. Please install Nix to use this plugin.", vim.log.levels.ERROR)

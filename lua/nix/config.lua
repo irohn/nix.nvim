@@ -2,20 +2,20 @@ local M = {}
 
 ---@class NixConfig
 ---@field data_dir string
----@field lsp NixConfig.lsp
+---@field lsp NixConfigLsp
 
----@class NixConfig.lsp
----@field enabled boolean|table
----@field cache_file string
+---@class NixConfigLsp
+---@field enabled boolean|string[]  -- false/nil: disable; true: use cache; {list}: merge list with cache
+---@field cache_file string         -- path to JSON file containing cached server array
 
----@class NixConfig.nixpkgs
+---@class NixConfigNixpkgs
 ---@field url string
 ---@field allow_unfree boolean
 
 M.DEFAULT_CONFIG = {
   -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
   data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data")),
-  ---@type NixConfig.lsp
+  ---@type NixConfigLsp
   -- LSP module configuration
   lsp = {
     -- Enable the LSP module to automatically enable cached LSP servers.
@@ -26,9 +26,9 @@ M.DEFAULT_CONFIG = {
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
     -- If the file does not exist, it will be created.
-    cache_file = string.format("%s/language-servers.json", vim.fn.stdpath("data")),
+    cache_file = string.format("%s/nix.nvim/language-servers.json", vim.fn.stdpath("data")),
   },
-  ---@type NixConfig.nixpkgs
+  ---@type NixConfigNixpkgs
   -- nixpkgs configuration
   -- https://nixos.wiki/wiki/Nixpkgs
   nixpkgs = {

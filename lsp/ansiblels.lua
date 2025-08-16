@@ -1,3 +1,3 @@
 return {
-  cmd = require("nix").cmd("ansible-language-server", { "ansible-language-server", "--stdio" })
+  cmd = require("nix").build_nix_shell_cmd("ansible-language-server", { "ansible-language-server", "--stdio" })
 }

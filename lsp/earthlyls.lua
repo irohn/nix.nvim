@@ -1,3 +1,3 @@
 return {
-  cmd = require("nix").cmd("earthlyls")
+  cmd = require("nix").build_nix_shell_cmd("earthlyls")
 }

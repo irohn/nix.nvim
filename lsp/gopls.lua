@@ -1,3 +1,3 @@
 return {
-  cmd = require("nix").cmd("gopls")
+  cmd = require("nix").build_nix_shell_cmd("gopls")
 }
