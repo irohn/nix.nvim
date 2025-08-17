@@ -169,6 +169,18 @@ function M.setup(opts)
     return {}, "opts must be a table"
   end
 
+
+  if opts.override then
+    local plugin_dir = vim.api.nvim_get_runtime_file("plugin/nix-nvim.lua", false)[1]:gsub("/plugin/nix%-nvim%.lua$", "")
+    local servers_dir = plugin_dir .. "/lsp"
+    local files = vim.fn.globpath(servers_dir, "*.lua", false, true)
+
+    for _, file in ipairs(files) do
+      local lsp_name = file:match("[/\\]lsp[/\\]([^/\\]+)%.lua$")
+      vim.lsp.config(lsp_name, dofile(file))
+    end
+  end
+
   local mode = opts.enabled
   local mode_t = type(mode)
   if not (mode_t == "boolean" or mode_t == "table" or mode == nil) then

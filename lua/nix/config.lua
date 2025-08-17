@@ -22,6 +22,10 @@ M.DEFAULT_CONFIG = {
     -- Can also be a list of servers to always enable on startup.
     -- e.g. `enabled = { "lua_ls", "pyright" }` or `enabled = true`
     enabled = false,
+    -- Override lsp configurations after loading setup
+    -- This is useful if you don't use a plugin manager that has a load order
+    -- and it will reload the vim.lsp.copnfig for each server.
+    override = false,
     -- Path to the cache file for language servers.
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
