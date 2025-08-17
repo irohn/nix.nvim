@@ -61,6 +61,10 @@ require("nix").setup {
     -- Can also be a list of servers to always enable on startup.
     -- e.g. `enabled = { "lua_ls", "pyright" }` or `enabled = true`
     enabled = false,
+    -- Override lsp configurations when calling setup
+    -- this is useful when your plugin manager doesn't support dependencies (load order)
+    -- like `vim.pack` so you can ensure you call setup AFTER another plugin like `lspconfig`
+    override = false,
     -- Path to the cache file for language servers.
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
