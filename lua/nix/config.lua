@@ -2,9 +2,9 @@ local M = {}
 
 ---@class NixConfig
 ---@field data_dir string
----@field lsp NixConfigLsp
+---@field lsp NixConfigLspManager
 
----@class NixConfigLsp
+---@class NixConfigLspManager
 ---@field enabled boolean|string[]  -- false/nil: disable; true: use cache; {list}: merge list with cache
 ---@field cache_file string         -- path to JSON file containing cached server array
 
@@ -12,25 +12,42 @@ local M = {}
 ---@field url string
 ---@field allow_unfree boolean
 
+local data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data"))
+
 M.DEFAULT_CONFIG = {
   -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
-  data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data")),
-  ---@type NixConfigLsp
+  data_dir = data_dir,
+  ---@type NixConfigLspManager
   -- LSP module configuration
-  lsp = {
+  lsp_manager = {
     -- Enable the LSP module to automatically enable cached LSP servers.
     -- Can also be a list of servers to always enable on startup.
     -- e.g. `enabled = { "lua_ls", "pyright" }` or `enabled = true`
     enabled = false,
-    -- Override lsp configurations after loading setup
-    -- This is useful if you don't use a plugin manager that has a load order
-    -- and it will reload the vim.lsp.copnfig for each server.
-    override = false,
     -- Path to the cache file for language servers.
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
     -- If the file does not exist, it will be created.
-    cache_file = string.format("%s/nix.nvim/language-servers.json", vim.fn.stdpath("data")),
+    cache_file = string.format("%s/language-servers.json", data_dir),
+    -- LSP Manager UI window options
+    window = {
+      width = 60,
+      height = 20,
+      border = "rounded",
+      title = " LSP Manager ",
+      headers = { "", "Servers" },
+      icons = {
+        enabled = "⬤",
+        disabled = "○",
+      },
+      keys = {
+        close_window = { "<Esc>", "q" },
+        disable_server = { "d", "x" },
+        enable_server = { "i", "e" },
+        show_help = { "?" },
+        toggle_server = { "<Enter>" },
+      }
+    },
   },
   ---@type NixConfigNixpkgs
   -- nixpkgs configuration

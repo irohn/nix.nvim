@@ -1,7 +1,8 @@
-local lsp = require("nix.lsp")
-
 local M = {}
 
+---Builds a nix command you can run
+---
+--- Returns a table of arguments
 ---@param pkg string
 ---@param cmd? string|string[]
 ---@param nixpkgs? NixConfigNixpkgs
@@ -67,13 +68,10 @@ function M.setup(opts)
   vim.fn.mkdir(config.data_dir, "p")
   vim.env.NIXPKGS_ALLOW_UNFREE = config.nixpkgs.allow_unfree and 1 or 0
 
-  if config.lsp.enabled then
-    lsp.setup(config.lsp)
+  if config.lsp_manager.enabled then
+    require("nix.lsp-manager").setup(config.lsp_manager)
   end
 end
-
--- Expose the LSP API
-M.lsp = require("nix.lsp.api")
 
 return M
 
