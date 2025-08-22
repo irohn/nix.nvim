@@ -137,9 +137,9 @@ function M.disable_servers(servers)
   return changed, err
 end
 
-function M.setup()
+function M.setup(opts)
   local enabled = config.enabled
-  if enabled == false or enabled == nil then
+  if enabled == false then
     return
   end
 
