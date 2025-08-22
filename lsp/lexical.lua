@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('lexical'),
+  cmd = NixCmd('lexical'),
   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
   root_markers = { 'mix.exs', '.git' },
 }

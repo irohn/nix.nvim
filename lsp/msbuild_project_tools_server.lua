@@ -43,5 +43,5 @@ return {
     on_dir(util.root_pattern('*.sln', '*.slnx', '*.*proj', '.git')(fname))
   end,
   init_options = {},
-  cmd = nixCmd('dotnetCorePackages.sdk_9_0_1xx-bin', { 'dotnet', host_dll_name }),
+  cmd = NixCmd('dotnetCorePackages.sdk_9_0_1xx-bin', { 'dotnet', host_dll_name }),
 }

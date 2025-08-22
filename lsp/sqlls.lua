@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'sql-language-server', 'up', '--method', 'stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'sql-language-server', 'up', '--method', 'stdio' }),
   filetypes = { 'sql', 'mysql' },
   root_markers = { '.sqllsrc.json' },
   settings = {},

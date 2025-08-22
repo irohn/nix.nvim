@@ -21,7 +21,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('fsautocomplete', { 'fsautocomplete', '--adaptive-lsp-server-enabled' }),
+  cmd = NixCmd('fsautocomplete', { 'fsautocomplete', '--adaptive-lsp-server-enabled' }),
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
     on_dir(util.root_pattern('*.sln', '*.fsproj', '.git')(fname))

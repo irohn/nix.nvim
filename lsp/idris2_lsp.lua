@@ -33,7 +33,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('idris2Packages.idris2Lsp', { 'idris2-lsp' }),
+  cmd = NixCmd('idris2Packages.idris2Lsp', { 'idris2-lsp' }),
   filetypes = { 'idris2' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

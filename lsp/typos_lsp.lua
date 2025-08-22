@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('typos-lsp'),
+  cmd = NixCmd('typos-lsp'),
   root_markers = { 'typos.toml', '_typos.toml', '.typos.toml', 'pyproject.toml', 'Cargo.toml' },
   settings = {},
 }

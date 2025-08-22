@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('python313Packages.jedi-language-server', { 'jedi-language-server' }),
+  cmd = NixCmd('python313Packages.jedi-language-server', { 'jedi-language-server' }),
   filetypes = { 'python' },
   root_markers = {
     'pyproject.toml',

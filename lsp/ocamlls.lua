@@ -11,7 +11,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'ocaml-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'ocaml-language-server', '--stdio' }),
   filetypes = { 'ocaml', 'reason' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

@@ -134,7 +134,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('texlab'),
+  cmd = NixCmd('texlab'),
   filetypes = { 'tex', 'plaintex', 'bib' },
   root_markers = { '.git', '.latexmkrc', 'latexmkrc', '.texlabroot', 'texlabroot', 'Tectonic.toml' },
   settings = {

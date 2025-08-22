@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'hoon-language-server' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'hoon-language-server' }),
   filetypes = { 'hoon' },
   root_markers = { '.git' },
 }

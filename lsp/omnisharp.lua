@@ -18,7 +18,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('omnisharp-roslyn', {
+  cmd = NixCmd('omnisharp-roslyn', {
     vim.fn.executable('OmniSharp') == 1 and 'OmniSharp' or 'omnisharp',
     '-z', -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
     '--hostPID',

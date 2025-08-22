@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('next-ls'),
+  cmd = NixCmd('next-ls'),
   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
   root_markers = { 'mix.exs', '.git' },
 }

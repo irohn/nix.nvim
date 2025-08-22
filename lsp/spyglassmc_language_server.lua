@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'spyglassmc-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'spyglassmc-language-server', '--stdio' }),
   filetypes = { 'mcfunction' },
   root_markers = { 'pack.mcmeta' },
 }

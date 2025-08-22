@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ginko', { 'ginko_ls' }),
+  cmd = NixCmd('ginko', { 'ginko_ls' }),
   filetypes = { 'dts' },
   root_markers = { '.git' },
   settings = {},

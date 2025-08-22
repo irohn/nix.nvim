@@ -24,7 +24,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('alloy6', { 'alloy6', 'lsp' }),
+  cmd = NixCmd('alloy6', { 'alloy6', 'lsp' }),
   filetypes = { 'alloy' },
   root_markers = { '.git' },
 }

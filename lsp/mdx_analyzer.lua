@@ -7,7 +7,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('mdx-language-server', { 'mdx-language-server', '--stdio' }),
+  cmd = NixCmd('mdx-language-server', { 'mdx-language-server', '--stdio' }),
   filetypes = { 'mdx' },
   root_markers = { 'package.json' },
   settings = {},

@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ty', { 'ty', 'server' }),
+  cmd = NixCmd('ty', { 'ty', 'server' }),
   filetypes = { 'python' },
   root_markers = { 'ty.toml', 'pyproject.toml', '.git' },
 }

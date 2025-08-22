@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  filetypes = nixCmd('java-language-server'),
+  filetypes = NixCmd('java-language-server'),
   root_markers = { 'build.gradle', 'build.gradle.kts', 'pom.xml', '.git' },
   settings = {},
 }

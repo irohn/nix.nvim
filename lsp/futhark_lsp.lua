@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('futhark', { 'futhark', 'lsp' }),
+  cmd = NixCmd('futhark', { 'futhark', 'lsp' }),
   filetypes = { 'futhark', 'fut' },
   root_markers = { '.git' },
 }

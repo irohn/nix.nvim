@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('glslls', { 'glslls', '--stdin' }),
+  cmd = NixCmd('glslls', { 'glslls', '--stdin' }),
   filetypes = { 'glsl', 'vert', 'tesc', 'tese', 'frag', 'geom', 'comp' },
   root_markers = { '.git' },
   capabilities = {

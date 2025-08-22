@@ -111,7 +111,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('jdt-language-server', {
+  cmd = NixCmd('jdt-language-server', {
     'jdtls',
     '-configuration',
     get_jdtls_config_dir(),

@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'nomicfoundation-solidity-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'nomicfoundation-solidity-language-server', '--stdio' }),
   filetypes = { 'solidity' },
   root_markers = {
     'hardhat.config.js',

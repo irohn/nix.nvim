@@ -11,7 +11,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('astro-language-server', { 'astro-ls', '--stdio' }),
+  cmd = NixCmd('astro-language-server', { 'astro-ls', '--stdio' }),
   filetypes = { 'astro' },
   root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
   init_options = {

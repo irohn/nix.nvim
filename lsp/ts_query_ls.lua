@@ -28,7 +28,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ts_query_ls'),
+  cmd = NixCmd('ts_query_ls'),
   filetypes = { 'query' },
   root_markers = { 'queries', '.git' },
   settings = {

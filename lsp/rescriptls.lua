@@ -36,7 +36,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('rescript-language-server', { 'rescript-language-server', '--stdio' }),
+  cmd = NixCmd('rescript-language-server', { 'rescript-language-server', '--stdio' }),
   filetypes = { 'rescript' },
   root_markers = { 'bsconfig.json', 'rescript.json', '.git' },
   settings = {},

@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('codebook', { 'codebook-lsp', 'serve' }),
+  cmd = NixCmd('codebook', { 'codebook-lsp', 'serve' }),
   filetypes = {
     'c',
     'css',

@@ -13,7 +13,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('oxlint', { 'oxc_language_server' }),
+  cmd = NixCmd('oxlint', { 'oxc_language_server' }),
   filetypes = {
     'javascript',
     'javascriptreact',

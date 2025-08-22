@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'nxls', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'nxls', '--stdio' }),
   filetypes = { 'json', 'jsonc' },
   root_markers = { 'nx.json', '.git' },
 }

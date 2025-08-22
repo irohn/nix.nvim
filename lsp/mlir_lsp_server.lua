@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('triton-llvm', { 'mlir-lsp-server' }),
+  cmd = NixCmd('triton-llvm', { 'mlir-lsp-server' }),
   filetypes = { 'mlir' },
   root_markers = { '.git' },
 }

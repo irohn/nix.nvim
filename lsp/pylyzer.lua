@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('pylyzer', { 'pylyzer', '--server' }),
+  cmd = NixCmd('pylyzer', { 'pylyzer', '--server' }),
   filetypes = { 'python' },
   root_markers = {
     'setup.py',

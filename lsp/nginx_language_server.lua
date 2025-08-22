@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nginx-language-server'),
+  cmd = NixCmd('nginx-language-server'),
   filetypes = { 'nginx' },
   root_markers = { 'nginx.conf', '.git' },
 }

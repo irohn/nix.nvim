@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('erlang-language-platform', { 'elp', 'server' }),
+  cmd = NixCmd('erlang-language-platform', { 'elp', 'server' }),
   filetypes = { 'erlang' },
   root_markers = { 'rebar.config', 'erlang.mk', '.git' },
 }

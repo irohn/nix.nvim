@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('dprint', { 'dprint', 'lsp' }),
+  cmd = NixCmd('dprint', { 'dprint', 'lsp' }),
   filetypes = {
     'javascript',
     'javascriptreact',

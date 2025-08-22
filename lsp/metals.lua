@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('metals'),
+  cmd = NixCmd('metals'),
   filetypes = { 'scala' },
   root_markers = { 'build.sbt', 'build.sc', 'build.gradle', 'pom.xml' },
   init_options = {

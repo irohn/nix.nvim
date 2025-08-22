@@ -29,7 +29,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('vhdl-ls', { 'vhdl_ls' }),
+  cmd = NixCmd('vhdl-ls', { 'vhdl_ls' }),
   filetypes = { 'vhd', 'vhdl' },
   root_markers = {
     'vhdl_ls.toml',

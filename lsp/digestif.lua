@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('lua54Packages.digestif', { 'digestif' }),
+  cmd = NixCmd('lua54Packages.digestif', { 'digestif' }),
   filetypes = { 'tex', 'plaintex', 'context' },
   root_markers = { '.git' },
 }

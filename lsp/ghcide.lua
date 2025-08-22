@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('haskellPackages.ghcide', { 'ghcide', '--lsp' }),
+  cmd = NixCmd('haskellPackages.ghcide', { 'ghcide', '--lsp' }),
   filetypes = { 'haskell', 'lhaskell' },
   root_markers = { 'stack.yaml', 'hie-bios', 'BUILD.bazel', 'cabal.config', 'package.yaml' },
 }

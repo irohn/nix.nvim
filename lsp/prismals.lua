@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'prisma-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'prisma-language-server', '--stdio' }),
   filetypes = { 'prisma' },
   settings = {
     prisma = {

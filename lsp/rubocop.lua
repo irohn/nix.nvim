@@ -4,7 +4,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('rubocop', { 'rubocop', '--lsp' }),
+  cmd = NixCmd('rubocop', { 'rubocop', '--lsp' }),
   filetypes = { 'ruby' },
   root_markers = { 'Gemfile', '.git' },
 }

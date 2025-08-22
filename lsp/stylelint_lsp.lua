@@ -39,7 +39,7 @@ root_file = util.insert_package_json(root_file, 'stylelint')
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('stylelint-lsp', { 'stylelint-lsp', '--stdio' }),
+  cmd = NixCmd('stylelint-lsp', { 'stylelint-lsp', '--stdio' }),
   filetypes = {
     'astro',
     'css',

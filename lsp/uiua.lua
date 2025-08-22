@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('uiua', { 'uiua', 'lsp' }),
+  cmd = NixCmd('uiua', { 'uiua', 'lsp' }),
   filetypes = { 'uiua' },
   root_markers = { 'main.ua', '.fmt.ua', '.git' },
 }

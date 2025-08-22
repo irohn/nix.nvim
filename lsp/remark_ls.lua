@@ -31,7 +31,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'remark-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'remark-language-server', '--stdio' }),
   filetypes = { 'markdown' },
   root_markers = {
     '.remarkrc',

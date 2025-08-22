@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('crystalline'),
+  cmd = NixCmd('crystalline'),
   filetypes = { 'crystal' },
   root_markers = { 'shard.yml', '.git' },
 }

@@ -39,7 +39,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ccls'),
+  cmd = NixCmd('ccls'),
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
   root_markers = { 'compile_commands.json', '.ccls', '.git' },
   offset_encoding = 'utf-32',

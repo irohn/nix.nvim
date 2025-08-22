@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('luau-lsp', { 'luau-lsp', 'lsp' }),
+  cmd = NixCmd('luau-lsp', { 'luau-lsp', 'lsp' }),
   filetypes = { 'luau' },
   root_markers = { '.git' },
 }

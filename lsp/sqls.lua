@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('sqls'),
+  cmd = NixCmd('sqls'),
   filetypes = { 'sql', 'mysql' },
   root_markers = { 'config.yml' },
   settings = {},

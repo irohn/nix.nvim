@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('racket-minimal', { 'racket', '--lib', 'racket-langserver' }),
+  cmd = NixCmd('racket-minimal', { 'racket', '--lib', 'racket-langserver' }),
   filetypes = { 'racket', 'scheme' },
   root_markers = { '.git' },
 }

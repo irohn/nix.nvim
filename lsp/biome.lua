@@ -21,7 +21,7 @@ return {
     if local_cmd and vim.fn.executable(local_cmd) == 1 then
       cmd = local_cmd
     end
-    return vim.lsp.rpc.start(nixCmd(, 'biome',{ cmd, 'lsp-proxy' }, dispatchers)
+    return vim.lsp.rpc.start(NixCmd(, 'biome',{ cmd, 'lsp-proxy' }, dispatchers)
   end,
   filetypes = {
     'astro',

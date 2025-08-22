@@ -31,7 +31,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('shader-slang', { bin_name }),
+  cmd = NixCmd('shader-slang', { bin_name }),
   filetypes = { 'hlsl', 'shaderslang' },
   root_markers = { '.git' },
 }

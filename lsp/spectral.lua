@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('spectral-language-server', { 'spectral-language-server', '--stdio' }),
+  cmd = NixCmd('spectral-language-server', { 'spectral-language-server', '--stdio' }),
   filetypes = { 'yaml', 'json', 'yml' },
   root_markers = { '.spectral.yaml', '.spectral.yml', '.spectral.json', '.spectral.js' },
   settings = {

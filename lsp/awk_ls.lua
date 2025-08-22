@@ -9,6 +9,6 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('awk-language-server'),
+  cmd = NixCmd('awk-language-server'),
   filetypes = { 'awk' },
 }

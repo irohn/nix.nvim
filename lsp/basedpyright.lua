@@ -21,7 +21,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd("basedpyright", { "basedpyright-langserver", "--stdio" }),
+  cmd = NixCmd("basedpyright", { "basedpyright-langserver", "--stdio" }),
   filetypes = { 'python' },
   root_markers = {
     'pyproject.toml',

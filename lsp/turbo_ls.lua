@@ -16,7 +16,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'turbo-language-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'turbo-language-server', '--stdio' }),
   filetypes = { 'html', 'ruby', 'eruby', 'blade', 'php' },
   root_markers = { 'Gemfile', '.git' },
 }

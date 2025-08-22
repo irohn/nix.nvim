@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('pyrefly', { 'pyrefly', 'lsp' }),
+  cmd = NixCmd('pyrefly', { 'pyrefly', 'lsp' }),
   filetypes = { 'python' },
   root_markers = {
     'pyrefly.toml',

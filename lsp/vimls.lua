@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('vim-language-server', { 'vim-language-server', '--stdio' }),
+  cmd = NixCmd('vim-language-server', { 'vim-language-server', '--stdio' }),
   filetypes = { 'vim' },
   root_markers = { '.git' },
   init_options = {

@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('postgres-lsp', { 'postgrestools', 'lsp-proxy' }),
+  cmd = NixCmd('postgres-lsp', { 'postgrestools', 'lsp-proxy' }),
   filetypes = {
     'sql',
   },

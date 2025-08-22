@@ -24,7 +24,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('dockerfile-language-server-nodejs', { 'docker-langserver', '--stdio' }),
+  cmd = NixCmd('dockerfile-language-server-nodejs', { 'docker-langserver', '--stdio' }),
   filetypes = { 'dockerfile' },
   root_markers = { 'Dockerfile' },
 }

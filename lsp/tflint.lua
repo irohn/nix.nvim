@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('tflint', { 'tflint', '--langserver' }),
+  cmd = NixCmd('tflint', { 'tflint', '--langserver' }),
   filetypes = { 'terraform' },
   root_markers = { '.terraform', '.git', '.tflint.hcl' },
 }

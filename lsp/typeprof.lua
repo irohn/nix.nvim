@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ruby_3_4', { 'typeprof', '--lsp', '--stdio' }),
+  cmd = NixCmd('ruby_3_4', { 'typeprof', '--lsp', '--stdio' }),
   filetypes = { 'ruby', 'eruby' },
   root_markers = { 'Gemfile', '.git' },
 }

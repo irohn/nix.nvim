@@ -65,7 +65,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('deno', { 'deno', 'lsp' }),
+  cmd = NixCmd('deno', { 'deno', 'lsp' }),
   cmd_env = { NO_COLOR = true },
   filetypes = {
     'javascript',

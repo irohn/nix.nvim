@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('marksman', { 'marksman', 'server' }),
+  cmd = NixCmd('marksman', { 'marksman', 'server' }),
   filetypes = { 'markdown', 'markdown.mdx' },
   root_markers = { '.marksman.toml', '.git' },
 }

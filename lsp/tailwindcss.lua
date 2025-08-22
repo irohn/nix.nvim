@@ -8,7 +8,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('tailwindcss-language-server', { 'tailwindcss-language-server', '--stdio' }),
+  cmd = NixCmd('tailwindcss-language-server', { 'tailwindcss-language-server', '--stdio' }),
   -- filetypes copied and adjusted from tailwindcss-intellisense
   filetypes = {
     -- html

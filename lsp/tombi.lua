@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('tombi', { 'tombi', 'lsp' }),
+  cmd = NixCmd('tombi', { 'tombi', 'lsp' }),
   filetypes = { 'toml' },
   root_markers = { 'tombi.toml', 'pyproject.toml', '.git' },
 }

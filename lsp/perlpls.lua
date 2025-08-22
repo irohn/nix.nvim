@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('perl540Packages.PLS', { 'pls' }),
+  cmd = NixCmd('perl540Packages.PLS', { 'pls' }),
   settings = {
     perl = {
       perlcritic = { enabled = false },

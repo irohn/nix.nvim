@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('luajitPackages.teal-language-server', {
+  cmd = NixCmd('luajitPackages.teal-language-server', {
     'teal-language-server',
   }),
   filetypes = {

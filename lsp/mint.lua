@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('mint', { 'mint', 'ls' }),
+  cmd = NixCmd('mint', { 'mint', 'ls' }),
   filetypes = { 'mint' },
   root_markers = { 'mint.json', '.git' },
 }

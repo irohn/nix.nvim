@@ -34,7 +34,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('terraform-ls', { 'terraform-ls', 'serve' }),
+  cmd = NixCmd('terraform-ls', { 'terraform-ls', 'serve' }),
   filetypes = { 'terraform', 'terraform-vars' },
   root_markers = { '.terraform', '.git' },
 }

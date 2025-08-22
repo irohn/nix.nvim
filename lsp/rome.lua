@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'rome', 'lsp-proxy' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'rome', 'lsp-proxy' }),
   filetypes = {
     'javascript',
     'javascriptreact',

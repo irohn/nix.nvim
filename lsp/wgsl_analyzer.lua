@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('wgsl-analyzer'),
+  cmd = NixCmd('wgsl-analyzer'),
   filetypes = { 'wgsl' },
   root_markers = { '.git' },
   settings = {},

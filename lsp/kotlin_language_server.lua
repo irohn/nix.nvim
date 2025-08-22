@@ -34,7 +34,7 @@ local root_files = {
 return {
   filetypes = { 'kotlin' },
   root_markers = root_files,
-  cmd = nixCmd('kotlin-language-server'),
+  cmd = NixCmd('kotlin-language-server'),
   init_options = {
     -- Enables caching and use project root to store cache data.
     storagePath = vim.fs.root(vim.fn.expand '%:p:h', root_files),

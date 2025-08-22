@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('aiken', { 'aiken', 'lsp' }),
+  cmd = NixCmd('aiken', { 'aiken', 'lsp' }),
   filetypes = { 'aiken' },
   root_markers = { 'aiken.toml', '.git' },
 }

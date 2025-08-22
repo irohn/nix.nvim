@@ -14,7 +14,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('graphql-language-service-cli', { 'graphql-lsp', 'server', '-m', 'stream' }),
+  cmd = NixCmd('graphql-language-service-cli', { 'graphql-lsp', 'server', '-m', 'stream' }),
   filetypes = { 'graphql', 'typescriptreact', 'javascriptreact' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

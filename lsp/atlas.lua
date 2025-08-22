@@ -58,7 +58,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('atlas', { 'atlas', 'tool', 'lsp', '--stdio' }),
+  cmd = NixCmd('atlas', { 'atlas', 'tool', 'lsp', '--stdio' }),
   filetypes = {
     'atlas-*',
   },

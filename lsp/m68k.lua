@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'm68k-lsp-server', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'm68k-lsp-server', '--stdio' }),
   filetypes = { 'asm68k' },
   root_markers = { 'Makefile', '.git' },
 }

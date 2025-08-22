@@ -17,7 +17,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('vacuum-go', { 'vacuum', 'language-server' }),
+  cmd = NixCmd('vacuum-go', { 'vacuum', 'language-server' }),
   filetypes = { 'yaml.openapi', 'json.openapi' },
   root_markers = { '.git' },
 }

@@ -45,7 +45,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('python313Packages.pip', { 'python3', '-m', 'esbonio' }),
+  cmd = NixCmd('python313Packages.pip', { 'python3', '-m', 'esbonio' }),
   filetypes = { 'rst' },
   root_markers = { '.git' },
 }

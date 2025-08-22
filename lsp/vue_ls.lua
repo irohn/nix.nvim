@@ -20,7 +20,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('vue-language-server', { 'vue-language-server', '--stdio' }),
+  cmd = NixCmd('vue-language-server', { 'vue-language-server', '--stdio' }),
   filetypes = { 'vue' },
   root_markers = { 'package.json' },
   on_init = function(client)

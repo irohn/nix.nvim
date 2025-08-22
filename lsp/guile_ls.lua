@@ -13,7 +13,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('guile-lsp-server'),
+  cmd = NixCmd('guile-lsp-server'),
   filetypes = {
     'scheme.guile',
   },

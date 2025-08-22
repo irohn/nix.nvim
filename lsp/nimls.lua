@@ -12,7 +12,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nimlsp'),
+  cmd = NixCmd('nimlsp'),
   filetypes = { 'nim' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

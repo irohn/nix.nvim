@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd("ansible-language-server", { "ansible-language-server", "--stdio" }),
+  cmd = NixCmd("ansible-language-server", { "ansible-language-server", "--stdio" }),
   settings = {
     ansible = {
       python = {

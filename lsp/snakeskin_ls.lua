@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'snakeskin-cli', 'lsp', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'snakeskin-cli', 'lsp', '--stdio' }),
   filetypes = { 'ss' },
   root_markers = { 'package.json' },
 }

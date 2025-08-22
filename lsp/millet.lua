@@ -13,7 +13,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('millet'),
+  cmd = NixCmd('millet'),
   filetypes = { 'sml' },
   root_markers = { 'millet.toml' },
 }

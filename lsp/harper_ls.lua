@@ -19,7 +19,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('harper', { 'harper-ls', '--stdio' }),
+  cmd = NixCmd('harper', { 'harper-ls', '--stdio' }),
   filetypes = {
     'c',
     'cpp',

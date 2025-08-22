@@ -13,7 +13,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('regal', { 'regal', 'language-server' }),
+  cmd = NixCmd('regal', { 'regal', 'language-server' }),
   filetypes = { 'rego' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

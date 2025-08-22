@@ -47,7 +47,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('tinymist'),
+  cmd = NixCmd('tinymist'),
   filetypes = { 'typst' },
   root_markers = { '.git' },
   on_attach = function(client, bufnr)

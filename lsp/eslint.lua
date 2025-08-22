@@ -59,7 +59,7 @@ local eslint_config_files = {
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('vscode-langservers-extracted', { 'vscode-eslint-language-server', '--stdio' }),
+  cmd = NixCmd('vscode-langservers-extracted', { 'vscode-eslint-language-server', '--stdio' }),
   filetypes = {
     'javascript',
     'javascriptreact',

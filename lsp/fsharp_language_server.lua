@@ -17,7 +17,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('dotnetCorePackages.sdk_9_0_1xx-bin', { 'dotnet', 'FSharpLanguageServer.dll' }),
+  cmd = NixCmd('dotnetCorePackages.sdk_9_0_1xx-bin', { 'dotnet', 'FSharpLanguageServer.dll' }),
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
     on_dir(util.root_pattern('*.sln', '*.fsproj', '.git')(fname))

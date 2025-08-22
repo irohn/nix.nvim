@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('lsp-ai'),
+  cmd = NixCmd('lsp-ai'),
   filetypes = {},
   root_dir = nil,
   init_options = {

@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('hyprls', { 'hyprls', '--stdio' }),
+  cmd = NixCmd('hyprls', { 'hyprls', '--stdio' }),
   filetypes = { 'hyprlang' },
   root_markers = { '.git' },
 }

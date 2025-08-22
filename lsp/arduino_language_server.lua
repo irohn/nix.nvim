@@ -77,7 +77,7 @@ return {
     local fname = vim.api.nvim_buf_get_name(bufnr)
     on_dir(util.root_pattern('*.ino')(fname))
   end,
-  cmd = nixCmd('arduino-language-server'),
+  cmd = NixCmd('arduino-language-server'),
   capabilities = {
     textDocument = {
       semanticTokens = vim.NIL,

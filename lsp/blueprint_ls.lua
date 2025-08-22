@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('blueprint-compiler', { 'blueprint-compiler', 'lsp' }),
+  cmd = NixCmd('blueprint-compiler', { 'blueprint-compiler', 'lsp' }),
   cmd_env = {
     -- Prevent recursive scanning which will cause issues when opening a file
     -- directly in the home directory (e.g. ~/foo.sh).

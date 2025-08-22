@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('kcl-language-server'),
+  cmd = NixCmd('kcl-language-server'),
   filetypes = { 'kcl' },
   root_markers = { '.git' },
 }

@@ -8,7 +8,7 @@ local util = require 'lspconfig.util'
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('sourcekit-lsp'),
+  cmd = NixCmd('sourcekit-lsp'),
   filetypes = { 'swift', 'objc', 'objcpp', 'c', 'cpp' },
   root_dir = function(bufnr, on_dir)
     local filename = vim.api.nvim_buf_get_name(bufnr)

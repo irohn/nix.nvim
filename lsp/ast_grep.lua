@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('ast-grep', { 'ast-grep', 'lsp' }),
+  cmd = NixCmd('ast-grep', { 'ast-grep', 'lsp' }),
   workspace_required = true,
   reuse_client = function(client, config)
     config.cmd_cwd = config.root_dir

@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nodejs_24', {'npx', 'grammarly-languageserver', '--stdio' }),
+  cmd = NixCmd('nodejs_24', {'npx', 'grammarly-languageserver', '--stdio' }),
   filetypes = { 'markdown' },
   root_markers = { '.git' },
   handlers = {

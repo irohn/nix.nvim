@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = nixCmd('nil'),
+  cmd = NixCmd('nil'),
   filetypes = { 'nix' },
   root_markers = { 'flake.nix', '.git' },
 }
