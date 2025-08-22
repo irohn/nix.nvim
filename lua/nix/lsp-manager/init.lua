@@ -138,6 +138,11 @@ function M.disable_servers(servers)
 end
 
 function M.setup()
+  local enabled = config.enabled
+  if enabled == false or enabled == nil then
+    return
+  end
+
   -- Ensure cache file exists (create empty array if missing)
   if vim.fn.filereadable(M.cache_file) == 0 then
     local ok, err = M.write_server_list({})
@@ -149,11 +154,51 @@ function M.setup()
   local cached = M.get_enabled_servers()
 
   local final = {}
+  local seen = {}
+
+  local function add(name)
+    if not seen[name] then
+      seen[name] = true
+      final[#final + 1] = name
+    end
+  end
+
+  if type(enabled) == "table" then
+    for _, name in ipairs(enabled) do
+      if type(name) == "string" and name ~= "" then
+        add(name)
+      end
+    end
+  end
+  -- Add cached servers (for mode == true or table mode)
   for _, name in ipairs(cached) do
-    final[#final + 1] = name
+    if type(name) == "string" and name ~= "" then
+      add(name)
+    end
   end
 
   table.sort(final)
+
+  if type(enabled) == "table" then
+    local changed = false
+    if #final ~= #cached then
+      changed = true
+    else
+      for i = 1, #final do
+        if final[i] ~= cached[i] then
+          changed = true
+          break
+        end
+      end
+    end
+    if changed then
+      local ok, werr = M.write_server_list(final)
+      if not ok then
+        -- Non-fatal: we still proceed enabling
+        vim.notify("[lsp-manager] " .. werr, vim.log.levels.WARN)
+      end
+    end
+  end
 
   if #final == 0 then
     return
