@@ -31,15 +31,22 @@ M.DEFAULT_CONFIG = {
     cache_file = string.format("%s/language-servers.json", data_dir),
     -- LSP Manager UI window options
     window = {
+      -- Window width dimension
       width = 60,
+      -- Window height dimension
       height = 20,
+      -- Window border style
       border = "rounded",
+      -- Window title
       title = " LSP Manager ",
+      -- Header lines, these can be set to `false` to disable
       headers = { "", "Servers" },
+      -- The icons used for enabled/disabled servers
       icons = {
         enabled = "⬤",
         disabled = "○",
       },
+      -- Key mappings for the LSP manager window
       keys = {
         close_window = { "<Esc>", "q" },
         disable_server = { "d", "x" },

@@ -83,19 +83,27 @@ local function update_display(opts)
   local lines = {}
   local padding = 2
   local min_header_length = 2
+  local headers = config.headers
+  local display_headers = true
 
-  -- Header
+  -- Headers
+  if not config.headers or #config.headers < 2 then
+    headers = { "", "" }
+    display_headers = false
+  end
   local header_widths = {}
-  for i, header in ipairs(config.headers) do
+  for i, header in ipairs(headers) do
     local col_len = math.max(#header, min_header_length)
     header_widths[i] = col_len + padding
   end
   local header_line = ""
-  for i, header in ipairs(config.headers) do
+  for i, header in ipairs(headers) do
     header_line = header_line .. string.format("%-" .. header_widths[i] .. "s", header)
   end
-  table.insert(lines, header_line)
-  table.insert(lines, string.rep("─", config.width))
+  if display_headers then
+    table.insert(lines, header_line)
+    table.insert(lines, string.rep("─", config.width))
+  end
 
   -- Server list
   for _, server in ipairs(state.servers) do
@@ -300,9 +308,10 @@ function M.open()
   update_display()
   setup_keybindings()
 
-  -- Set cursor to first server line (line 3, since we have 2 header lines)
+  -- Set cursor to first server line
   if #state.servers > 0 then
-    vim.api.nvim_win_set_cursor(state.win, { 3, 0 })
+    local starting_line = config.headers and 3 or 1
+    vim.api.nvim_win_set_cursor(state.win, { starting_line, 0 })
   end
 end
 

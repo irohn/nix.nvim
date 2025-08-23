@@ -48,9 +48,9 @@ vim.pack.add({
 ### Information
 This is an API to expose nix shells in neovim, this lets you build commands you can run as long as you have nix installed.
 You can configure where you pull packages from, see the [Nixpkgs](#nixpkgs) section for more info.
-It is also an LSP config collection taken from [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) modified to use the nix instead of PATH.
+It is also an LSP config collection taken from [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) and modified to use the nix shell command instead of your PATH.
 Note that some LSPs are missing, this is because I couldn't find them in [nixpkgs](https://github.com/NixOS/nixpkgs) or the configuration did not use a standard `cmd` field.
-There is an LSP Manager module as well, but it is disabled by default, see the [LSP Manager](#lsp-manager) section for more info.
+There is a complimentary LSP Manager module as well, but it is disabled by default, see the [LSP Manager](#lsp-manager) section for more info.
 
 ### Usage
 If you just want the LSP configurations, all you need is to install the plugin, no need to call setup.
@@ -124,15 +124,22 @@ This is the default configuration (no need to call setup if you use the defaults
     cache_file = string.format("%s/language-servers.json", data_dir),
     -- LSP Manager UI window options
     window = {
+      -- Window width dimension
       width = 60,
+      -- Window height dimension
       height = 20,
+      -- Window border style
       border = "rounded",
+      -- Window title
       title = " LSP Manager ",
+      -- Header lines, these can be set to `false` to disable
       headers = { "", "Servers" },
+      -- The icons used for enabled/disabled servers
       icons = {
         enabled = "⬤",
         disabled = "○",
       },
+      -- Key mappings for the LSP manager window
       keys = {
         close_window = { "<Esc>", "q" },
         disable_server = { "d", "x" },
