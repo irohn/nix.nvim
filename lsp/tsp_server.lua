@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('typespec', { 'tsp-server', '--stdio' }),
+  cmd = NixShellCmd('typespec', { 'tsp-server', '--stdio' }),
   filetypes = { 'typespec' },
   root_markers = { 'tspconfig.yaml', '.git' },
 }

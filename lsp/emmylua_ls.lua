@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('emmylua_ls'),
+  cmd = NixShellCmd('emmylua_ls'),
   filetypes = { 'lua' },
   root_markers = {
     '.luarc.json',

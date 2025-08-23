@@ -7,7 +7,7 @@
 ---@type vim.lsp.Config
 return {
   -- Configuration from https://github.com/iamcco/diagnostic-languageserver#config--document
-  cmd = NixCmd('diagnostic-languageserver', { 'diagnostic-languageserver', '--stdio' }),
+  cmd = NixShellCmd('diagnostic-languageserver', { 'diagnostic-languageserver', '--stdio' }),
   root_markers = { '.git' },
   -- Empty by default, override to add filetypes.
   filetypes = {},

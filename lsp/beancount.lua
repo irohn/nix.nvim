@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('beancount-language-server', {'beancount-language-server', '--stdio' }),
+  cmd = NixShellCmd('beancount-language-server', {'beancount-language-server', '--stdio' }),
   filetypes = { 'beancount', 'bean' },
   root_markers = { '.git' },
   init_options = {},

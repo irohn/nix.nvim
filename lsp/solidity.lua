@@ -35,7 +35,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'solidity-ls', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'solidity-ls', '--stdio' }),
   filetypes = { 'solidity' },
   root_markers = { '.git', 'package.json' },
   settings = { solidity = { includePath = '', remapping = {} } },

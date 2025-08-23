@@ -24,7 +24,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("vscode-langservers-extracted", { "vscode-html-language-server", "--stdio" }),
+  cmd = NixShellCmd("vscode-langservers-extracted", { "vscode-html-language-server", "--stdio" }),
   filetypes = { 'html', 'templ' },
   root_markers = { 'package.json', '.git' },
   settings = {},

@@ -16,7 +16,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'lean-language-server', '--stdio', '--', '-M', '4096', '-T', '100000' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'lean-language-server', '--stdio', '--', '-M', '4096', '-T', '100000' }),
   filetypes = { 'lean3' },
   offset_encoding = 'utf-32',
   root_dir = function(bufnr, on_dir)

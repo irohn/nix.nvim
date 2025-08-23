@@ -73,7 +73,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ltex-ls'),
+  cmd = NixShellCmd('ltex-ls'),
   filetypes = filetypes,
   root_markers = { '.git' },
   get_language_id = get_language_id,

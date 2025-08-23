@@ -17,7 +17,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('matlab-language-server', { 'matlab-language-server', '--stdio' }),
+  cmd = NixShellCmd('matlab-language-server', { 'matlab-language-server', '--stdio' }),
   filetypes = { 'matlab' },
   root_dir = function(bufnr, on_dir)
     local root_dir = vim.fs.root(bufnr, '.git')

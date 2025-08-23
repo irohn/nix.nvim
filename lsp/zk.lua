@@ -14,7 +14,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('zk', { 'zk', 'lsp' }),
+  cmd = NixShellCmd('zk', { 'zk', 'lsp' }),
   filetypes = { 'markdown' },
   root_markers = { '.zk' },
   ---@param bufnr integer

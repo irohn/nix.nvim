@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ruby-lsp'),
+  cmd = NixShellCmd('ruby-lsp'),
   filetypes = { 'ruby', 'eruby' },
   root_markers = { 'Gemfile', '.git' },
   init_options = {

@@ -23,7 +23,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'herb-language-server', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'herb-language-server', '--stdio' }),
   filetypes = { 'html', 'ruby', 'eruby' },
   root_markers = { 'Gemfile', '.git' },
 }

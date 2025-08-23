@@ -70,7 +70,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("lua-language-server"),
+  cmd = NixShellCmd("lua-language-server"),
   filetypes = { 'lua' },
   root_markers = {
     '.luarc.json',

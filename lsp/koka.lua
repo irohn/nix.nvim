@@ -5,7 +5,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('koka', { 'koka', '--language-server', '--lsstdio' }),
+  cmd = NixShellCmd('koka', { 'koka', '--language-server', '--lsstdio' }),
   filetypes = { 'koka' },
   root_markers = { '.git' },
 }

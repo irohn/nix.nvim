@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('vscode-solidity-server', { 'vscode-solidity-server', '--stdio' }),
+  cmd = NixShellCmd('vscode-solidity-server', { 'vscode-solidity-server', '--stdio' }),
   filetypes = { 'solidity' },
   root_markers = {
     'hardhat.config.js',

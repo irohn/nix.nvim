@@ -28,7 +28,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('python313Packages.python-lsp-server', { 'pylsp' }),
+  cmd = NixShellCmd('python313Packages.python-lsp-server', { 'pylsp' }),
   filetypes = { 'python' },
   root_markers = {
     'pyproject.toml',

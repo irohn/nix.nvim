@@ -76,7 +76,7 @@ local function activate_env(path)
   end
 end
 
-local cmd = NixCmd('julia_19', {
+local cmd = NixShellCmd('julia_19', {
   'julia',
   '--startup-file=no',
   '--history-file=no',

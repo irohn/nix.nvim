@@ -67,7 +67,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('vtsls', { 'vtsls', '--stdio' }),
+  cmd = NixShellCmd('vtsls', { 'vtsls', '--stdio' }),
   filetypes = {
     'javascript',
     'javascriptreact',

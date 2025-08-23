@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('jsonnet-language-server'),
+  cmd = NixShellCmd('jsonnet-language-server'),
   filetypes = {
     'jsonnet',
     'libsonnet',

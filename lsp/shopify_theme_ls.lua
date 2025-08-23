@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('shopify-cli', {
+  cmd = NixShellCmd('shopify-cli', {
     'shopify',
     'theme',
     'language-server',

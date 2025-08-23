@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('sqruff', { 'sqruff', 'lsp' }),
+  cmd = NixShellCmd('sqruff', { 'sqruff', 'lsp' }),
   filetypes = { 'sql' },
   root_markers = { '.sqruff', '.git' },
 }

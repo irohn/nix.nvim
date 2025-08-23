@@ -13,7 +13,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('erg', { 'erg', '--language-server' }),
+  cmd = NixShellCmd('erg', { 'erg', '--language-server' }),
   filetypes = { 'erg' },
   root_markers = { 'package.er', '.git' },
 }

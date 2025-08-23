@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('kdePackages.qtdeclarative', { 'qmlls' }),
+  cmd = NixShellCmd('kdePackages.qtdeclarative', { 'qmlls' }),
   filetypes = { 'qml', 'qmljs' },
   root_markers = { '.git' },
 }

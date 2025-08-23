@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('air-formatter', { 'air', 'language-server' }),
+  cmd = NixShellCmd('air-formatter', { 'air', 'language-server' }),
   filetypes = { 'r' },
   root_markers = { 'air.toml', '.air.toml', '.git' },
 }

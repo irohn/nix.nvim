@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('vale-ls'),
+  cmd = NixShellCmd('vale-ls'),
   filetypes = { 'markdown', 'text', 'tex', 'rst' },
   root_markers = { '.vale.ini' },
 }

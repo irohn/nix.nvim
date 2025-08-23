@@ -26,7 +26,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nls'),
+  cmd = NixShellCmd('nls'),
   filetypes = { 'ncl', 'nickel' },
   root_markers = { '.git' },
 }

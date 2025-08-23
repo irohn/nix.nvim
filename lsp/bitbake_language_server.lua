@@ -4,7 +4,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('bitbake-language-server'),
+  cmd = NixShellCmd('bitbake-language-server'),
   filetypes = { 'bitbake' },
   root_markers = { '.git' },
 }

@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('openscad-lsp', { 'openscad-lsp', '--stdio' }),
+  cmd = NixShellCmd('openscad-lsp', { 'openscad-lsp', '--stdio' }),
   filetypes = { 'openscad' },
   root_markers = { '.git' },
 }

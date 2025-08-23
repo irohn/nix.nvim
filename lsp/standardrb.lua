@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('rubyPackages_3_4.standard', { 'standardrb', '--lsp' }),
+  cmd = NixShellCmd('rubyPackages_3_4.standard', { 'standardrb', '--lsp' }),
   filetypes = { 'ruby' },
   root_markers = { 'Gemfile', '.git' },
 }

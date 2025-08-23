@@ -13,7 +13,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('textlsp'),
+  cmd = NixShellCmd('textlsp'),
   filetypes = { 'text', 'tex', 'org' },
   root_markers = { '.git' },
   settings = {

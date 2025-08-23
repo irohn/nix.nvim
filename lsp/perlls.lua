@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('perl', {
+  cmd = NixShellCmd('perl', {
     'perl',
     '-MPerl::LanguageServer',
     '-e',

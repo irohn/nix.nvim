@@ -16,7 +16,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('typescript-go', { 'tsgo', '--lsp', '--stdio' }),
+  cmd = NixShellCmd('typescript-go', { 'tsgo', '--lsp', '--stdio' }),
   filetypes = {
     'javascript',
     'javascriptreact',

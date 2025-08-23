@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('akkuPackages.scheme-langserver', { 'scheme-langserver', '~/.scheme-langserver.log', 'enable', 'disable' }),
+  cmd = NixShellCmd('akkuPackages.scheme-langserver', { 'scheme-langserver', '~/.scheme-langserver.log', 'enable', 'disable' }),
   filetypes = { 'scheme' },
   root_markers = {
     'Akku.manifest',

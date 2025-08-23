@@ -1,47 +1,5 @@
 local M = {}
 
----Builds a nix command you can run
----
---- Returns a table of arguments
----@param pkg string
----@param cmd? string|string[]
----@param nixpkgs? NixConfigNixpkgs
----@return string[]|nil argv  -- list of args or nil on error
----@return string? err
-function M.build_nix_shell_cmd(pkg, cmd, nixpkgs)
-  if type(pkg) ~= "string" or pkg == "" then
-    return nil, "Package must be a non-empty string"
-  end
-
-  local cfg = nixpkgs or require("nix.config").config.nixpkgs
-  cmd = cmd or pkg
-
-  -- Base command
-  local argv = {
-    "nix",
-    "--experimental-features", "nix-command flakes",
-    "shell",
-  }
-
-  if cfg.allow_unfree then
-    argv[#argv + 1] = "--impure"
-  end
-
-  argv[#argv + 1] = string.format("%s#%s", cfg.url, pkg)
-  argv[#argv + 1] = "--command"
-
-  local t = type(cmd)
-  if t == "string" then
-    argv[#argv + 1] = cmd
-  elseif t == "table" then
-    vim.list_extend(argv, cmd)
-  else
-    return nil, ("Invalid cmd type (%s); must be string or list of strings"):format(t)
-  end
-
-  return argv
-end
-
 ---Setup function for the Nix plugin.
 ---
 --- Behavior (opts):
@@ -60,6 +18,11 @@ function M.setup(opts)
     return
   end
 
+  if vim.fn.has("nvim-0.11") == 0 then
+    vim.notify("Nix.nvim requires Neovim 0.11 or higher.", vim.log.levels.ERROR)
+    return
+  end
+
   if opts then
     require("nix.config").setup(opts)
   end
@@ -67,6 +30,10 @@ function M.setup(opts)
 
   vim.fn.mkdir(config.data_dir, "p")
   vim.env.NIXPKGS_ALLOW_UNFREE = config.nixpkgs.allow_unfree and 1 or 0
+
+  if config.plugin_manager.enabled then
+    require("nix.plugin-manager").setup(config.plugin_manager)
+  end
 
   if config.lsp_manager.enabled then
     require("nix.lsp-manager").setup(config.lsp_manager)

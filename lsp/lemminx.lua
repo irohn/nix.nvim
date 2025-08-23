@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('lemminx'),
+  cmd = NixShellCmd('lemminx'),
   filetypes = { 'xml', 'xsd', 'xsl', 'xslt', 'svg' },
   root_markers = { '.git' },
 }

@@ -4,7 +4,7 @@
 ---
 --- Installation: https://github.com/phan/phan#getting-started
 
-local cmd = NixCmd('php84Packages.phan', {
+local cmd = NixShellCmd('php84Packages.phan', {
   'phan',
   '-m',
   'json',

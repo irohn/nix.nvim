@@ -61,7 +61,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("yaml-language-server", { "yaml-language-server", "--stdio" }),
+  cmd = NixShellCmd("yaml-language-server", { "yaml-language-server", "--stdio" }),
   filetypes = { 'yaml', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' },
   root_markers = { '.git' },
   settings = {

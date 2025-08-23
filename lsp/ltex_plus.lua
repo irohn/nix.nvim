@@ -34,7 +34,7 @@ local language_id_mapping = {
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ltex-ls-plus'),
+  cmd = NixShellCmd('ltex-ls-plus'),
   filetypes = {
     'bib',
     'context',

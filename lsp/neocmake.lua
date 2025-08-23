@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('neocmakelsp', { 'neocmakelsp', '--stdio' }),
+  cmd = NixShellCmd('neocmakelsp', { 'neocmakelsp', '--stdio' }),
   filetypes = { 'cmake' },
   root_markers = { '.git', 'build', 'cmake' },
 }

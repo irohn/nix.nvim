@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('cuelsp'),
+  cmd = NixShellCmd('cuelsp'),
   filetypes = { 'cue' },
   root_markers = { 'cue.mod', '.git' },
 }

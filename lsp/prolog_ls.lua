@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('swi-prolog', {
+  cmd = NixShellCmd('swi-prolog', {
     'swipl',
     '-g',
     'use_module(library(lsp_server)).',

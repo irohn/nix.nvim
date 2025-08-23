@@ -4,19 +4,45 @@ local M = {}
 ---@field data_dir string
 ---@field lsp NixConfigLspManager
 
+---@class NixConfigPluginManager
+---@field enabled boolean
+---@field build_dir string
+---@field cache_file string
+---@field plugins NixPluginSpec[]
+
 ---@class NixConfigLspManager
----@field enabled boolean|string[]  -- false/nil: disable; true: use cache; {list}: merge list with cache
----@field cache_file string         -- path to JSON file containing cached server array
+---@field enabled boolean|string[] -- false/nil: disable; true: use cache; {list}: merge list with cache
+---@field cache_file string -- path to JSON file containing cached server array
+---@field window table -- window configuration (see defaults below)
 
 ---@class NixConfigNixpkgs
 ---@field url string
 ---@field allow_unfree boolean
 
-local data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data"))
+---@class NixPluginSpec
+---@field package string -- nix package name, will first look in vimPlugins package set, then in nixpkgs
+---@field name? string -- unique name for the plugin
+---@field url? string -- optional override the package source, e.g. "github:username/repo"
+
+
+local data_dir = vim.fn.stdpath("data")
 
 M.DEFAULT_CONFIG = {
   -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
-  data_dir = data_dir,
+  data_dir = string.format("%s/nix.nvim", data_dir),
+  ---@type NixConfigPluginManager
+  plugin_manager = {
+    -- Enable the plugin-manager module to manage plugins via nix.
+    enabled = true,
+    -- Directory where plugins will be built and stored.
+    -- Defaults to `stdpath("data")/site/pack/nix/start`
+    -- Note that if you change this, you may need to add it to your 'runtimepath'.
+    build_dir = string.format("%s/site/pack/nix/start", data_dir),
+    -- Path to the cache file for plugins.
+    cache_file = string.format("%s/nix.nvim/plugins.json", data_dir),
+    -- List of plugin specifications to manage.
+    plugins = {}
+  },
   ---@type NixConfigLspManager
   -- LSP module configuration
   lsp_manager = {
@@ -28,7 +54,7 @@ M.DEFAULT_CONFIG = {
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
     -- If the file does not exist, it will be created.
-    cache_file = string.format("%s/language-servers.json", data_dir),
+    cache_file = string.format("%s/nix.nvim/language-servers.json", data_dir),
     -- LSP Manager UI window options
     window = {
       -- Window width dimension
@@ -39,8 +65,10 @@ M.DEFAULT_CONFIG = {
       border = "rounded",
       -- Window title
       title = " LSP Manager ",
-      -- Header lines, these can be set to `false` to disable
-      headers = { "", "Servers" },
+      -- Header lines, these can be set to a table of strings
+      -- First is the header for enabled icon, second is the server list
+      -- e.g. headers = { "Status", "Servers" }
+      headers = false,
       -- The icons used for enabled/disabled servers
       icons = {
         enabled = "⬤",

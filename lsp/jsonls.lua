@@ -23,7 +23,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("vscode-langservers-extracted", { "vscode-json-language-server", "--stdio" }),
+  cmd = NixShellCmd("vscode-langservers-extracted", { "vscode-json-language-server", "--stdio" }),
   filetypes = { 'json', 'jsonc' },
   init_options = {
     provideFormatter = true,

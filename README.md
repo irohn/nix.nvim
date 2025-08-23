@@ -54,10 +54,10 @@ There is a complimentary LSP Manager module as well, but it is disabled by defau
 
 ### Usage
 If you just want the LSP configurations, all you need is to install the plugin, no need to call setup.
-The plugin exposes a global `NixCmd` by default for easier command builds.
+The plugin exposes a global `NixShellCmd` by default for easier command builds.
 You can check the plugin is installed by running this vim command:
 ```lua
-:lua (function() vim.cmd("enew") vim.fn.termopen(NixCmd("asciiquarium")) end)()
+:lua (function() vim.cmd("enew") vim.fn.termopen(NixShellCmd("asciiquarium")) end)()
 ```
 <img width="1081" height="546" alt="image" src="https://github.com/user-attachments/assets/54afa944-049a-46ef-b36e-eb6363c8ecab" />
 
@@ -98,10 +98,10 @@ require("nix").setup {
 }
 ```
 
-You can also set a specific nixpkgs URL while building a command, the NixCmd global is reference to the `build_nix_shell_cmd` function:
+You can also set a specific nixpkgs URL while building a command, the NixShellCmd global is reference to the `build_nix_shell_cmd` function:
 
 ```lua
-NixCmd(cowsay, {"cowsay", "--version"}, { nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable" }})
+NixShellCmd(cowsay, {"cowsay", "--version"}, { nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable" }})
 ```
 
 ### Configuration

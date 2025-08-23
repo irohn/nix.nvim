@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ballerina', { 'bal', 'start-language-server' }),
+  cmd = NixShellCmd('ballerina', { 'bal', 'start-language-server' }),
   filetypes = { 'ballerina' },
   root_markers = { 'Ballerina.toml' },
 }

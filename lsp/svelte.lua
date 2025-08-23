@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('svelte-language-server', { 'svelteserver', '--stdio' }),
+  cmd = NixShellCmd('svelte-language-server', { 'svelteserver', '--stdio' }),
   filetypes = { 'svelte' },
   root_dir = function(bufnr, on_dir)
     local root_files = { 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'bun.lock' }

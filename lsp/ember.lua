@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ember-language-server', { 'ember-language-server', '--stdio' }),
+  cmd = NixShellCmd('ember-language-server', { 'ember-language-server', '--stdio' }),
   filetypes = { 'handlebars', 'typescript', 'javascript', 'typescript.glimmer', 'javascript.glimmer' },
   root_markers = { 'ember-cli-build.js', '.git' },
 }

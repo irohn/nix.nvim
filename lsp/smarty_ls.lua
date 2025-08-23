@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'smarty-language-server', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'smarty-language-server', '--stdio' }),
   filetypes = { 'smarty' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
