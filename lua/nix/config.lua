@@ -60,7 +60,6 @@ M.DEFAULT_CONFIG = {
     -- or a specific commit hash, e.g.:
     -- url = "github:NixOS/nixpkgs/c5e2e42c112de623adfd662b3e51f0805bf9ff83
     url = "nixpkgs",
-
     -- Allow unfree packages
     -- https://nixos.wiki/wiki/Unfree_Software
     allow_unfree = false,
