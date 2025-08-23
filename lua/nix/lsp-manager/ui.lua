@@ -134,12 +134,16 @@ local function get_server_from_line()
 
   local line_num = vim.api.nvim_win_get_cursor(state.win)[1]
 
-  -- Skip header lines (first 2 lines)
-  if line_num <= 2 then
-    return nil
+  if config.headers then
+    -- Skip header lines (first 2 lines)
+    if line_num <= 2 then
+      return nil
+    end
   end
 
-  local server_index = line_num - 2
+  local index_offset = config.headers and 2 or 0
+
+  local server_index = line_num - index_offset
   if server_index > 0 and server_index <= #state.servers then
     return state.servers[server_index]
   end
