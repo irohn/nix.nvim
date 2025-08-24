@@ -72,13 +72,14 @@ M.DEFAULT_CONFIG = {
         installed = "⬤",
         disabled = "○",
       },
-      -- Key mappings for the LSP manager window
+      -- Key mappings for the plugin manager window
       keys = {
         close_window = { "<Esc>", "q" },
         remove_plugin = { "d", "x" },
         install_plugin = { "i", "e" },
         show_help = { "?" },
         toggle_plugin = { "<Enter>" },
+        rescan_plugins = { "R" },
       }
     },
   },
