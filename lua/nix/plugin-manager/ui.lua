@@ -89,7 +89,9 @@ local function update_display(opts)
   -- Build a set for installed plugins
   local installed_set = {}
   for _, p in ipairs(state.installed_plugins) do
-    installed_set[p] = true
+    -- Remove vimPlugins prefix if it exists (shouldn't happen, but just in case)
+    local plugin_name = p:match("vimPlugins%.(.+)") or p
+    installed_set[plugin_name] = true
   end
 
   -- Combine all plugins (available + installed)
@@ -98,9 +100,11 @@ local function update_display(opts)
   
   -- Add installed plugins first
   for _, plugin in ipairs(state.installed_plugins) do
-    if not plugin_set[plugin] then
-      table.insert(all_plugins, plugin)
-      plugin_set[plugin] = true
+    -- Remove vimPlugins prefix if it exists (shouldn't happen, but just in case)
+    local plugin_name = plugin:match("vimPlugins%.(.+)") or plugin
+    if not plugin_set[plugin_name] then
+      table.insert(all_plugins, plugin_name)
+      plugin_set[plugin_name] = true
     end
   end
   
