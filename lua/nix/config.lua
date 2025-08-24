@@ -10,6 +10,7 @@ local M = {}
 ---@field cache_file string
 ---@field plugins table
 ---@field settings table
+---@field window table
 
 ---@class NixConfigLspManager
 ---@field enabled boolean|string[] -- false/nil: disable; true: use cache; {list}: merge list with cache
@@ -70,7 +71,7 @@ M.DEFAULT_CONFIG = {
       -- The icons used for enabled/disabled servers
       icons = {
         installed = "⬤",
-        disabled = "○",
+        scanned = "○",
       },
       -- Key mappings for the LSP manager window
       keys = {

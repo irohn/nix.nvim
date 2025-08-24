@@ -38,7 +38,7 @@ local function scan_vim_plugins(rescan, async, on_complete)
     return true
   end
 
-  local cmd = require("nix.api.search").build_command("vimPlugins", config.nixpkgs)
+  local cmd = require("nix.api.search").build_command("vimPlugins\\.", config.nixpkgs)
   table.insert(cmd, "--json")
 
   if not async then
@@ -98,6 +98,39 @@ local function scan_vim_plugins(rescan, async, on_complete)
   end
 end
 
+---Read the scanned plugins cache JSON and return simplified plugin names.
+---@return string[]
+local function get_scanned_plugins()
+  local path = M.scanned_plugins_path
+  if vim.fn.filereadable(path) ~= 1 then
+    return {}
+  end
+  local fh = io.open(path, "r")
+  if not fh then
+    return {}
+  end
+  local content = fh:read("*a")
+  fh:close()
+  if not content or content:match("^%s*$") then
+    return {}
+  end
+  local ok, decoded = pcall(vim.json.decode, content)
+  if not ok then
+    ok, decoded = pcall(vim.fn.json_decode, content)
+  end
+  if not ok or type(decoded) ~= "table" then
+    return {}
+  end
+  local result = {}
+  for k, _ in pairs(decoded) do
+    local name = k:match("vimPlugins%.(.+)$")
+    if name then
+      table.insert(result, name)
+    end
+  end
+  return result
+end
+
 ---Run a command using vim.system with async support.
 ---@param cmd string[] command and args
 ---@param on_exit? fun(success: boolean, code: integer) callback function called when command
@@ -149,6 +182,94 @@ local function process_plugin(plugin)
   end)
 end
 
+local function remove_plugin(plugin_name)
+  local plugin_path = string.format("%s/%s", config.plugin_manager.build_dir, plugin_name)
+  -- If not installed, optionally notify and return false
+  if vim.fn.isdirectory(plugin_path) == 0 then
+    if config.plugin_manager.settings.notify then
+      vim.notify(string.format("[nix.nvim] Plugin %s is not installed", plugin_name), vim.log.levels.WARN)
+    end
+    return false
+  end
+
+  -- Recursively delete directory
+  local ok = vim.fn.delete(plugin_path, "rf") == 0
+  if ok then
+    if config.plugin_manager.settings.notify then
+      vim.notify(string.format("[nix.nvim] Removed plugin %s", plugin_name), vim.log.levels.INFO)
+    end
+  else
+    if config.plugin_manager.settings.notify then
+      vim.notify(string.format("[nix.nvim] Failed to remove plugin %s", plugin_name), vim.log.levels.ERROR)
+    end
+  end
+  return ok
+end
+
+local function install_plugin(plugin_name, on_exit)
+  local plugin_path = string.format("%s/%s", config.plugin_manager.build_dir, plugin_name)
+  if vim.fn.isdirectory(plugin_path) == 1 then
+    return
+  end
+
+  local cmd = require("nix.api.build").build_command(
+    plugin_name,
+    plugin_path,
+    { url = config.nixpkgs.url, allow_unfree = config.nixpkgs.allow_unfree }
+  )
+
+  run_command(cmd, function(success, code)
+    if success then
+      if config.plugin_manager.settings.notify then
+        vim.schedule(function()
+          vim.notify(string.format("[nix.nvim] Installed plugin %s", plugin_name), vim.log.levels.INFO)
+        end)
+      end
+    else
+      if config.plugin_manager.settings.notify then
+        vim.schedule(function()
+          vim.notify(string.format("[nix.nvim] Failed to install plugin %s (code %d)", plugin_name, code),
+            vim.log.levels.ERROR)
+        end)
+      end
+    end
+  end)
+end
+
+--Get list of installed plugin directories under the build directory.
+---@return string[]
+local function get_installed_plugins()
+  local build_dir = config.plugin_manager.build_dir
+  if vim.fn.isdirectory(build_dir) == 0 then
+    return {}
+  end
+
+  local handle = vim.loop.fs_scandir(build_dir)
+  if not handle then
+    return {}
+  end
+
+  local plugins = {}
+  while true do
+    local name, t = vim.loop.fs_scandir_next(handle)
+    if not name then break end
+    if t == 'directory' then
+      table.insert(plugins, name)
+    elseif t == 'link' then
+      -- Resolve symlink and include if it points to a directory
+      local stat = vim.loop.fs_stat(build_dir .. "/" .. name)
+      if stat and stat.type == 'directory' then
+        table.insert(plugins, name)
+      end
+    end
+  end
+  -- remove the vimPlugins. prefis if present
+  for i, v in ipairs(plugins) do
+    plugins[i] = v:gsub("^vimPlugins%.", "")
+  end
+  return plugins
+end
+
 ---Setup function for the nix plugin-manager module.
 ---@param opts NixConfigPluginManager
 ---@return nil
@@ -177,6 +298,9 @@ function M.setup(opts)
 end
 
 M.scan_vim_plugins = scan_vim_plugins
-M.process_plugin = process_plugin
+M.install_plugin = install_plugin
+M.remove_plugin = remove_plugin
+M.get_installed_plugins = get_installed_plugins
+M.get_scanned_plugins = get_scanned_plugins
 
 return M
