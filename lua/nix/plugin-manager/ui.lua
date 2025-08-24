@@ -13,9 +13,32 @@ local state = {
   help_buf = nil,
   help_win = nil,
   loading = false,
+  footer_messages = {},
 }
 
--- Create the floating window
+-- Add a message to the footer
+local function add_footer_message(message, level)
+  level = level or "info"
+  table.insert(state.footer_messages, { message = message, level = level, time = os.time() })
+  
+  -- Keep only last 10 messages
+  if #state.footer_messages > 10 then
+    table.remove(state.footer_messages, 1)
+  end
+  
+  -- Update display if window is open
+  if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
+    update_display()
+  end
+end
+
+-- Clear footer messages
+local function clear_footer_messages()
+  state.footer_messages = {}
+  if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
+    update_display()
+  end
+end
 local function create_window()
   local width = config.width
   local height = config.height
@@ -149,6 +172,59 @@ local function update_display(opts)
     table.insert(lines, line)
   end
 
+  -- Calculate available height for plugin list (total height - header - footer)
+  local footer_height = 2
+  local main_height = config.height - footer_height
+  if display_headers then
+    main_height = main_height - 2  -- Subtract header lines
+  end
+  
+  -- Pad or truncate plugin list to fit main area
+  local current_content_lines = display_headers and 2 or 0
+  if state.loading then
+    current_content_lines = current_content_lines + 2
+  end
+  current_content_lines = current_content_lines + #all_plugins
+  
+  -- Add empty lines to fill main area if needed
+  while #lines < main_height then
+    table.insert(lines, "")
+  end
+  
+  -- Truncate if too many lines
+  while #lines > main_height do
+    table.remove(lines)
+  end
+
+  -- Add footer separator
+  table.insert(lines, string.rep("─", config.width))
+  
+  -- Add footer messages (last 2 lines)
+  local footer_lines = {}
+  if #state.footer_messages > 0 then
+    -- Show the most recent messages
+    local start_idx = math.max(1, #state.footer_messages - 1)
+    for i = start_idx, #state.footer_messages do
+      local msg = state.footer_messages[i]
+      if msg then
+        table.insert(footer_lines, msg.message)
+      end
+    end
+  end
+  
+  -- Ensure exactly 2 footer lines
+  while #footer_lines < footer_height then
+    table.insert(footer_lines, "")
+  end
+  while #footer_lines > footer_height do
+    table.remove(footer_lines, 1)
+  end
+  
+  -- Add footer lines to main lines
+  for _, line in ipairs(footer_lines) do
+    table.insert(lines, line)
+  end
+
   -- Set buffer content
   vim.api.nvim_set_option_value("modifiable", true, { buf = state.buf })
   vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
@@ -178,7 +254,8 @@ local function get_plugin_from_line()
   end
 
   local plugin_index = line_num - index_offset
-  local all_plugins = update_display({ sort = false })
+  -- Use the same sorting as the display to ensure correct plugin selection
+  local all_plugins = update_display({ sort = true })
   
   if plugin_index > 0 and plugin_index <= #all_plugins then
     return all_plugins[plugin_index]
@@ -191,28 +268,28 @@ end
 local function install_plugin()
   local plugin = get_plugin_from_line()
   if not plugin then
-    vim.notify("No plugin found on current line", vim.log.levels.WARN)
+    add_footer_message("No plugin found on current line", "warn")
     return
   end
 
   local installed_plugins = plugin_manager.get_installed_plugins()
   if vim.tbl_contains(installed_plugins, plugin) then
-    vim.notify(string.format("Plugin '%s' is already installed", plugin), vim.log.levels.INFO)
+    add_footer_message(string.format("Plugin '%s' is already installed", plugin), "info")
     return
   end
 
   -- Start installation
-  vim.notify(string.format("Installing plugin: %s", plugin), vim.log.levels.INFO)
+  add_footer_message(string.format("Installing plugin: %s", plugin), "info")
   
   plugin_manager.install_plugin_async("vimPlugins." .. plugin, function(success, plugin_name)
     if success then
-      vim.notify(string.format("Successfully installed plugin: %s", plugin), vim.log.levels.INFO)
+      add_footer_message(string.format("Successfully installed plugin: %s", plugin), "info")
       -- Refresh display
       vim.schedule(function()
         update_display()
       end)
     else
-      vim.notify(string.format("Failed to install plugin: %s", plugin), vim.log.levels.ERROR)
+      add_footer_message(string.format("Failed to install plugin: %s", plugin), "error")
     end
   end)
 end
@@ -221,25 +298,23 @@ end
 local function remove_plugin()
   local plugin = get_plugin_from_line()
   if not plugin then
-    vim.notify("No plugin found on current line", vim.log.levels.WARN)
+    add_footer_message("No plugin found on current line", "warn")
     return
   end
 
   local installed_plugins = plugin_manager.get_installed_plugins()
   if not vim.tbl_contains(installed_plugins, plugin) then
-    vim.notify(string.format("Plugin '%s' is not installed", plugin), vim.log.levels.INFO)
+    add_footer_message(string.format("Plugin '%s' is not installed", plugin), "info")
     return
   end
 
+  add_footer_message(string.format("Removing plugin: %s", plugin), "info")
   local success = plugin_manager.remove_plugin(plugin)
   if success then
-    vim.notify(string.format("Removed plugin: %s", plugin), vim.log.levels.INFO)
+    add_footer_message(string.format("Removed plugin: %s", plugin), "info")
     update_display()
   else
-    vim.notify(
-      string.format("Failed to remove plugin '%s'", plugin),
-      vim.log.levels.ERROR
-    )
+    add_footer_message(string.format("Failed to remove plugin '%s'", plugin), "error")
   end
 end
 
@@ -247,7 +322,7 @@ end
 local function toggle_plugin()
   local plugin = get_plugin_from_line()
   if not plugin then
-    vim.notify("No plugin found on current line", vim.log.levels.WARN)
+    add_footer_message("No plugin found on current line", "warn")
     return
   end
   
@@ -262,20 +337,20 @@ end
 -- Rescan vim plugins
 local function rescan_plugins()
   state.loading = true
+  clear_footer_messages()  -- Clear previous messages when starting rescan
+  add_footer_message("Rescanning vim plugins...", "info")
   update_display()
-  
-  vim.notify("Rescanning vim plugins...", vim.log.levels.INFO)
   
   plugin_manager.get_available_plugins(true, true, function(plugins)
     state.loading = false
     state.available_plugins = plugins or {}
     vim.schedule(function()
-      update_display()
       if plugins then
-        vim.notify("Plugin scan complete", vim.log.levels.INFO)
+        add_footer_message("Plugin scan complete", "info")
       else
-        vim.notify("Plugin scan failed", vim.log.levels.ERROR)
+        add_footer_message("Plugin scan failed", "error")
       end
+      update_display()
     end)
   end)
 end
@@ -448,5 +523,7 @@ end
 M.install_plugin = install_plugin
 M.remove_plugin = remove_plugin
 M.rescan_plugins = rescan_plugins
+M.add_footer_message = add_footer_message
+M.clear_footer_messages = clear_footer_messages
 
 return M
