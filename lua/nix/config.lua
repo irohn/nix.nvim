@@ -8,7 +8,8 @@ local M = {}
 ---@field enabled boolean
 ---@field build_dir string
 ---@field cache_file string
----@field plugins NixPluginSpec[]
+---@field plugins table
+---@field settings table
 
 ---@class NixConfigLspManager
 ---@field enabled boolean|string[] -- false/nil: disable; true: use cache; {list}: merge list with cache
@@ -20,10 +21,8 @@ local M = {}
 ---@field allow_unfree boolean
 
 ---@class NixPluginSpec
----@field package string -- nix package name, will first look in vimPlugins package set, then in nixpkgs
----@field name? string -- unique name for the plugin
----@field url? string -- optional override the package source, e.g. "github:username/repo"
-
+---@field pkg string
+---@field src? string
 
 local data_dir = vim.fn.stdpath("data")
 
@@ -33,7 +32,7 @@ M.DEFAULT_CONFIG = {
   ---@type NixConfigPluginManager
   plugin_manager = {
     -- Enable the plugin-manager module to manage plugins via nix.
-    enabled = true,
+    enabled = false,
     -- Directory where plugins will be built and stored.
     -- Defaults to `stdpath("data")/site/pack/nix/start`
     -- Note that if you change this, you may need to add it to your 'runtimepath'.
@@ -41,7 +40,47 @@ M.DEFAULT_CONFIG = {
     -- Path to the cache file for plugins.
     cache_file = string.format("%s/nix.nvim/plugins.json", data_dir),
     -- List of plugin specifications to manage.
-    plugins = {}
+    ---@type NixPluginSpec[]
+    plugins = {},
+    -- Plugin manager settings
+    settings = {
+      -- Whether to automatically scan for plugins on startup if cache is missing.
+      auto_scan = true,
+      -- Whether to force a rescan of plugins on startup, even if cache exists.
+      -- Not recommended, as scanning can be slow and depends on network connection.
+      force_rescan = false,
+      -- Whether to automatically install missing plugins on startup.
+      auto_install = true,
+      -- Whether to show notifications for plugin operations (scan, install, etc...).
+      notify = true,
+    },
+    window = {
+      -- Window width dimension
+      width = 60,
+      -- Window height dimension
+      height = 20,
+      -- Window border style
+      border = "rounded",
+      -- Window title
+      title = " Plugin Manager ",
+      -- Header lines, these can be set to a table of strings
+      -- First is the header for enabled icon, second is the server list
+      -- e.g. headers = { "Status", "Servers" }
+      headers = false,
+      -- The icons used for enabled/disabled servers
+      icons = {
+        installed = "⬤",
+        disabled = "○",
+      },
+      -- Key mappings for the LSP manager window
+      keys = {
+        close_window = { "<Esc>", "q" },
+        remove_plugin = { "d", "x" },
+        install_plugin = { "i", "e" },
+        show_help = { "?" },
+        toggle_plugin = { "<Enter>" },
+      }
+    },
   },
   ---@type NixConfigLspManager
   -- LSP module configuration

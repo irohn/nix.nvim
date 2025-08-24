@@ -22,10 +22,6 @@ function M.build_command(pattern, opts)
     "search",
   }
 
-  if opts.allow_unfree then
-    table.insert(cmd, "--impure")
-  end
-
   table.insert(cmd, opts.url)
   table.insert(cmd, pattern)
 
