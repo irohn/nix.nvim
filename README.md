@@ -4,7 +4,7 @@
 [![GitHub license](https://badgen.net/static/license/MIT/blue)](https://github.com/irohn/nix.nvim/blob/master/LICENSE)
 <!-- badges: end -->
 
-> This plugin is **very** early stages, it is still very much experimental, and breaking changes can be intorduced often. Use at your own risk!
+> This plugin is **very** early stages, it is still very much experimental, breaking changes can occur often. Use at your own risk!
 
 Use the power of nix to run applications without installing them!
 <img width="936" height="182" alt="image" src="https://github.com/user-attachments/assets/3fb2fc00-0507-4d76-ad6f-f83ab4c7599f" />
@@ -81,7 +81,9 @@ require("nix").setup({
 ```
 
 You can also use the UI to install or remove plugins interactivley (this only applies to plugins installed throught nix.nvim)
-for example, set a keymap to open the Plugin Manager:
+<img width="816" height="643" alt="image" src="https://github.com/user-attachments/assets/9d5e9bcb-3880-472c-8f1a-e7896dea2498" />
+
+For example, set a keymap to open the Plugin Manager:
 
 ```lua
 vim.keymap.set("n", "<leader>P", require("nix.plugin-manager.ui").open)
