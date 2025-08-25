@@ -19,7 +19,7 @@
 ---@type vim.lsp.Config
 return {
   name = 'somesass_ls',
-  cmd = NixCmd('nodejs_24', {'npx', 'some-sass-language-server', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'some-sass-language-server', '--stdio' }),
   filetypes = { 'scss', 'sass' },
   root_markers = { '.git', '.package.json' },
   settings = {

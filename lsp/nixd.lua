@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("nixd"),
+  cmd = NixShellCmd("nixd"),
   filetypes = { 'nix' },
   root_markers = { 'flake.nix', '.git' },
 }

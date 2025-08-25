@@ -87,7 +87,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("gopls"),
+  cmd = NixShellCmd("gopls"),
   filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)

@@ -22,7 +22,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("vscode-langservers-extracted", { "vscode-css-language-server", "--stdio" }),
+  cmd = NixShellCmd("vscode-langservers-extracted", { "vscode-css-language-server", "--stdio" }),
   filetypes = { 'css', 'scss', 'less' },
   init_options = { provideFormatter = true }, -- needed to enable formatting capabilities
   root_markers = { 'package.json', '.git' },

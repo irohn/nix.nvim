@@ -24,7 +24,7 @@ end
 return {
   root_markers = { '.git', '.obsidian', '.moxide.toml' },
   filetypes = { 'markdown' },
-  cmd = NixCmd('markdown-oxide'),
+  cmd = NixShellCmd('markdown-oxide'),
   on_attach = function(client, bufnr)
     for _, cmd in ipairs({ 'today', 'tomorrow', 'yesterday' }) do
       vim.api.nvim_buf_create_user_command(bufnr, 'Lsp' .. ('%s'):format(cmd:gsub('^%l', string.upper)), function()

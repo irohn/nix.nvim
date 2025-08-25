@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('dot-language-server', { 'dot-language-server', '--stdio' }),
+  cmd = NixShellCmd('dot-language-server', { 'dot-language-server', '--stdio' }),
   filetypes = { 'dot' },
   root_markers = { '.git' },
 }

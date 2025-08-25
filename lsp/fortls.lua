@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('fortls', {
+  cmd = NixShellCmd('fortls', {
     'fortls',
     '--notify_init',
     '--hover_signature',

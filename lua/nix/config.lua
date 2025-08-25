@@ -4,19 +4,78 @@ local M = {}
 ---@field data_dir string
 ---@field lsp NixConfigLspManager
 
+---@class NixConfigPluginManager
+---@field enabled boolean
+---@field build_dir string
+---@field plugins table
+---@field settings table
+---@field window table
+
 ---@class NixConfigLspManager
----@field enabled boolean|string[]  -- false/nil: disable; true: use cache; {list}: merge list with cache
----@field cache_file string         -- path to JSON file containing cached server array
+---@field enabled boolean|string[] -- false/nil: disable; true: use cache; {list}: merge list with cache
+---@field cache_file string -- path to JSON file containing cached server array
+---@field window table -- window configuration (see defaults below)
 
 ---@class NixConfigNixpkgs
 ---@field url string
 ---@field allow_unfree boolean
 
-local data_dir = string.format("%s/nix.nvim", vim.fn.stdpath("data"))
+---@class NixPluginSpec
+---@field pkg string
+---@field src? string
+
+local data_dir = vim.fn.stdpath("data")
 
 M.DEFAULT_CONFIG = {
   -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
-  data_dir = data_dir,
+  data_dir = string.format("%s/nix.nvim", data_dir),
+  ---@type NixConfigPluginManager
+  plugin_manager = {
+    -- Enable the plugin-manager module to manage plugins via nix.
+    enabled = false,
+    -- Directory where plugins will be built and stored.
+    -- Defaults to `stdpath("data")/site/pack/nix/start`
+    -- Note that if you change this, you may need to add it to your 'runtimepath'.
+    build_dir = string.format("%s/site/pack/nix/start", data_dir),
+    -- List of plugin specifications to manage.
+    ---@type NixPluginSpec[]
+    plugins = {},
+    -- Plugin manager settings
+    settings = {
+      -- Whether to automatically scan for plugins on startup if cache is missing.
+      auto_scan = true,
+      -- Whether to force a rescan of plugins on startup, even if cache exists.
+      -- Not recommended, as scanning can be slow and depends on network connection.
+      force_rescan = false,
+      -- Whether to automatically install missing plugins on startup.
+      auto_install = true,
+      -- Whether to show notifications for plugin operations (scan, install, etc...).
+      notify = true,
+    },
+    window = {
+      -- Window width dimension percentage
+      width = 0.6,
+      -- Window height dimension percentage
+      height = 0.6,
+      -- Window border style
+      border = "rounded",
+      -- Window title
+      title = "Plugin Manager",
+      -- The icons used for enabled/disabled servers
+      icons = {
+        enabled = "⬤",
+        disabled = "○",
+      },
+      -- Key mappings for the LSP manager window
+      keys = {
+        install_plugin = { "i", "e" },
+        remove_plugin = { "d", "x" },
+        toggle_plugin = { "<Enter>" },
+        show_help = { "?" },
+        close_window = { "q" },
+      }
+    },
+  },
   ---@type NixConfigLspManager
   -- LSP module configuration
   lsp_manager = {
@@ -28,7 +87,7 @@ M.DEFAULT_CONFIG = {
     -- This file will be used to store the enabled language servers.
     -- Defaults to `data_dir/language-servers.json`
     -- If the file does not exist, it will be created.
-    cache_file = string.format("%s/language-servers.json", data_dir),
+    cache_file = string.format("%s/nix.nvim/language-servers.json", data_dir),
     -- LSP Manager UI window options
     window = {
       -- Window width dimension
@@ -38,9 +97,11 @@ M.DEFAULT_CONFIG = {
       -- Window border style
       border = "rounded",
       -- Window title
-      title = " LSP Manager ",
-      -- Header lines, these can be set to `false` to disable
-      headers = { "", "Servers" },
+      title = "LSP Manager",
+      -- Header lines, these can be set to a table of strings
+      -- First is the header for enabled icon, second is the server list
+      -- e.g. headers = { "Status", "Servers" }
+      headers = false,
       -- The icons used for enabled/disabled servers
       icons = {
         enabled = "⬤",
@@ -48,11 +109,11 @@ M.DEFAULT_CONFIG = {
       },
       -- Key mappings for the LSP manager window
       keys = {
-        close_window = { "<Esc>", "q" },
-        disable_server = { "d", "x" },
         enable_server = { "i", "e" },
-        show_help = { "?" },
+        disable_server = { "d", "x" },
         toggle_server = { "<Enter>" },
+        show_help = { "?" },
+        close_window = { "q" },
       }
     },
   },
@@ -75,7 +136,7 @@ M.DEFAULT_CONFIG = {
 
 M.config = M.DEFAULT_CONFIG
 
----@param opts NixConfig
+---@param opts? NixConfig
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", M.DEFAULT_CONFIG, opts or {})
 end

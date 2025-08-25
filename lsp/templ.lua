@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('templ', { 'templ', 'lsp' }),
+  cmd = NixShellCmd('templ', { 'templ', 'lsp' }),
   filetypes = { 'templ' },
   root_markers = { 'go.work', 'go.mod', '.git' },
 }

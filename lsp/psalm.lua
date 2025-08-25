@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('php84Packages.psalm', { 'psalm', '--language-server' }),
+  cmd = NixShellCmd('php84Packages.psalm', { 'psalm', '--language-server' }),
   filetypes = { 'php' },
   root_markers = { 'psalm.xml', 'psalm.xml.dist' },
 }

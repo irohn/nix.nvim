@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('rubyPackages_3_4.solargraph', { 'solargraph', 'stdio' }),
+  cmd = NixShellCmd('rubyPackages_3_4.solargraph', { 'solargraph', 'stdio' }),
   settings = {
     solargraph = {
       diagnostics = true,

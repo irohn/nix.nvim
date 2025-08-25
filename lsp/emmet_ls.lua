@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('emmet-ls', { 'emmet-ls', '--stdio' }),
+  cmd = NixShellCmd('emmet-ls', { 'emmet-ls', '--stdio' }),
   filetypes = {
     'astro',
     'css',

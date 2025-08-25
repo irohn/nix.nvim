@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('fish-lsp', { 'fish-lsp', 'start' }),
+  cmd = NixShellCmd('fish-lsp', { 'fish-lsp', 'start' }),
   filetypes = { 'fish' },
   root_markers = { 'config.fish', '.git' },
 }

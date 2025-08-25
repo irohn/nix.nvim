@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('jq-lsp'),
+  cmd = NixShellCmd('jq-lsp'),
   filetypes = { 'jq' },
   root_markers = { '.git' },
 }

@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("docker-language-server", { "docker-language-server", "start", "--stdio" }),
+  cmd = NixShellCmd("docker-language-server", { "docker-language-server", "start", "--stdio" }),
   filetypes = { 'dockerfile', 'yaml.docker-compose' },
   get_language_id = function(_, ftype)
     if ftype == 'yaml.docker-compose' or ftype:lower():find('ya?ml') then

@@ -30,7 +30,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('mesonlsp', { 'mesonlsp', '--lsp' }),
+  cmd = NixShellCmd('mesonlsp', { 'mesonlsp', '--lsp' }),
   filetypes = { 'meson' },
   root_dir = function(bufnr, on_dir)
     on_dir(vim.fs.root(bufnr, meson_matcher) or vim.fs.root(bufnr, '.git'))

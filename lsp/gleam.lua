@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('gleam', { 'gleam', 'lsp' }),
+  cmd = NixShellCmd('gleam', { 'gleam', 'lsp' }),
   filetypes = { 'gleam' },
   root_markers = { 'gleam.toml', '.git' },
 }

@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('quick-lint-js', { 'quick-lint-js', '--lsp-server' }),
+  cmd = NixShellCmd('quick-lint-js', { 'quick-lint-js', '--lsp-server' }),
   filetypes = { 'javascript', 'typescript' },
   root_markers = { 'package.json', 'jsconfig.json', '.git' },
 }

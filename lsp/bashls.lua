@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd("bash-language-server", { "bash-language-server", "start" }),
+  cmd = NixShellCmd("bash-language-server", { "bash-language-server", "start" }),
   settings = {
     bashIde = {
       -- Glob pattern for finding and parsing shell script files in the workspace.

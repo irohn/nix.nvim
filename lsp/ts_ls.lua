@@ -44,7 +44,7 @@
 ---@type vim.lsp.Config
 return {
   init_options = { hostInfo = 'neovim' },
-  cmd = require("nix").build_nix_shell_cmd("typescript-language-server", { "typescript-language-server", "--stdio" }),
+  cmd = NixShellCmd("typescript-language-server", { "typescript-language-server", "--stdio" }),
   filetypes = {
     'javascript',
     'javascriptreact',

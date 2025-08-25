@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('asm-lsp'),
+  cmd = NixShellCmd('asm-lsp'),
   filetypes = { 'asm', 'vmasm' },
   root_markers = { '.asm-lsp.toml', '.git' },
 }

@@ -28,7 +28,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('ruff', { 'ruff', 'server' }),
+  cmd = NixShellCmd('ruff', { 'ruff', 'server' }),
   filetypes = { 'python' },
   root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
   settings = {},

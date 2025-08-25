@@ -16,7 +16,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'gh-actions-language-server', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'gh-actions-language-server', '--stdio' }),
   filetypes = { 'yaml' },
 
   -- `root_dir` ensures that the LSP does not attach to all yaml files

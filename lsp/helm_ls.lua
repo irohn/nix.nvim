@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = require("nix").build_nix_shell_cmd("helm-ls", { "helm_ls", "serve" }),
+  cmd = NixShellCmd("helm-ls", { "helm_ls", "serve" }),
   filetypes = { 'helm', 'yaml.helm-values' },
   root_markers = { 'Chart.yaml' },
   capabilities = {

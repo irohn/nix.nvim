@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('dart', { 'dart', 'language-server', '--protocol=lsp' }),
+  cmd = NixShellCmd('dart', { 'dart', 'language-server', '--protocol=lsp' }),
   filetypes = { 'dart' },
   root_markers = { 'pubspec.yaml' },
   init_options = {

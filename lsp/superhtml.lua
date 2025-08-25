@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('superhtml', { 'superhtml', 'lsp' }),
+  cmd = NixShellCmd('superhtml', { 'superhtml', 'lsp' }),
   filetypes = { 'superhtml', 'html' },
   root_markers = { '.git' },
 }

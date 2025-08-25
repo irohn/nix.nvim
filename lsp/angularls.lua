@@ -70,7 +70,7 @@ local ng_probe_dirs = vim
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('angular-language-server', {
+  cmd = NixShellCmd('angular-language-server', {
     'ngserver',
     '--stdio',
     '--tsProbeLocations',

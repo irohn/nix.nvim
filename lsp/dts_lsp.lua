@@ -15,7 +15,7 @@
 ---@type vim.lsp.Config
 return {
   name = 'dts_lsp',
-  cmd = NixCmd('dts-lsp'),
+  cmd = NixShellCmd('dts-lsp'),
   filetypes = { 'dts', 'dtsi', 'overlay' },
   root_markers = { '.git' },
   settings = {},

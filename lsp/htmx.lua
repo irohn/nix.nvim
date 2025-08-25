@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('htmx-lsp'),
+  cmd = NixShellCmd('htmx-lsp'),
   filetypes = { -- filetypes copied and adjusted from tailwindcss-intellisense
     -- html
     'aspnetcorerazor',

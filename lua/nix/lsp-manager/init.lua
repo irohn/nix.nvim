@@ -137,17 +137,20 @@ function M.disable_servers(servers)
   return changed, err
 end
 
+---@param opts NixConfigLspManager
+---@return nil
 function M.setup(opts)
-  local enabled = config.enabled
+  local enabled = opts.enabled
   if enabled == false then
     return
   end
 
   -- Ensure cache file exists (create empty array if missing)
   if vim.fn.filereadable(M.cache_file) == 0 then
-    local ok, err = M.write_server_list({})
+    local ok, _ = M.write_server_list({})
     if not ok then
-      return {}, err
+      vim.notify("Failed to create initial cache file: " .. M.cache_file, vim.log.levels.ERROR)
+      return
     end
   end
 

@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'marko-language-server', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'marko-language-server', '--stdio' }),
   filetypes = { 'marko' },
   root_markers = { '.git' },
 }

@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('serve-d'),
+  cmd = NixShellCmd('serve-d'),
   filetypes = { 'd' },
   root_markers = { 'dub.json', 'dub.sdl', '.git' },
 }

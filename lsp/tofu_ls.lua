@@ -5,7 +5,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('tofu-ls', { 'tofu-ls', 'serve' }),
+  cmd = NixShellCmd('tofu-ls', { 'tofu-ls', 'serve' }),
   filetypes = { 'opentofu', 'opentofu-vars' },
   root_markers = { '.terraform', '.git' },
 }

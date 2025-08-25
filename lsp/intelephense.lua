@@ -27,7 +27,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('nodejs_24', {'npx', 'intelephense', '--stdio' }),
+  cmd = NixShellCmd('nodejs_24', {'npx', 'intelephense', '--stdio' }),
   filetypes = { 'php' },
   root_markers = { '.git', 'composer.json' },
 }

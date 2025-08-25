@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('buf', { 'buf', 'beta', 'lsp', '--timeout=0', '--log-format=text' }),
+  cmd = NixShellCmd('buf', { 'buf', 'beta', 'lsp', '--timeout=0', '--log-format=text' }),
   filetypes = { 'proto' },
   root_markers = { 'buf.yaml', '.git' },
 }

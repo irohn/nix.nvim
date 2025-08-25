@@ -15,7 +15,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixCmd('golangci-lint-langserver'),
+  cmd = NixShellCmd('golangci-lint-langserver'),
   filetypes = { 'go', 'gomod' },
   init_options = {
     command = { 'golangci-lint', 'run', '--output.json.path=stdout', '--show-stats=false' },
