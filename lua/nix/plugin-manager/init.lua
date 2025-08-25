@@ -3,7 +3,6 @@ local config = require("nix.config").config
 local M = {}
 
 M.scanned_plugins_path = string.format("%s/vim-plugins.json", config.data_dir)
-M._scanned = false
 
 ---@param plugin NixPluginSpec
 local function validate_plugin_spec(plugin)
@@ -206,7 +205,7 @@ local function remove_plugin(plugin_name)
   return ok
 end
 
-local function install_plugin(plugin_name, on_exit)
+local function install_plugin(plugin_name)
   local plugin_path = string.format("%s/%s", config.plugin_manager.build_dir, plugin_name)
   if vim.fn.isdirectory(plugin_path) == 1 then
     return
@@ -218,7 +217,10 @@ local function install_plugin(plugin_name, on_exit)
     { url = config.nixpkgs.url, allow_unfree = config.nixpkgs.allow_unfree }
   )
 
-  run_command(cmd, function(success, code)
+  vim.system(cmd, {
+    text = true,
+  }, function(obj)
+    local success = obj.code == 0
     if success then
       if config.plugin_manager.settings.notify then
         vim.schedule(function()
@@ -228,14 +230,13 @@ local function install_plugin(plugin_name, on_exit)
     else
       if config.plugin_manager.settings.notify then
         vim.schedule(function()
-          vim.notify(string.format("[nix.nvim] Failed to install plugin %s (code %d)", plugin_name, code),
+          vim.notify(string.format("[nix.nvim] Failed to install plugin %s (code %d)", plugin_name, obj.code),
             vim.log.levels.ERROR)
         end)
       end
     end
-  end)
+  end):wait()
 end
-
 --Get list of installed plugin directories under the build directory.
 ---@return string[]
 local function get_installed_plugins()
@@ -281,7 +282,6 @@ function M.setup(opts)
 
   if opts.settings.auto_scan then
     scan_vim_plugins(opts.settings.force_rescan, true, function()
-      M._scanned = true
       if opts.settings.notify then
         vim.notify("[nix.nvim] Plugin scan complete", vim.log.levels.INFO)
       end

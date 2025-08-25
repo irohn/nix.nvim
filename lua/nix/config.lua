@@ -7,7 +7,6 @@ local M = {}
 ---@class NixConfigPluginManager
 ---@field enabled boolean
 ---@field build_dir string
----@field cache_file string
 ---@field plugins table
 ---@field settings table
 ---@field window table
@@ -38,8 +37,6 @@ M.DEFAULT_CONFIG = {
     -- Defaults to `stdpath("data")/site/pack/nix/start`
     -- Note that if you change this, you may need to add it to your 'runtimepath'.
     build_dir = string.format("%s/site/pack/nix/start", data_dir),
-    -- Path to the cache file for plugins.
-    cache_file = string.format("%s/nix.nvim/plugins.json", data_dir),
     -- List of plugin specifications to manage.
     ---@type NixPluginSpec[]
     plugins = {},
@@ -56,30 +53,26 @@ M.DEFAULT_CONFIG = {
       notify = true,
     },
     window = {
-      -- Window width dimension
-      width = 60,
-      -- Window height dimension
-      height = 20,
+      -- Window width dimension percentage
+      width = 0.6,
+      -- Window height dimension percentage
+      height = 0.6,
       -- Window border style
       border = "rounded",
       -- Window title
-      title = " Plugin Manager ",
-      -- Header lines, these can be set to a table of strings
-      -- First is the header for enabled icon, second is the server list
-      -- e.g. headers = { "Status", "Servers" }
-      headers = false,
+      title = "Plugin Manager",
       -- The icons used for enabled/disabled servers
       icons = {
-        installed = "⬤",
-        scanned = "○",
+        enabled = "⬤",
+        disabled = "○",
       },
       -- Key mappings for the LSP manager window
       keys = {
-        close_window = { "<Esc>", "q" },
-        remove_plugin = { "d", "x" },
         install_plugin = { "i", "e" },
-        show_help = { "?" },
+        remove_plugin = { "d", "x" },
         toggle_plugin = { "<Enter>" },
+        show_help = { "?" },
+        close_window = { "q" },
       }
     },
   },
@@ -104,7 +97,7 @@ M.DEFAULT_CONFIG = {
       -- Window border style
       border = "rounded",
       -- Window title
-      title = " LSP Manager ",
+      title = "LSP Manager",
       -- Header lines, these can be set to a table of strings
       -- First is the header for enabled icon, second is the server list
       -- e.g. headers = { "Status", "Servers" }
@@ -116,11 +109,11 @@ M.DEFAULT_CONFIG = {
       },
       -- Key mappings for the LSP manager window
       keys = {
-        close_window = { "<Esc>", "q" },
-        disable_server = { "d", "x" },
         enable_server = { "i", "e" },
-        show_help = { "?" },
+        disable_server = { "d", "x" },
         toggle_server = { "<Enter>" },
+        show_help = { "?" },
+        close_window = { "q" },
       }
     },
   },
@@ -143,7 +136,7 @@ M.DEFAULT_CONFIG = {
 
 M.config = M.DEFAULT_CONFIG
 
----@param opts NixConfig
+---@param opts? NixConfig
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", M.DEFAULT_CONFIG, opts or {})
 end
