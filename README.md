@@ -4,6 +4,8 @@
 [![GitHub license](https://badgen.net/static/license/MIT/blue)](https://github.com/irohn/nix.nvim/blob/master/LICENSE)
 <!-- badges: end -->
 
+> This plugin is **very** early stages, it is still very much experimental, and breaking changes can be intorduced often. Use at your own risk!
+
 Use the power of nix to run applications without installing them!
 <img width="936" height="182" alt="image" src="https://github.com/user-attachments/assets/3fb2fc00-0507-4d76-ad6f-f83ab4c7599f" />
 
@@ -11,6 +13,7 @@ Use the power of nix to run applications without installing them!
 - [Installation](#installation)
 - [Information](#information)
 - [Usage](#usage)
+- [Plugin Manager](#plugin-manager)
 - [LSP Manager](#lsp-manager)
 - [Nixpkgs](#nixpkgs)
 - [Configuration](#configuration)
@@ -46,11 +49,9 @@ vim.pack.add({
 </details>
 
 ### Information
-This is an API to expose nix shells in neovim, this lets you build commands you can run as long as you have nix installed.
-You can configure where you pull packages from, see the [Nixpkgs](#nixpkgs) section for more info.
-It is also an LSP config collection taken from [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) and modified to use the nix shell command instead of your PATH.
-Note that some LSPs are missing, this is because I couldn't find them in [nixpkgs](https://github.com/NixOS/nixpkgs) or the configuration did not use a standard `cmd` field.
-There is a complimentary LSP Manager module as well, but it is disabled by default, see the [LSP Manager](#lsp-manager) section for more info.
+This plugin is a package manager that uses [nix](https://nixos.org/) to do the heavy lifting.
+You can spawn nix shells, use nix builds and search nixpkgs!
+There are also complimentary LSP Manager and Plugin Manager GUIs for those who are not as comfortable with the API.
 
 ### Usage
 If you just want the LSP configurations, all you need is to install the plugin, no need to call setup.
@@ -60,6 +61,31 @@ You can check the plugin is installed by running this vim command:
 :lua (function() vim.cmd("enew") vim.fn.termopen(NixShellCmd("asciiquarium")) end)()
 ```
 <img width="1081" height="546" alt="image" src="https://github.com/user-attachments/assets/54afa944-049a-46ef-b36e-eb6363c8ecab" />
+
+### Plugin Manager
+Install any plugin from [nixpkgs](https://search.nixos.org/packages?channel=unstable&query=vimPlugins), most vim plugins are prefixed with `vimPlugins.`,
+theoretically, you can install any package with this though, as long as it is supported for your operating system.
+
+To enable the Plugin Manager module:
+
+```lua
+require("nix").setup({
+  plugin_manager = {
+    enabled = true,
+    plugins = {
+      { pkg = "vimPlugins.<plugin1-name>" },
+      { pkg = "vimPlugins.<plugin2-name>" }
+    }
+  }
+})
+```
+
+You can also use the UI to install or remove plugins interactivley (this only applies to plugins installed throught nix.nvim)
+for example, set a keymap to open the Plugin Manager:
+
+```lua
+vim.keymap.set("n", "<leader>P", require("nix.plugin-manager.ui").open)
+```
 
 ### LSP Manager
 A simple UI for enabling / disabling LSP servers, press `?` in the LSP Manager for keybindings.
