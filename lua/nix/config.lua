@@ -91,9 +91,9 @@ M.DEFAULT_CONFIG = {
     -- LSP Manager UI window options
     window = {
       -- Window width dimension
-      width = 60,
+      width = 0.6,
       -- Window height dimension
-      height = 20,
+      height = 0.6,
       -- Window border style
       border = "rounded",
       -- Window title
