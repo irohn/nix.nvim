@@ -114,9 +114,15 @@ local function install_plugin()
   local plugin_package_name = "vimPlugins." .. plugin
 
   print("Installing plugin:", plugin)
-  pm.install_plugin(plugin_package_name)
-  state.installed_plugins = pm.get_installed_plugins()
-  update_display()
+  pm.install_plugin(plugin_package_name, function(success, code)
+    if success then
+      print("Plugin installed:", plugin)
+      state.installed_plugins = pm.get_installed_plugins()
+      vim.schedule(update_display)
+    else
+      print(string.format("Failed to install plugin %s (code %d)", plugin, code))
+    end
+  end)
 end
 
 local function remove_plugin()

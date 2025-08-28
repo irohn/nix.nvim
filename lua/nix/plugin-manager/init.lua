@@ -205,22 +205,13 @@ local function remove_plugin(plugin_name)
   return ok
 end
 
-local function install_plugin(plugin_name)
+local function install_plugin(plugin_name, on_exit)
   local plugin_path = string.format("%s/%s", config.plugin_manager.build_dir, plugin_name)
   if vim.fn.isdirectory(plugin_path) == 1 then
     return
   end
 
-  local cmd = require("nix.api.build").build_command(
-    plugin_name,
-    plugin_path,
-    { url = config.nixpkgs.url, allow_unfree = config.nixpkgs.allow_unfree }
-  )
-
-  vim.system(cmd, {
-    text = true,
-  }, function(obj)
-    local success = obj.code == 0
+  on_exit = on_exit or function(success, code)
     if success then
       if config.plugin_manager.settings.notify then
         vim.schedule(function()
@@ -230,12 +221,20 @@ local function install_plugin(plugin_name)
     else
       if config.plugin_manager.settings.notify then
         vim.schedule(function()
-          vim.notify(string.format("[nix.nvim] Failed to install plugin %s (code %d)", plugin_name, obj.code),
+          vim.notify(string.format("[nix.nvim] Failed to install plugin %s (code %d)", plugin_name, code),
             vim.log.levels.ERROR)
         end)
       end
     end
-  end):wait()
+  end
+
+  local cmd = require("nix.api.build").build_command(
+    plugin_name,
+    plugin_path,
+    { url = config.nixpkgs.url, allow_unfree = config.nixpkgs.allow_unfree }
+  )
+
+  vim.system(cmd, { text = true }, on_exit)
 end
 --Get list of installed plugin directories under the build directory.
 ---@return string[]
@@ -286,6 +285,8 @@ function M.setup(opts)
         vim.notify("[nix.nvim] Plugin scan complete", vim.log.levels.INFO)
       end
     end)
+  else
+    scan_vim_plugins()
   end
 
   for _, plugin in ipairs(plugins) do
