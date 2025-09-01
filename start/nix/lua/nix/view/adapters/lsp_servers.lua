@@ -3,31 +3,13 @@
 local M = {}
 
 local function get_registry()
-  local ok = pcall(vim.cmd, "packadd nix-lsp-manager")
-  if not ok then
-    vim.notify("Failed to load nix-lsp-manager (optional pack). Make sure it exists under opt/.", vim.log.levels.ERROR)
-  end
   local reg = require("nix-lsp-manager.lib.registry")
   return reg
 end
 
 M.config = {
   title = "Nix LSP Servers",
-  icons = {
-    checked = "✓",
-    unchecked = " ",
-    pending_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
-  },
-  keys = {
-    toggle = { "<CR>", "t" },
-    check = { "e", "+" },
-    uncheck = { "d", "-" },
-    refresh = { "r" },
-    help = { "?" },
-    close = { "q", "<Esc>" },
-  },
-  sort = { checked_first = true },
-  concurrency = 4,
+  concurrency = math.max(1, math.floor((vim.uv or vim.loop).available_parallelism() / 2)), -- ensure concurrency is never 0
   debounce = 40,
 }
 
