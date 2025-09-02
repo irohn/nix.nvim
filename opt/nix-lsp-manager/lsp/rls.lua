@@ -29,7 +29,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('rustup', { 'rls' }),
-  filetypes = { 'rust' },
-  root_markers = { 'Cargo.toml' },
+	cmd = NixLspShellCmd("rustup", { "rls" }),
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml" },
 }

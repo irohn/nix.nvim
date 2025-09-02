@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('rune-languageserver'),
-  filetypes = { 'rune' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("rune-languageserver"),
+	filetypes = { "rune" },
+	root_markers = { ".git" },
 }

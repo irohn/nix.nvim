@@ -7,6 +7,6 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('wasm-language-tools', { 'wat_server' }),
-  filetypes = { 'wat' },
+	cmd = NixLspShellCmd("wasm-language-tools", { "wat_server" }),
+	filetypes = { "wat" },
 }

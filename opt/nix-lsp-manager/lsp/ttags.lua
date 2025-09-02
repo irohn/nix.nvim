@@ -4,7 +4,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('ttags', { 'ttags', 'lsp' }),
-  filetypes = { 'ruby', 'rust', 'javascript', 'haskell' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("ttags", { "ttags", "lsp" }),
+	filetypes = { "ruby", "rust", "javascript", "haskell" },
+	root_markers = { ".git" },
 }

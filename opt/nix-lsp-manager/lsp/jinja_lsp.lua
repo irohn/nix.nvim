@@ -16,8 +16,8 @@
 
 ---@type vim.lsp.Config
 return {
-  name = 'jinja_lsp',
-  cmd = NixLspShellCmd('jinja-lsp'),
-  filetypes = { 'jinja' },
-  root_markers = { '.git' },
+	name = "jinja_lsp",
+	cmd = NixLspShellCmd("jinja-lsp"),
+	filetypes = { "jinja" },
+	root_markers = { ".git" },
 }

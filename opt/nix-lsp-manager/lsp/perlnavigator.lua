@@ -22,7 +22,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('perlnavigator'),
-  filetypes = { 'perl' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("perlnavigator"),
+	filetypes = { "perl" },
+	root_markers = { ".git" },
 }

@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('triton-llvm', { 'mlir-pdll-lsp-server' }),
-  filetypes = { 'pdll' },
-  root_markers = { 'pdll_compile_commands.yml', '.git' },
+	cmd = NixLspShellCmd("triton-llvm", { "mlir-pdll-lsp-server" }),
+	filetypes = { "pdll" },
+	root_markers = { "pdll_compile_commands.yml", ".git" },
 }

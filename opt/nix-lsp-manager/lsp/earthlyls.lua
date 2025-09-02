@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd("earthlyls"),
-  filetypes = { 'earthfile' },
-  root_markers = { 'Earthfile' },
+	cmd = NixLspShellCmd("earthlyls"),
+	filetypes = { "earthfile" },
+	root_markers = { "Earthfile" },
 }

@@ -14,26 +14,27 @@ M.__index = M
 --- }
 ---@return NixSearch
 function M:new(opts)
-  if type(opts) == "string" then
-    opts = { query = opts }
-  else
-    opts = opts or {}
-  end
-  self = setmetatable({}, M)
+	if type(opts) == "string" then
+		opts = { query = opts }
+	else
+		opts = opts or {}
+	end
+	self = setmetatable({}, M)
 
-  assert(opts.query, "Search query is required")
-  self.query = opts.query
-  self.command = vim.list_extend(vim.deepcopy(base_command), {
-    "search",
-    nixpkgs, self.query,
-    "--json",
-  })
+	assert(opts.query, "Search query is required")
+	self.query = opts.query
+	self.command = vim.list_extend(vim.deepcopy(base_command), {
+		"search",
+		nixpkgs,
+		self.query,
+		"--json",
+	})
 
-  return self
+	return self
 end
 
 function M.__tostring(self)
-  return string.format("NixSearch(query=%s)", self.query)
+	return string.format("NixSearch(query=%s)", self.query)
 end
 
 return M

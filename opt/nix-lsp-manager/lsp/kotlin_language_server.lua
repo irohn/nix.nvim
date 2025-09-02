@@ -22,21 +22,21 @@
 --  Kotlin. I am not sure whether the language server supports Ant projects,
 --  but I'm keeping it here as well since Ant does support Kotlin.
 local root_files = {
-  'settings.gradle', -- Gradle (multi-project)
-  'settings.gradle.kts', -- Gradle (multi-project)
-  'build.xml', -- Ant
-  'pom.xml', -- Maven
-  'build.gradle', -- Gradle
-  'build.gradle.kts', -- Gradle
+	"settings.gradle", -- Gradle (multi-project)
+	"settings.gradle.kts", -- Gradle (multi-project)
+	"build.xml", -- Ant
+	"pom.xml", -- Maven
+	"build.gradle", -- Gradle
+	"build.gradle.kts", -- Gradle
 }
 
 ---@type vim.lsp.Config
 return {
-  filetypes = { 'kotlin' },
-  root_markers = root_files,
-  cmd = NixLspShellCmd('kotlin-language-server'),
-  init_options = {
-    -- Enables caching and use project root to store cache data.
-    storagePath = vim.fs.root(vim.fn.expand '%:p:h', root_files),
-  },
+	filetypes = { "kotlin" },
+	root_markers = root_files,
+	cmd = NixLspShellCmd("kotlin-language-server"),
+	init_options = {
+		-- Enables caching and use project root to store cache data.
+		storagePath = vim.fs.root(vim.fn.expand("%:p:h"), root_files),
+	},
 }

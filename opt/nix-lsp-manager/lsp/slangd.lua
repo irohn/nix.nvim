@@ -23,15 +23,15 @@
 --- Available options are documented [here](https://github.com/shader-slang/slang-vscode-extension/tree/main?tab=readme-ov-file#configurations)
 --- or in more detail [here](https://github.com/shader-slang/slang-vscode-extension/blob/main/package.json#L70).
 
-local bin_name = 'slangd'
+local bin_name = "slangd"
 
-if vim.fn.has 'win32' == 1 then
-  bin_name = 'slangd.exe'
+if vim.fn.has("win32") == 1 then
+	bin_name = "slangd.exe"
 end
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('shader-slang', { bin_name }),
-  filetypes = { 'hlsl', 'shaderslang' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("shader-slang", { bin_name }),
+	filetypes = { "hlsl", "shaderslang" },
+	root_markers = { ".git" },
 }

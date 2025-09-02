@@ -10,7 +10,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('starlark-rust', { 'starlark', '--lsp' }),
-  filetypes = { 'star', 'bzl', 'BUILD.bazel' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("starlark-rust", { "starlark", "--lsp" }),
+	filetypes = { "star", "bzl", "BUILD.bazel" },
+	root_markers = { ".git" },
 }

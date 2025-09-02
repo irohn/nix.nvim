@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('tilt', { 'tilt', 'lsp', 'start' }),
-  filetypes = { 'tiltfile' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("tilt", { "tilt", "lsp", "start" }),
+	filetypes = { "tiltfile" },
+	root_markers = { ".git" },
 }

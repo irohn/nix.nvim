@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('veryl', { 'veryl-ls' }),
-  filetypes = { 'veryl' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("veryl", { "veryl-ls" }),
+	filetypes = { "veryl" },
+	root_markers = { ".git" },
 }

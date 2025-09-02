@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('veridian'),
-  filetypes = { 'systemverilog', 'verilog' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("veridian"),
+	filetypes = { "systemverilog", "verilog" },
+	root_markers = { ".git" },
 }

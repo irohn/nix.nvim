@@ -19,12 +19,12 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'lwc-language-server', '--stdio' }),
-  filetypes = { 'javascript', 'html' },
-  root_markers = { 'sfdx-project.json' },
-  init_options = {
-    embeddedLanguages = {
-      javascript = true,
-    },
-  },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "lwc-language-server", "--stdio" }),
+	filetypes = { "javascript", "html" },
+	root_markers = { "sfdx-project.json" },
+	init_options = {
+		embeddedLanguages = {
+			javascript = true,
+		},
+	},
 }

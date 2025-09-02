@@ -31,16 +31,16 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'remark-language-server', '--stdio' }),
-  filetypes = { 'markdown' },
-  root_markers = {
-    '.remarkrc',
-    '.remarkrc.json',
-    '.remarkrc.js',
-    '.remarkrc.cjs',
-    '.remarkrc.mjs',
-    '.remarkrc.yml',
-    '.remarkrc.yaml',
-    '.remarkignore',
-  },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "remark-language-server", "--stdio" }),
+	filetypes = { "markdown" },
+	root_markers = {
+		".remarkrc",
+		".remarkrc.json",
+		".remarkrc.js",
+		".remarkrc.cjs",
+		".remarkrc.mjs",
+		".remarkrc.yml",
+		".remarkrc.yaml",
+		".remarkignore",
+	},
 }

@@ -9,12 +9,12 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'prisma-language-server', '--stdio' }),
-  filetypes = { 'prisma' },
-  settings = {
-    prisma = {
-      prismaFmtBinPath = '',
-    },
-  },
-  root_markers = { '.git', 'package.json' },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "prisma-language-server", "--stdio" }),
+	filetypes = { "prisma" },
+	settings = {
+		prisma = {
+			prismaFmtBinPath = "",
+		},
+	},
+	root_markers = { ".git", "package.json" },
 }

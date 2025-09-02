@@ -9,13 +9,13 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('perl540Packages.PLS', { 'pls' }),
-  settings = {
-    perl = {
-      perlcritic = { enabled = false },
-      syntax = { enabled = true },
-    },
-  },
-  filetypes = { 'perl' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("perl540Packages.PLS", { "pls" }),
+	settings = {
+		perl = {
+			perlcritic = { enabled = false },
+			syntax = { enabled = true },
+		},
+	},
+	filetypes = { "perl" },
+	root_markers = { ".git" },
 }

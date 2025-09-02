@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('protols'),
-  filetypes = { 'proto' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("protols"),
+	filetypes = { "proto" },
+	root_markers = { ".git" },
 }

@@ -18,13 +18,13 @@
 
 ---@type vim.lsp.Config
 return {
-  name = 'somesass_ls',
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'some-sass-language-server', '--stdio' }),
-  filetypes = { 'scss', 'sass' },
-  root_markers = { '.git', '.package.json' },
-  settings = {
-    somesass = {
-      suggestAllFromOpenDocument = true,
-    },
-  },
+	name = "somesass_ls",
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "some-sass-language-server", "--stdio" }),
+	filetypes = { "scss", "sass" },
+	root_markers = { ".git", ".package.json" },
+	settings = {
+		somesass = {
+			suggestAllFromOpenDocument = true,
+		},
+	},
 }

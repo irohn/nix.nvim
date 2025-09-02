@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('mint', { 'mint', 'ls' }),
-  filetypes = { 'mint' },
-  root_markers = { 'mint.json', '.git' },
+	cmd = NixLspShellCmd("mint", { "mint", "ls" }),
+	filetypes = { "mint" },
+	root_markers = { "mint.json", ".git" },
 }

@@ -28,14 +28,14 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('ts_query_ls'),
-  filetypes = { 'query' },
-  root_markers = { 'queries', '.git' },
-  settings = {
-    parser_aliases = {
-      ecma = 'javascript',
-      jsx = 'javascript',
-      php_only = 'php',
-    },
-  },
+	cmd = NixLspShellCmd("ts_query_ls"),
+	filetypes = { "query" },
+	root_markers = { "queries", ".git" },
+	settings = {
+		parser_aliases = {
+			ecma = "javascript",
+			jsx = "javascript",
+			php_only = "php",
+		},
+	},
 }

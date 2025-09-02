@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('verible', { 'verible-verilog-ls' }),
-  filetypes = { 'systemverilog', 'verilog' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("verible", { "verible-verilog-ls" }),
+	filetypes = { "systemverilog", "verilog" },
+	root_markers = { ".git" },
 }

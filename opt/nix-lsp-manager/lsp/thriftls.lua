@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('thrift-ls', { 'thriftls' }),
-  filetypes = { 'thrift' },
-  root_markers = { '.thrift' },
+	cmd = NixLspShellCmd("thrift-ls", { "thriftls" }),
+	filetypes = { "thrift" },
+	root_markers = { ".thrift" },
 }

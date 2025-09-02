@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('just-lsp'),
-  filetypes = { 'just' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("just-lsp"),
+	filetypes = { "just" },
+	root_markers = { ".git" },
 }

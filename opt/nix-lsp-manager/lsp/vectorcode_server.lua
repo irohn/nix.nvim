@@ -5,7 +5,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('vectorcode', { 'vectorcode-server' }),
-  root_dir = vim.fs.root(0, { '.vectorcode', '.git' }),
-  settings = {},
+	cmd = NixLspShellCmd("vectorcode", { "vectorcode-server" }),
+	root_dir = vim.fs.root(0, { ".vectorcode", ".git" }),
+	settings = {},
 }

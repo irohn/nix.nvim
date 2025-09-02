@@ -23,65 +23,65 @@
 --- Note: The julia programming language searches for global environments within the `environments/`
 --- folder of `$JULIA_DEPOT_PATH` entries. By default this simply `~/.julia/environments`
 
-local root_files = { 'Project.toml', 'JuliaProject.toml' }
+local root_files = { "Project.toml", "JuliaProject.toml" }
 
 local function activate_env(path)
-  assert(vim.fn.has 'nvim-0.10' == 1, 'requires Nvim 0.10 or newer')
-  local bufnr = vim.api.nvim_get_current_buf()
-  local julials_clients = vim.lsp.get_clients { bufnr = bufnr, name = 'julials' }
-  assert(
-    #julials_clients > 0,
-    'method julia/activateenvironment is not supported by any servers active on the current buffer'
-  )
-  local function _activate_env(environment)
-    if environment then
-      for _, julials_client in ipairs(julials_clients) do
-        julials_client:notify('julia/activateenvironment', { envPath = environment })
-      end
-      vim.notify('Julia environment activated: \n`' .. environment .. '`', vim.log.levels.INFO)
-    end
-  end
-  if path then
-    path = vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ':p'))
-    local found_env = false
-    for _, project_file in ipairs(root_files) do
-      local file = vim.uv.fs_stat(vim.fs.joinpath(path, project_file))
-      if file and file.type then
-        found_env = true
-        break
-      end
-    end
-    if not found_env then
-      vim.notify('Path is not a julia environment: \n`' .. path .. '`', vim.log.levels.WARN)
-      return
-    end
-    _activate_env(path)
-  else
-    local depot_paths = vim.env.JULIA_DEPOT_PATH
-        and vim.split(vim.env.JULIA_DEPOT_PATH, vim.fn.has 'win32' == 1 and ';' or ':')
-      or { vim.fn.expand '~/.julia' }
-    local environments = {}
-    vim.list_extend(environments, vim.fs.find(root_files, { type = 'file', upward = true, limit = math.huge }))
-    for _, depot_path in ipairs(depot_paths) do
-      local depot_env = vim.fs.joinpath(vim.fs.normalize(depot_path), 'environments')
-      vim.list_extend(
-        environments,
-        vim.fs.find(function(name, env_path)
-          return vim.tbl_contains(root_files, name) and string.sub(env_path, #depot_env + 1):match '^/[^/]*$'
-        end, { path = depot_env, type = 'file', limit = math.huge })
-      )
-    end
-    environments = vim.tbl_map(vim.fs.dirname, environments)
-    vim.ui.select(environments, { prompt = 'Select a Julia environment' }, _activate_env)
-  end
+	assert(vim.fn.has("nvim-0.10") == 1, "requires Nvim 0.10 or newer")
+	local bufnr = vim.api.nvim_get_current_buf()
+	local julials_clients = vim.lsp.get_clients({ bufnr = bufnr, name = "julials" })
+	assert(
+		#julials_clients > 0,
+		"method julia/activateenvironment is not supported by any servers active on the current buffer"
+	)
+	local function _activate_env(environment)
+		if environment then
+			for _, julials_client in ipairs(julials_clients) do
+				julials_client:notify("julia/activateenvironment", { envPath = environment })
+			end
+			vim.notify("Julia environment activated: \n`" .. environment .. "`", vim.log.levels.INFO)
+		end
+	end
+	if path then
+		path = vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
+		local found_env = false
+		for _, project_file in ipairs(root_files) do
+			local file = vim.uv.fs_stat(vim.fs.joinpath(path, project_file))
+			if file and file.type then
+				found_env = true
+				break
+			end
+		end
+		if not found_env then
+			vim.notify("Path is not a julia environment: \n`" .. path .. "`", vim.log.levels.WARN)
+			return
+		end
+		_activate_env(path)
+	else
+		local depot_paths = vim.env.JULIA_DEPOT_PATH
+				and vim.split(vim.env.JULIA_DEPOT_PATH, vim.fn.has("win32") == 1 and ";" or ":")
+			or { vim.fn.expand("~/.julia") }
+		local environments = {}
+		vim.list_extend(environments, vim.fs.find(root_files, { type = "file", upward = true, limit = math.huge }))
+		for _, depot_path in ipairs(depot_paths) do
+			local depot_env = vim.fs.joinpath(vim.fs.normalize(depot_path), "environments")
+			vim.list_extend(
+				environments,
+				vim.fs.find(function(name, env_path)
+					return vim.tbl_contains(root_files, name) and string.sub(env_path, #depot_env + 1):match("^/[^/]*$")
+				end, { path = depot_env, type = "file", limit = math.huge })
+			)
+		end
+		environments = vim.tbl_map(vim.fs.dirname, environments)
+		vim.ui.select(environments, { prompt = "Select a Julia environment" }, _activate_env)
+	end
 end
 
-local cmd = NixLspShellCmd('julia_19', {
-  'julia',
-  '--startup-file=no',
-  '--history-file=no',
-  '-e',
-  [[
+local cmd = NixLspShellCmd("julia_19", {
+	"julia",
+	"--startup-file=no",
+	"--history-file=no",
+	"-e",
+	[[
     # Load LanguageServer.jl: attempt to load from ~/.julia/environments/nvim-lspconfig
     # with the regular load path as a fallback
     ls_install_path = joinpath(
@@ -118,14 +118,14 @@ local cmd = NixLspShellCmd('julia_19', {
 
 ---@type vim.lsp.Config
 return {
-  cmd = cmd,
-  filetypes = { 'julia' },
-  root_markers = root_files,
-  on_attach = function(_, bufnr)
-    vim.api.nvim_buf_create_user_command(bufnr, 'LspJuliaActivateEnv', activate_env, {
-      desc = 'Activate a Julia environment',
-      nargs = '?',
-      complete = 'file',
-    })
-  end,
+	cmd = cmd,
+	filetypes = { "julia" },
+	root_markers = root_files,
+	on_attach = function(_, bufnr)
+		vim.api.nvim_buf_create_user_command(bufnr, "LspJuliaActivateEnv", activate_env, {
+			desc = "Activate a Julia environment",
+			nargs = "?",
+			complete = "file",
+		})
+	end,
 }

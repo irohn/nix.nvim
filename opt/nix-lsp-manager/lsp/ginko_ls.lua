@@ -10,8 +10,8 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('ginko', { 'ginko_ls' }),
-  filetypes = { 'dts' },
-  root_markers = { '.git' },
-  settings = {},
+	cmd = NixLspShellCmd("ginko", { "ginko_ls" }),
+	filetypes = { "dts" },
+	root_markers = { ".git" },
+	settings = {},
 }

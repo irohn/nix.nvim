@@ -12,8 +12,8 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('sqls'),
-  filetypes = { 'sql', 'mysql' },
-  root_markers = { 'config.yml' },
-  settings = {},
+	cmd = NixLspShellCmd("sqls"),
+	filetypes = { "sql", "mysql" },
+	root_markers = { "config.yml" },
+	settings = {},
 }
