@@ -11,6 +11,13 @@ M.defaults = {
   plugin_manager = {
     enabled = true,
     plugins = {},
+    build_dir = vim.fn.stdpath("data") .. "/site/pack/nix/start",
+    settings = {
+      auto_install = true,
+      auto_scan = true,
+      force_rescan = false,
+      notify = true,
+    },
     window = {
       width = 0.6,
       height = 0.6,

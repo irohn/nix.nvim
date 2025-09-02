@@ -2,6 +2,13 @@ local NixPackage = require("nix.lib.package")
 
 ---@class NixPlugin
 ---@field name string
+---@field pname string
+---@field dependencies string[]
+---@field init function|nil
+---@field config function|nil
+---@field package NixPackage
+---@field lazy boolean
+---@field loaded boolean
 local Plugin = {}
 Plugin.__index = Plugin
 
@@ -29,21 +36,40 @@ function Plugin:new(opts)
   self.init = opts.init or nil                -- user init function to run before plugin is loaded
   self.config = opts.config or nil            -- user config function to run after plugin is loaded
   self.package = opts.package or NixPackage:new({ name = self.pname })
-  self.lazy = false                           -- currently not supported
+  self.lazy = opts.lazy or false              -- whether to load lazily
+  self.loaded = false                         -- track if plugin is loaded
 
   return self
+end
+
+---Check if this plugin is installed
+---@return boolean
+function Plugin:is_installed()
+  return self.package:is_built()
 end
 
 ---Remove the package
 function Plugin:uninstall()
   self.package:remove()
+  self.loaded = false
 end
 
 ---Load the plugin (packadd self.pname)
 function Plugin:load()
+  if self.loaded then
+    return true -- already loaded
+  end
+  
+  if not self:is_installed() then
+    vim.notify(string.format("[nix-plugin-manager] Cannot load %s: not installed", self.name), vim.log.levels.WARN)
+    return false
+  end
+  
   if self.init then self.init() end
   vim.cmd.packadd(self.pname)
   if self.config then self.config() end
+  self.loaded = true
+  return true
 end
 
 ---Build the package
@@ -53,6 +79,36 @@ function Plugin:install(opts)
   if not self.lazy then
     self:load()
   end
+end
+
+---Check if all dependencies are loaded
+---@return boolean, string[] success, missing dependencies
+function Plugin:check_dependencies()
+  if not self.dependencies or #self.dependencies == 0 then
+    return true, {}
+  end
+  
+  local missing = {}
+  for _, dep_name in ipairs(self.dependencies) do
+    -- Check if dependency is loaded by looking for it in the package path
+    local dep_pname = dep_name:match("^vimPlugins%.") and dep_name or ("vimPlugins." .. dep_name)
+    
+    -- Try to find the plugin in the loaded packages
+    local found = false
+    local rtp = vim.opt.runtimepath:get()
+    for _, path in ipairs(rtp) do
+      if path:find(dep_pname:gsub("%.", "%."), 1, true) then
+        found = true
+        break
+      end
+    end
+    
+    if not found then
+      table.insert(missing, dep_name)
+    end
+  end
+  
+  return #missing == 0, missing
 end
 
 Plugin.__tostring = function(self)

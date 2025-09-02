@@ -115,6 +115,26 @@ function M:build(opts)
 end
 
 ---
+--- Check if the package is built (exists at outlink)
+---
+---@return boolean built True if package is built, false otherwise
+function M:is_built()
+  local stat = vim.loop.fs_stat(self.outlink)
+  if not stat then
+    return false
+  end
+  
+  if stat.type == "link" then
+    local target = vim.loop.fs_readlink(self.outlink)
+    return target and vim.fn.isdirectory(target) == 1
+  elseif stat.type == "directory" then
+    return true
+  end
+  
+  return false
+end
+
+---
 --- Remove the installed Nix package
 ---
 ---@return boolean removed True if removed, false otherwise
