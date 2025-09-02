@@ -8,6 +8,7 @@ local state = {
   plugins = {}, ---@type table<string, NixPlugin>
   loaded_plugins = {}, ---@type table<string, boolean>
   dependency_graph = {}, ---@type table<string, string[]>
+  installing_plugins = {}, ---@type table<string, boolean>
 }
 
 ---Setup function for the plugin manager
@@ -45,17 +46,62 @@ end
 function M.install_and_load_plugins()
   local options = config.options
   
-  -- First pass: install all plugins
-  if options.plugin_manager.auto_install then
-    for name, plugin in pairs(state.plugins) do
-      if not plugin:is_installed() then
-        vim.notify(string.format("[nix-plugin-manager] Installing plugin %s", name), vim.log.levels.INFO)
-        plugin:install()
-      end
+  if not options.plugin_manager.auto_install then
+    -- If auto_install is disabled, just try to load configured plugins
+    M.load_configured_plugins()
+    return
+  end
+  
+  -- First pass: install all plugins that need installation
+  local plugins_to_install = {}
+  for name, plugin in pairs(state.plugins) do
+    if not plugin:is_installed() and not state.installing_plugins[name] then
+      table.insert(plugins_to_install, {name = name, plugin = plugin})
     end
   end
   
-  -- Second pass: load plugins with dependency resolution
+  if #plugins_to_install == 0 then
+    -- No plugins need installation, proceed with loading
+    M.load_configured_plugins()
+    return
+  end
+  
+  -- Install plugins one by one (to avoid overwhelming the system)
+  local install_index = 1
+  local function install_next()
+    if install_index > #plugins_to_install then
+      -- All installations complete, now load plugins
+      M.load_configured_plugins()
+      return
+    end
+    
+    local item = plugins_to_install[install_index]
+    local name = item.name
+    
+    -- Mark as installing
+    state.installing_plugins[name] = true
+    vim.notify(string.format("[nix-plugin-manager] Installing plugin %s (%d/%d)", name, install_index, #plugins_to_install), vim.log.levels.INFO)
+    
+    item.plugin:install(function(success)
+      -- Clear installing state
+      state.installing_plugins[name] = nil
+      
+      if success then
+        vim.notify(string.format("[nix-plugin-manager] Successfully installed %s", name), vim.log.levels.INFO)
+      else
+        vim.notify(string.format("[nix-plugin-manager] Failed to install %s", name), vim.log.levels.ERROR)
+      end
+      
+      install_index = install_index + 1
+      install_next()
+    end)
+  end
+  
+  install_next()
+end
+
+---Load configured plugins with dependency resolution
+function M.load_configured_plugins()
   local loaded = {}
   local function load_plugin_with_deps(name)
     if loaded[name] then
@@ -64,6 +110,12 @@ function M.install_and_load_plugins()
     
     local plugin = state.plugins[name]
     if not plugin then
+      return false
+    end
+    
+    -- Check if plugin is installed before attempting to load
+    if not plugin:is_installed() then
+      vim.notify(string.format("[nix-plugin-manager] Cannot load %s: not installed", name), vim.log.levels.WARN)
       return false
     end
     
@@ -109,9 +161,40 @@ end
 function M.install_plugin(name, on_complete)
   on_complete = on_complete or function() end
   
+  -- Check if already installing
+  if state.installing_plugins[name] then
+    vim.notify(string.format("[nix-plugin-manager] Plugin %s is already being installed", name), vim.log.levels.INFO)
+    on_complete(false)
+    return
+  end
+  
   local plugin = Plugin:new(name)
-  plugin:install()
-  on_complete(true)
+  
+  if plugin:is_installed() then
+    vim.notify(string.format("[nix-plugin-manager] Plugin %s is already installed", name), vim.log.levels.INFO)
+    on_complete(true)
+    return
+  end
+  
+  -- Mark as installing
+  state.installing_plugins[name] = true
+  vim.notify(string.format("[nix-plugin-manager] Starting installation of %s", name), vim.log.levels.INFO)
+  
+  plugin:install(function(success)
+    -- Clear installing state
+    state.installing_plugins[name] = nil
+    
+    if success then
+      -- Add to our state if not already there
+      if not state.plugins[name] then
+        state.plugins[name] = plugin
+      end
+      vim.notify(string.format("[nix-plugin-manager] Plugin %s installed successfully", name), vim.log.levels.INFO)
+    else
+      vim.notify(string.format("[nix-plugin-manager] Failed to install plugin %s", name), vim.log.levels.ERROR)
+    end
+    on_complete(success)
+  end)
 end
 
 ---Remove a plugin by name
@@ -132,6 +215,13 @@ end
 ---@return string[]
 function M.get_available_plugins()
   return Registry.list_available()
+end
+
+---Check if a plugin is currently being installed
+---@param name string Plugin name
+---@return boolean
+function M.is_plugin_installing(name)
+  return state.installing_plugins[name] or false
 end
 
 return M

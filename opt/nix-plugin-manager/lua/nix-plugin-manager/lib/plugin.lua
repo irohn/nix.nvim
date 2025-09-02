@@ -74,11 +74,67 @@ end
 
 ---Build the package
 ---@param opts table? Options to pass to the package build
-function Plugin:install(opts)
-  self.package:build(opts)
-  if not self.lazy then
-    self:load()
+---@param on_complete fun(success: boolean)? Callback when installation completes
+function Plugin:install(opts, on_complete)
+  if type(opts) == "function" then
+    on_complete = opts
+    opts = {}
   end
+  opts = opts or {}
+  on_complete = on_complete or function() end
+  
+  -- Set up timeout (5 minutes)
+  local timeout_ms = 5 * 60 * 1000
+  local uv = vim.uv or vim.loop
+  local timeout_timer = uv.new_timer()
+  local completed = false
+  
+  -- Set up build options with callback
+  local build_opts = vim.tbl_deep_extend("force", opts, {
+    cmd_opts = vim.tbl_deep_extend("force", opts.cmd_opts or {}, {
+      text = true,
+      timeout = timeout_ms
+    }),
+    on_exit = function(obj)
+      if completed then return end
+      completed = true
+      
+      if timeout_timer then
+        timeout_timer:stop()
+        timeout_timer:close()
+      end
+      
+      local success = obj.code == 0
+      if success then
+        vim.schedule(function()
+          vim.notify(string.format("Plugin %s installed successfully!", self.name), vim.log.levels.INFO)
+          if not self.lazy then
+            self:load()
+          end
+          on_complete(true)
+        end)
+      else
+        vim.schedule(function()
+          vim.notify(string.format("Failed to install plugin %s: %s", self.name, obj.stderr or "Unknown error"), vim.log.levels.ERROR)
+          on_complete(false)
+        end)
+      end
+    end
+  })
+  
+  -- Set up timeout handler
+  timeout_timer:start(timeout_ms, 0, function()
+    if completed then return end
+    completed = true
+    
+    vim.schedule(function()
+      vim.notify(string.format("Plugin %s installation timed out after 5 minutes", self.name), vim.log.levels.ERROR)
+      on_complete(false)
+    end)
+  end)
+  
+  -- Start the build
+  self.package:build(build_opts)
 end
 
 ---Check if all dependencies are loaded

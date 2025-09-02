@@ -150,12 +150,13 @@ local function discover_installed(recache)
     return list
   end
 
-  local build_dir = config.options.plugin_manager.build_dir or (config.options.nix.outlink_dir .. "/plugins")
-  if vim.fn.isdirectory(build_dir) == 0 then
+  -- Scan the outlink directory for vimPlugins.* packages
+  local outlink_dir = config.options.nix.outlink_dir
+  if vim.fn.isdirectory(outlink_dir) == 0 then
     return {}
   end
 
-  local handle = vim.loop.fs_scandir(build_dir)
+  local handle = vim.loop.fs_scandir(outlink_dir)
   if not handle then
     return {}
   end
@@ -165,20 +166,23 @@ local function discover_installed(recache)
   while true do
     local name, t = vim.loop.fs_scandir_next(handle)
     if not name then break end
-    if t == 'directory' then
-      -- Remove vimPlugins. prefix if present
+    
+    -- Only consider vimPlugins.* entries
+    if name:match("^vimPlugins%.") and (t == 'directory' or t == 'link') then
+      if t == 'link' then
+        -- Resolve symlink and include if it points to a directory
+        local stat = vim.loop.fs_stat(outlink_dir .. "/" .. name)
+        if not (stat and stat.type == 'directory') then
+          goto continue
+        end
+      end
+      
+      -- Remove vimPlugins. prefix to get clean plugin name
       local clean_name = name:gsub("^vimPlugins%.", "")
       plugins[#plugins + 1] = clean_name
       state.installed_set[clean_name] = true
-    elseif t == 'link' then
-      -- Resolve symlink and include if it points to a directory
-      local stat = vim.loop.fs_stat(build_dir .. "/" .. name)
-      if stat and stat.type == 'directory' then
-        local clean_name = name:gsub("^vimPlugins%.", "")
-        plugins[#plugins + 1] = clean_name
-        state.installed_set[clean_name] = true
-      end
     end
+    ::continue::
   end
   
   table.sort(plugins)
