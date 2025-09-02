@@ -11,6 +11,68 @@ local state = {
   installing_plugins = {}, ---@type table<string, boolean>
 }
 
+-- Installation state persistence
+local function get_installation_state_file()
+  local options = config.options
+  local data_dir = options.data_dir
+  return data_dir .. "/installing-plugins.json"
+end
+
+local function save_installation_state()
+  local state_file = get_installation_state_file()
+  local state_dir = vim.fn.fnamemodify(state_file, ":h")
+  if vim.fn.isdirectory(state_dir) == 0 then
+    vim.fn.mkdir(state_dir, "p")
+  end
+  
+  local ok, encoded = pcall(vim.json.encode, state.installing_plugins)
+  if not ok then return end
+  
+  local fd = io.open(state_file, "w")
+  if fd then
+    fd:write(encoded)
+    fd:close()
+  end
+end
+
+local function load_installation_state()
+  local state_file = get_installation_state_file()
+  local fd = io.open(state_file, "r")
+  if not fd then return end
+  
+  local content = fd:read("*a")
+  fd:close()
+  
+  if content and content ~= "" then
+    local ok, decoded = pcall(vim.json.decode, content)
+    if ok and type(decoded) == "table" then
+      state.installing_plugins = decoded
+    end
+  end
+end
+
+-- Initialize installation state on startup
+load_installation_state()
+
+-- Clean up stale installation states
+local function cleanup_stale_installations()
+  local changed = false
+  for name, _ in pairs(state.installing_plugins) do
+    local plugin = Plugin:new(name)
+    if plugin:is_installed() then
+      -- Plugin is installed, clear the installing state
+      state.installing_plugins[name] = nil
+      changed = true
+    end
+  end
+  if changed then
+    save_installation_state()
+  end
+end
+
+-- Run cleanup on startup
+cleanup_stale_installations()
+
 ---Setup function for the plugin manager
 function M.setup()
   local options = config.options
@@ -80,11 +142,13 @@ function M.install_and_load_plugins()
     
     -- Mark as installing
     state.installing_plugins[name] = true
+    save_installation_state()
     vim.notify(string.format("[nix-plugin-manager] Installing plugin %s (%d/%d)", name, install_index, #plugins_to_install), vim.log.levels.INFO)
     
     item.plugin:install(function(success)
       -- Clear installing state
       state.installing_plugins[name] = nil
+      save_installation_state()
       
       if success then
         vim.notify(string.format("[nix-plugin-manager] Successfully installed %s", name), vim.log.levels.INFO)
@@ -110,6 +174,12 @@ function M.load_configured_plugins()
     
     local plugin = state.plugins[name]
     if not plugin then
+      return false
+    end
+    
+    -- Skip if currently being installed
+    if state.installing_plugins[name] then
+      vim.notify(string.format("[nix-plugin-manager] Skipping %s: installation in progress", name), vim.log.levels.INFO)
       return false
     end
     
@@ -178,11 +248,13 @@ function M.install_plugin(name, on_complete)
   
   -- Mark as installing
   state.installing_plugins[name] = true
+  save_installation_state()
   vim.notify(string.format("[nix-plugin-manager] Starting installation of %s", name), vim.log.levels.INFO)
   
   plugin:install(function(success)
     -- Clear installing state
     state.installing_plugins[name] = nil
+    save_installation_state()
     
     if success then
       -- Add to our state if not already there
