@@ -66,9 +66,9 @@ end
 
 ---String representation of NixShell
 ---@return string
-function M.__tostring()
+function M:__tostring()
   local pkg_names = {}
-  for _, pkg in ipairs(M.packages) do
+  for _, pkg in ipairs(self.packages) do
     table.insert(pkg_names, pkg.name)
   end
   return string.format("NixShell(packages=%s)", table.concat(pkg_names, ", "))
