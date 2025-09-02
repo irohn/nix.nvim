@@ -75,6 +75,18 @@ function M:build(opts)
     end
   end
 
+  -- check if outlink exists on filesystem, if it does, skip build
+  -- outlinks are symlinks, we need to handle that
+  local stat = vim.loop.fs_stat(self.outlink)
+  if stat then
+    if stat.type == "link" then
+      local target = vim.loop.fs_readlink(self.outlink)
+      if target and vim.fn.isdirectory(target) == 1 then
+        return
+      end
+    end
+  end
+
   -- Prepare dry-run command
   local dry_cmd = vim.deepcopy(cmd)
   table.insert(dry_cmd, "build")

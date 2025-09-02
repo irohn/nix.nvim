@@ -1,15 +1,24 @@
 local config = require("nix.config")
 
+local function ensure_directories(dirs)
+  for _, dir in ipairs(dirs) do
+    if vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, "p")
+    end
+  end
+end
+
 local M = {}
 
 function M.setup(opts)
   config.setup(opts)
   local options = config.options
 
-  -- create data directory if it doesn't exist
-  if vim.fn.isdirectory(options.data_dir) == 0 then
-    vim.fn.mkdir(options.data_dir, "p")
-  end
+  -- create directories if they don't exist
+  ensure_directories({
+    options.data_dir,
+    options.nix.outlink_dir
+  })
 
   -- Load plugin manager if enabled
   if options.plugin_manager.enabled then

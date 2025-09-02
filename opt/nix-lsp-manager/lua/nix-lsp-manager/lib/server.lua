@@ -6,15 +6,15 @@ Server.__index = Server
 ---Create a new server object
 ---@param opts table|string
 function Server:new(opts)
-  local obj = setmetatable({}, self)
+  self = setmetatable({}, self)
   if type(opts) == "string" then
     opts = { name = opts }
   else
     opts = opts or {}
   end
   assert(opts.name, "Server name is required")
-  obj.name = opts.name
-  return obj
+  self.name = opts.name
+  return self
 end
 
 function Server:__toString()
