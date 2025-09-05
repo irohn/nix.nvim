@@ -7,7 +7,7 @@
 > This plugin is **very** early stages, it is still very much experimental, breaking changes can occur often. Use at your own risk!
 
 Use the power of nix to run applications without installing them!
-<img width="936" height="182" alt="image" src="https://github.com/user-attachments/assets/3fb2fc00-0507-4d76-ad6f-f83ab4c7599f" />
+<img width="950" height="219" alt="image" src="https://github.com/user-attachments/assets/17fb4820-b610-438a-aa6b-9387cdb64f10" />
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -50,7 +50,7 @@ vim.opt.rtp:prepend(target)
 </details>
 
 ## Information
-This plugin is a package manager that uses [nix](https://nixos.org/) to do the heavy lifting.
+This is a package manager that uses [nix](https://nixos.org/) to do the heavy lifting.
 You can spawn nix shells, use nix builds and search nixpkgs!
 There are also complimentary LSP Manager and Plugin Manager GUIs for those who are not as comfortable with the API.
 
@@ -67,39 +67,37 @@ require("nix").setup({
   plugin_manager = {
     enabled = true,
     plugins = {
-      { name = "oil-nvim", config = function()
+      {
+      name = "oil-nvim",
+      config = function()
         require("oil").setup()
-      end},
+      end
+      },
     }
   }
 })
 
--- keymap to open the Plugin Manager UI
+-- Keymap to open the Plugin Manager UI
 vim.keymap.set("n", "<leader>P", "<cmd>NixPluginManager<cr>", { noremap = true, silent = true })
 ```
 
-You can also use the UI to install or remove plugins interactivley (this only applies to plugins installed throught nix.nvim)
-<img width="816" height="643" alt="image" src="https://github.com/user-attachments/assets/9d5e9bcb-3880-472c-8f1a-e7896dea2498" />
+You can also use the UI to install or remove plugins interactivley press `?` for keybindings
+<img width="743" height="470" alt="image" src="https://github.com/user-attachments/assets/a7f49ca4-7170-4bdb-8ed3-da971bf73fe2" />
+
+
 
 ### LSP Manager
 A simple UI for enabling / disabling LSP servers, press `?` in the LSP Manager for keybindings.
-<img width="703" height="475" alt="image" src="https://github.com/user-attachments/assets/8f6e0588-9562-4976-a4c2-00fed91f4db2" />
+<img width="722" height="475" alt="image" src="https://github.com/user-attachments/assets/bee59b2d-d119-401d-9099-52c1a2059bba" />
 
 To use the LSP Manager module, you can enable it in your configuration:
 
 ```lua
 require("nix").setup({
-  lsp_manager = {
-    enabled = true
-    -- You can also pass a table to enable servers on startup:
-    -- enabled = {
-      -- "lua_ls",
-      -- "bashls",
-      -- "rust_analyzer"
-    -- }
-  }
+  lsp_manager = { enabled = true }
 })
 
+-- Keymap to open the LSP Manager UI
 vim.keymap.set("n", "<leader>L", "<cmd>NixLspManager<cr>", { noremap = true, silent = true })
 ```
 
