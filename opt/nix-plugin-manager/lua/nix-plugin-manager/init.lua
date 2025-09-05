@@ -5,6 +5,9 @@ local M = {}
 M.registry = require("nix-plugin-manager.lib.registry")
 
 function M.setup()
+  -- load installed plugins
+  M.registry.load_installed()
+
   plugins_handler.scan_plugins(false, function(success)
     if success then
       vim.schedule(function()
