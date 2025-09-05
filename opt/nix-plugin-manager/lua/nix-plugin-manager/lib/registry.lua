@@ -35,9 +35,7 @@ function M.load_installed()
       local plugin_name = name:match("^vimPlugins%.(.+)$")
       if plugin_name then
         state.installed_set[plugin_name] = true
-        if not vim.tbl_contains(state.available, plugin_name) then
-          table.insert(state.available, plugin_name)
-        end
+        Plugin:new(plugin_name):load()
       end
     end
   end
@@ -94,8 +92,8 @@ function M.list_installed()
 end
 
 function M.bootstrap()
-  M.discover()
   M.load_installed()
+  M.discover()
 end
 
 return M
