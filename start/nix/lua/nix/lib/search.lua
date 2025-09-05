@@ -4,22 +4,19 @@ local nixpkgs = nix.nixpkgs
 
 ---@class NixSearch
 ---@field query string Search query
-local M = {}
-M.__index = M
+local Search = {}
+Search.__index = Search
 
----Create a new NixSearch instance
----@param opts string|table
---- opts = {
----   query = string search query (required)
---- }
----@return NixSearch
-function M:new(opts)
+--- Create a new NixSearch instance
+--- @param opts string|table Search query string or options table with query field
+--- @return NixSearch
+function Search:new(opts)
   if type(opts) == "string" then
     opts = { query = opts }
   else
     opts = opts or {}
   end
-  self = setmetatable({}, M)
+  self = setmetatable({}, Search)
 
   assert(opts.query, "Search query is required")
   self.query = opts.query
@@ -32,8 +29,8 @@ function M:new(opts)
   return self
 end
 
-function M.__tostring(self)
+function Search.__tostring(self)
   return string.format("NixSearch(query=%s)", self.query)
 end
 
-return M
+return Search

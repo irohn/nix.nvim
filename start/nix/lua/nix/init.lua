@@ -1,12 +1,5 @@
 local config = require("nix.config")
-
-local function ensure_directories(dirs)
-  for _, dir in ipairs(dirs) do
-    if vim.fn.isdirectory(dir) == 0 then
-      vim.fn.mkdir(dir, "p")
-    end
-  end
-end
+local util = require("nix.util")
 
 local M = {}
 
@@ -15,7 +8,7 @@ function M.setup(opts)
   local options = config.options
 
   -- create directories if they don't exist
-  ensure_directories({
+  util.ensure_directories({
     options.data_dir,
     options.nix.outlink_dir
   })
@@ -31,6 +24,9 @@ function M.setup(opts)
     vim.api.nvim_command("packadd nix-lsp-manager")
     require("nix-lsp-manager").setup()
   end
+
+  -- Load user commands
+  require("nix.commands").setup()
 end
 
 return M

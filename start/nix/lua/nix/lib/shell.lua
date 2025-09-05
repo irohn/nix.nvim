@@ -5,8 +5,8 @@ local NixPackage = require("nix.lib.package")
 
 ---@class NixShell
 ---@field packages NixPackage[]|string[]
-local M = {}
-M.__index = M
+local Shell = {}
+Shell.__index = Shell
 
 ---Create a new NixShell instance
 ---@param opts string|table
@@ -14,13 +14,13 @@ M.__index = M
 ---   packages = NixPackage[]|string[] List of packages to include in the shell
 --- }
 ---@return NixShell
-function M:new(opts)
+function Shell:new(opts)
   if type(opts) == "string" then
     opts = { packages = { opts } }
   else
     opts = opts or {}
   end
-  self = setmetatable({}, M)
+  self = setmetatable({}, Shell)
 
   ---@type NixPackage[]
   self.packages = opts.packages or {}
@@ -40,7 +40,7 @@ end
 ---   args = string|string[]|nil Additional arguments to pass to the shell command (optional)
 --- }
 ---@return table
-function M:generate_command(args)
+function Shell:generate_command(args)
   if type(args) == "string" then
     args = { args }
   else
@@ -66,12 +66,12 @@ end
 
 ---String representation of NixShell
 ---@return string
-function M.__tostring()
+function Shell.__tostring()
   local pkg_names = {}
-  for _, pkg in ipairs(M.packages) do
+  for _, pkg in ipairs(Shell.packages) do
     table.insert(pkg_names, pkg.name)
   end
   return string.format("NixShell(packages=%s)", table.concat(pkg_names, ", "))
 end
 
-return M
+return Shell

@@ -10,8 +10,8 @@ local outlink_dir = nix.outlink_dir
 ---@field name string Package name
 ---@field nixpkgs? string Nixpkgs flake reference
 ---@field outlink? string Output link path
-local M = {}
-M.__index = M
+local Package = {}
+Package.__index = Package
 
 ---
 --- Create a new NixPackage instance
@@ -23,8 +23,8 @@ M.__index = M
 ---   outlink = string? Output link path (optional)
 --- }
 ---@return NixPackage
-function M:new(opts)
-  self = setmetatable({}, M)
+function Package:new(opts)
+  self = setmetatable({}, Package)
 
   if type(opts) == "string" then
     opts = { name = opts }
@@ -40,11 +40,11 @@ function M:new(opts)
   return self
 end
 
-function M:__toString()
+function Package:__toString()
   return string.format("NixPackage(name=%s, nixpkgs=%s, outlink=%s)", self.name, self.nixpkgs, self.outlink)
 end
 
-M.__tostring = M.__toString
+Package.__tostring = Package.__toString
 
 ---
 --- Build the Nix package into a directory, verifying with a dry-run first
@@ -59,7 +59,7 @@ M.__tostring = M.__toString
 ---   cmd_opts = table? Options for vim.system (optional)
 ---   on_exit = fun(obj: table)? Callback for process exit (optional)
 --- }
-function M:build(opts)
+function Package:build(opts)
   opts = opts or {}
   local cmd = vim.deepcopy(base_command)
   opts.cmd_opts = opts.cmd_opts or { text = true }
@@ -118,7 +118,7 @@ end
 --- Remove the installed Nix package
 ---
 ---@return boolean removed True if removed, false otherwise
-function M:remove()
+function Package:remove()
   local stat = vim.loop.fs_stat(self.outlink)
   if not stat then
     vim.notify(string.format("Package %s is not installed.", self.name), vim.log.levels.WARN)
@@ -150,13 +150,13 @@ end
 --- Update the Nix package (remove then build)
 ---
 ---@param opts table? Options table
-function M:update(opts)
+function Package:update(opts)
   opts = opts or {}
   self:remove()
   self:build(opts)
 end
 
-function M:export()
+function Package:export()
   return {
     name = self.name,
     nixpkgs = self.nixpkgs,
@@ -164,4 +164,4 @@ function M:export()
   }
 end
 
-return M
+return Package

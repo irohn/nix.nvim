@@ -3,7 +3,7 @@
 This directory contains adapter modules that plug into the generic `list_window` UI.
 
 Current adapters:
-- `lsp_servers.lua` : Manage enabling / disabling discovered LSP servers (uses nix-lsp-manager registry).
+- `lsp.lua` : Manage enabling / disabling discovered LSP servers (uses nix-lsp-manager registry).
 
 To add a new adapter (e.g. plugin manager):
 1. Create a module returning a table with fields:

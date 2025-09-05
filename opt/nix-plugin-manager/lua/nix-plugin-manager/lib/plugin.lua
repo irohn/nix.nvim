@@ -50,9 +50,6 @@ end
 ---@param opts table? Options to pass to the package build
 function Plugin:install(opts)
   self.package:build(opts)
-  if not self.lazy then
-    self:load()
-  end
 end
 
 Plugin.__tostring = function(self)

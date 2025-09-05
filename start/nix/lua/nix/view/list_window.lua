@@ -15,8 +15,8 @@
 ---@field on_check fun(item:string, done:function)
 ---@field on_uncheck fun(item:string, done:function)
 ---@field check_function fun(item:string):boolean|nil
-local M = {}
-M.__index = M
+local Adapter = {}
+Adapter.__index = Adapter
 
 -- Default configuration
 local DEFAULT_CONFIG = {
@@ -34,8 +34,8 @@ local DEFAULT_CONFIG = {
   icons = {
     checked = "◼",
     unchecked = "◻",
-    pending_frames = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }, -- spinner
-    pending = "…" -- fallback if spinner disabled
+    pending_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- spinner
+    pending = "…", -- fallback if spinner disabled
   },
   spinner_interval = 80, -- ms
   keys = {
@@ -73,10 +73,10 @@ end
 ---Create a new NixTemplate instance
 ---@param adapter NixTemplateAdapter
 ---@return NixTemplate
-function M:new(adapter)
-  local obj = setmetatable({}, self)
+function Adapter:new(adapter)
+  self = setmetatable({}, self)
 
-  obj.state = {
+  self.state = {
     buf = nil,
     win = nil,
     help_buf = nil,
@@ -92,47 +92,35 @@ function M:new(adapter)
     applied_hl_ns = nil,
   }
 
-  obj.config = deep_merge(vim.deepcopy(DEFAULT_CONFIG), adapter.config or {})
+  self.config = deep_merge(vim.deepcopy(DEFAULT_CONFIG), adapter.config or {})
 
-  obj.get_items_all = adapter.get_all_items
-  obj.get_items_checked = adapter.get_checked_items
-  obj.check_function = adapter.check_function
+  self.get_items_all = adapter.get_all_items
+  self.get_items_checked = adapter.get_checked_items
+  self.check_function = adapter.check_function
 
-  obj.on_check = adapter.on_check or function(item, done)
-    -- Example async simulation
+  self.on_check = adapter.on_check
+      or function(item, done)
+        -- Example async simulation
+        vim.defer_fn(function()
+          done()
+        end, 120)
+      end
+
+  self.on_uncheck = adapter.on_uncheck or function(item, done)
     vim.defer_fn(function()
       done()
     end, 120)
   end
 
-  obj.on_uncheck = adapter.on_uncheck or function(item, done)
-    vim.defer_fn(function()
-      done()
-    end, 120)
-  end
+  self.on_open = adapter.on_open
 
-  obj.on_open = adapter.on_open
-
-  -- Debounced update wrapper
-  function obj:_debounced_update(opts)
-    opts = opts or {}
-    local now = vim.loop.hrtime() / 1e6
-    self.state.last_update_req = now
-    if self.state.scheduled_update then return end
-    self.state.scheduled_update = true
-    vim.defer_fn(function()
-      self.state.scheduled_update = false
-      self:update(opts)
-    end, self.config.debounce)
-  end
-
-  return obj
+  return self
 end
 
 -----------------------------------------------------------------------
 -- Rendering / Windows
 -----------------------------------------------------------------------
-function M:create_floating_window()
+function Adapter:create_floating_window()
   local width = math.floor(vim.o.columns * self.config.width)
   local height = math.floor(vim.o.lines * self.config.height)
   local row = math.floor((vim.o.lines - height) / 2)
@@ -158,12 +146,29 @@ function M:create_floating_window()
 
   self.state.win = vim.api.nvim_open_win(self.state.buf, true, win_conf)
   self:_ensure_highlights()
+
+  -- Set window options (like number, cursorline, etc)
+  local winopts = {
+    cursorline = true,
+    wrap = false,
+    foldcolumn = "0",
+    signcolumn = "no",
+    colorcolumn = "",
+    number = false,
+    relativenumber = false,
+  }
+  for k, v in pairs(winopts) do
+    vim.api.nvim_set_option_value(k, v, { win = self.state.win })
+  end
+
   return self.state.win
 end
 
 -- Ensure highlight groups exist (if user hasn't defined)
-function M:_ensure_highlights()
-  if self.state.applied_hl_ns then return end
+function Adapter:_ensure_highlights()
+  if self.state.applied_hl_ns then
+    return
+  end
   local ns = vim.api.nvim_create_namespace("nix_template_hl")
   self.state.applied_hl_ns = ns
 
@@ -177,17 +182,16 @@ function M:_ensure_highlights()
     end
   end
 
-  link(self.config.highlights.checked, "String", { fg = "#6dc080" })
-  link(self.config.highlights.unchecked, "Comment", { fg = "#777777" })
-  link(self.config.highlights.pending, "WarningMsg", { fg = "#e0b050" })
   link(self.config.highlights.title, "Title", { bold = true })
 end
 
 ---Update the buffer contents to reflect checked/unchecked items
 ---@param opts table|nil Options, e.g. { sort = true, force = false }
-function M:update(opts)
+function Adapter:update(opts)
   opts = opts or {}
-  if self.state.closing then return end
+  if self.state.closing then
+    return
+  end
   if not (self.state.buf and vim.api.nvim_buf_is_valid(self.state.buf)) then
     return
   end
@@ -205,7 +209,9 @@ function M:update(opts)
     table.sort(items_all, function(a, b)
       if cmp then
         local ok, res = pcall(cmp, a, b, checked_set)
-        if ok and res ~= nil then return res end
+        if ok and res ~= nil then
+          return res
+        end
       end
       local ac = checked_set[a] or false
       local bc = checked_set[b] or false
@@ -238,7 +244,7 @@ function M:update(opts)
     else
       icon = is_checked and self.config.icons.checked or self.config.icons.unchecked
     end
-    local line = string.format("%s %s", icon, item)
+    local line = string.format(" %s %s", icon, item)
     lines[#lines + 1] = line
     local hl_group
     if pending and pending.show then
@@ -257,33 +263,34 @@ function M:update(opts)
   if self.state.applied_hl_ns then
     vim.api.nvim_buf_clear_namespace(self.state.buf, self.state.applied_hl_ns, 0, -1)
     for _, m in ipairs(line_meta) do
-      pcall(vim.api.nvim_buf_add_highlight,
-        self.state.buf,
-        self.state.applied_hl_ns,
-        m.hl,
-        m.index - 1,
-        m.col_start,
-        m.col_end)
+      pcall(vim.api.nvim_buf_set_extmark, self.state.buf, self.state.applied_hl_ns, m.index - 1, m.col_start, {
+        end_col = m.col_end,
+        hl_group = m.hl,
+      })
     end
   end
 end
 
 ---Get the item at the current cursor position
 ---@return string|nil item Item name or nil
-function M:item_at_cursor()
-  if not (self.state.win and vim.api.nvim_win_is_valid(self.state.win)) then return nil end
+function Adapter:item_at_cursor()
+  if not (self.state.win and vim.api.nvim_win_is_valid(self.state.win)) then
+    return nil
+  end
   local cur = vim.api.nvim_win_get_cursor(self.state.win)
   local line = vim.api.nvim_buf_get_lines(self.state.buf, cur[1] - 1, cur[1], false)[1]
-  if not line then return nil end
-  -- Split on first space after icon
-  local item = line:match("^%S+%s+(.+)$")
+  if not line then
+    return nil
+  end
+  -- remove whitespaces and icon
+  local item = line:match("^%s*[%S]+%s+(.*)$")
   return item and vim.trim(item) or nil
 end
 
 -----------------------------------------------------------------------
 -- Help window
 -----------------------------------------------------------------------
-function M:help()
+function Adapter:help()
   if self.state.help_win and vim.api.nvim_win_is_valid(self.state.help_win) then
     vim.api.nvim_set_current_win(self.state.help_win)
     return
@@ -337,7 +344,7 @@ function M:help()
   vim.api.nvim_set_option_value("modifiable", false, { buf = self.state.help_buf })
 
   for _, k in ipairs(help_close_keys) do
-    vim.keymap.set('n', k, function()
+    vim.keymap.set("n", k, function()
       if self.state.help_win and vim.api.nvim_win_is_valid(self.state.help_win) then
         vim.api.nvim_win_close(self.state.help_win, true)
         self.state.help_win = nil
@@ -349,8 +356,25 @@ end
 -----------------------------------------------------------------------
 -- Async job queue & spinner
 -----------------------------------------------------------------------
-function M:_start_spinner()
-  if self._spinner_active then return end
+-- Debounced update wrapper
+function Adapter:_debounced_update(opts)
+  opts = opts or {}
+  local now = vim.loop.hrtime() / 1e6
+  self.state.last_update_req = now
+  if self.state.scheduled_update then
+    return
+  end
+  self.state.scheduled_update = true
+  vim.defer_fn(function()
+    self.state.scheduled_update = false
+    self:update(opts)
+  end, self.config.debounce)
+end
+
+function Adapter:_start_spinner()
+  if self._spinner_active then
+    return
+  end
   self._spinner_active = true
   local function tick()
     if self.state.closing then
@@ -379,28 +403,34 @@ function M:_start_spinner()
   vim.defer_fn(tick, self.config.spinner_interval)
 end
 
-function M:_enqueue_action(item, action)
+function Adapter:_enqueue_action(item, action)
   -- action: "check" | "uncheck"
   -- Avoid duplicating if already pending or queued (unless allowed)
   if not self.config.allow_repeat_queue then
-    if self.state.pending[item] then return end
+    if self.state.pending[item] then
+      return
+    end
     for _, q in ipairs(self.state.queue) do
-      if q.item == item then return end
+      if q.item == item then
+        return
+      end
     end
   end
   table.insert(self.state.queue, { item = item, action = action })
   self:_process_queue()
 end
 
-function M:_process_queue()
-  if self.state.closing then return end
+function Adapter:_process_queue()
+  if self.state.closing then
+    return
+  end
   while self.state.active_jobs < self.config.concurrency and #self.state.queue > 0 do
     local job = table.remove(self.state.queue, 1)
     self:_run_job(job.item, job.action)
   end
 end
 
-function M:_run_job(item, action)
+function Adapter:_run_job(item, action)
   local callback
   if action == "check" then
     callback = self.on_check
@@ -417,7 +447,9 @@ function M:_run_job(item, action)
   self:_start_spinner()
 
   local function done()
-    if self.state.closing then return end
+    if self.state.closing then
+      return
+    end
     local pending = self.state.pending[item]
     if pending then
       self.state.pending[item] = nil
@@ -438,7 +470,9 @@ function M:_run_job(item, action)
       else
         local new = {}
         for _, v in ipairs(self.state.items_checked) do
-          if v ~= item then new[#new + 1] = v end
+          if v ~= item then
+            new[#new + 1] = v
+          end
         end
         self.state.items_checked = new
       end
@@ -460,11 +494,15 @@ end
 -----------------------------------------------------------------------
 -- User actions
 -----------------------------------------------------------------------
-function M:check()
+function Adapter:check()
   local item = self:item_at_cursor()
-  if not item then return end
+  if not item then
+    return
+  end
   local set = {}
-  for _, v in ipairs(self.state.items_checked) do set[v] = true end
+  for _, v in ipairs(self.state.items_checked) do
+    set[v] = true
+  end
   if self.check_function and self.check_function(item) then
     return
   end
@@ -473,11 +511,15 @@ function M:check()
   end
 end
 
-function M:uncheck()
+function Adapter:uncheck()
   local item = self:item_at_cursor()
-  if not item then return end
+  if not item then
+    return
+  end
   local set = {}
-  for _, v in ipairs(self.state.items_checked) do set[v] = true end
+  for _, v in ipairs(self.state.items_checked) do
+    set[v] = true
+  end
   if self.check_function and not self.check_function(item) then
     return
   end
@@ -486,11 +528,15 @@ function M:uncheck()
   end
 end
 
-function M:toggle()
+function Adapter:toggle()
   local item = self:item_at_cursor()
-  if not item then return end
+  if not item then
+    return
+  end
   local set = {}
-  for _, v in ipairs(self.state.items_checked) do set[v] = true end
+  for _, v in ipairs(self.state.items_checked) do
+    set[v] = true
+  end
   if self.check_function then
     if self.check_function(item) then
       self:uncheck()
@@ -506,7 +552,7 @@ function M:toggle()
   end
 end
 
-function M:refresh()
+function Adapter:refresh()
   self:load_items(function()
     self:update({ sort = true, force = true })
   end)
@@ -515,7 +561,7 @@ end
 -----------------------------------------------------------------------
 -- Data loading
 -----------------------------------------------------------------------
-function M:_invoke_provider(fn, fallback, cb)
+function Adapter:_invoke_provider(fn, fallback, cb)
   if not fn then
     cb(fallback)
     return
@@ -541,7 +587,7 @@ function M:_invoke_provider(fn, fallback, cb)
   end
 end
 
-function M:load_items(done)
+function Adapter:load_items(done)
   done = done or function() end
   local remaining = 2
   local function one_done()
@@ -563,11 +609,13 @@ end
 -----------------------------------------------------------------------
 -- Keybindings
 -----------------------------------------------------------------------
-function M:set_keybindings()
+function Adapter:set_keybindings()
   local function map(keys, fn, desc)
-    if not keys then return end
+    if not keys then
+      return
+    end
     for _, k in ipairs(type(keys) == "table" and keys or { keys }) do
-      vim.keymap.set('n', k, fn, {
+      vim.keymap.set("n", k, fn, {
         buffer = self.state.buf,
         noremap = true,
         silent = true,
@@ -577,12 +625,24 @@ function M:set_keybindings()
     end
   end
 
-  map(self.config.keys.check, function() self:check() end, "Check")
-  map(self.config.keys.uncheck, function() self:uncheck() end, "Uncheck")
-  map(self.config.keys.toggle, function() self:toggle() end, "Toggle")
-  map(self.config.keys.sort, function() self:update({ sort = true }) end, "Sort")
-  map(self.config.keys.help, function() self:help() end, "Help")
-  map(self.config.keys.refresh, function() self:refresh() end, "Refresh")
+  map(self.config.keys.check, function()
+    self:check()
+  end, "Check")
+  map(self.config.keys.uncheck, function()
+    self:uncheck()
+  end, "Uncheck")
+  map(self.config.keys.toggle, function()
+    self:toggle()
+  end, "Toggle")
+  map(self.config.keys.sort, function()
+    self:update({ sort = true })
+  end, "Sort")
+  map(self.config.keys.help, function()
+    self:help()
+  end, "Help")
+  map(self.config.keys.refresh, function()
+    self:refresh()
+  end, "Refresh")
   map(self.config.keys.close, function()
     self:close()
   end, "Close")
@@ -591,7 +651,7 @@ end
 -----------------------------------------------------------------------
 -- Lifecycle
 -----------------------------------------------------------------------
-function M:open()
+function Adapter:open()
   if self.state.win and vim.api.nvim_win_is_valid(self.state.win) then
     vim.api.nvim_set_current_win(self.state.win)
     return
@@ -607,7 +667,9 @@ function M:open()
   if self.on_open then
     local done_called = false
     local function done()
-      if done_called then return end
+      if done_called then
+        return
+      end
       done_called = true
       self:load_items(after_initial)
     end
@@ -621,7 +683,7 @@ function M:open()
   end
 end
 
-function M:close()
+function Adapter:close()
   self.state.closing = true
   -- clear timers/spinner
   self.state.pending = {}
@@ -644,4 +706,4 @@ function M:close()
   self.state.help_buf = nil
 end
 
-return M
+return Adapter

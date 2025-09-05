@@ -1,7 +1,8 @@
 local Server = require("nix-lsp-manager.lib.server")
+local util = require("nix.util")
+local data_dir = require("nix.config").options.data_dir
 
-local Registry = {}
-Registry.__index = Registry
+local M = {}
 
 local state = {
   _cached_configured = nil, ---@type NixLSPServer[]|nil
@@ -11,28 +12,8 @@ local state = {
 }
 
 -- Cache file (JSON) holding list of enabled server names
-local cache_dir = vim.fn.stdpath("state") .. "/nix-lsp-manager"
+local cache_dir = data_dir .. "/nix-lsp-manager"
 local cache_file = cache_dir .. "/enabled_servers.json"
-
-local function read_file(path)
-  local fd = io.open(path, "r")
-  if not fd then return nil end
-  local content = fd:read("*a")
-  fd:close()
-  return content
-end
-
-local function write_file(path, content)
-  local ok, err
-  local fd
-  fd, err = io.open(path, "w")
-  if not fd then
-    return false, err
-  end
-  fd:write(content)
-  fd:close()
-  return true
-end
 
 local function save_enabled()
   if vim.fn.isdirectory(cache_dir) == 0 then
@@ -50,7 +31,7 @@ local function save_enabled()
     vim.notify("nix-lsp-manager: failed to encode enabled servers", vim.log.levels.ERROR)
     return
   end
-  local success, err = write_file(cache_file, encoded)
+  local success, err = util.write_file(cache_file, encoded)
   if not success then
     vim.notify("nix-lsp-manager: failed to write cache: " .. tostring(err), vim.log.levels.ERROR)
   end
@@ -58,8 +39,7 @@ end
 
 local function load_enabled()
   if state.cache_loaded then return end
-  state.cache_loaded = true
-  local content = read_file(cache_file)
+  local content = util.read_file(cache_file)
   if not content or content == "" then
     return
   end
@@ -71,6 +51,7 @@ local function load_enabled()
   for _, name in ipairs(decoded) do
     state.enabled_set[name] = true
   end
+  state.cache_loaded = true
 end
 
 ---Discover installed servers by scanning runtimepath for lsp/*.lua
@@ -123,7 +104,7 @@ local function ensure_loaded()
 end
 
 ---Return list of installed server names
-function Registry.list_installed()
+function M.list_installed()
   ensure_loaded()
   local list = {}
   for _, srv in ipairs(state.configured) do
@@ -133,7 +114,7 @@ function Registry.list_installed()
 end
 
 ---Return list of enabled server names (from cache)
-function Registry.list_enabled()
+function M.list_enabled()
   ensure_loaded()
   local list = {}
   for name, v in pairs(state.enabled_set) do
@@ -145,7 +126,7 @@ end
 
 ---Enable a server (persist) - returns true if changed
 ---@param name string
-function Registry.enable(name)
+function M.enable(name)
   ensure_loaded()
   if not state.enabled_set[name] then
     state.enabled_set[name] = true
@@ -158,7 +139,7 @@ end
 
 ---Disable a server (persist)
 ---@param name string
-function Registry.disable(name)
+function M.disable(name)
   ensure_loaded()
   if state.enabled_set[name] then
     state.enabled_set[name] = nil
@@ -170,22 +151,22 @@ function Registry.disable(name)
 end
 
 ---Toggle server enabled state
-function Registry.toggle(name)
+function M.toggle(name)
   ensure_loaded()
   if state.enabled_set[name] then
-    Registry.disable(name)
+    M.disable(name)
   else
-    Registry.enable(name)
+    M.enable(name)
   end
 end
 
 ---Re-discover servers, keeping enabled cache integrity
-function Registry.refresh()
+function M.refresh()
   discover(true)
 end
 
 ---Bootstrap: enable all cached servers (call during startup)
-function Registry.bootstrap()
+function M.bootstrap()
   load_enabled()
   discover(false)
   for name, enabled in pairs(state.enabled_set) do
@@ -195,4 +176,4 @@ function Registry.bootstrap()
   end
 end
 
-return Registry
+return M
