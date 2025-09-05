@@ -18,49 +18,43 @@ Use the power of nix to run applications without installing them!
 - [Nixpkgs](#nixpkgs)
 - [Configuration](#configuration)
 
-### Requirements
+## Requirements
 - nvim 0.11+
 - [nix](https://nixos.org/download/) (tested on version 2.30+)
 
-### Installation
+## Installation
 <details open>
-<summary>vim.pack</summary>
+<summary>Pack</summary>
 <br>
 
+Add the following into your init.lua
+
 ```lua
-vim.pack.add({
-  { src = "https://github.com/irohn/nix.nvim" },
-})
+local target = vim.fn.stdpath("data") .. "/site/pack/nix.nvim"
+if not (vim.uv or vim.loop).fs_stat(target) then
+  local repo = "https://github.com/irohn/nix.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=refactor", repo, target })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone nix.nvim:\n", "ErrorMsg" },
+      { out,                           "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(target)
 ```
 
 </details>
 
-<details>
-<summary> <a href="https://lazy.folke.io/">lazy.nvim</a> </summary>
-<br>
-  
-```lua
-{
-  "irohn/nix.nvim",
-  lazy = false
-}
-```
-
-</details>
-
-### Information
+## Information
 This plugin is a package manager that uses [nix](https://nixos.org/) to do the heavy lifting.
 You can spawn nix shells, use nix builds and search nixpkgs!
 There are also complimentary LSP Manager and Plugin Manager GUIs for those who are not as comfortable with the API.
 
-### Usage
-If you just want the LSP configurations, all you need is to install the plugin, no need to call setup.
-The plugin exposes a global `NixShellCmd` by default for easier command builds.
-You can check the plugin is installed by running this vim command:
-```lua
-:lua (function() vim.cmd("enew") vim.fn.termopen(NixShellCmd("asciiquarium")) end)()
-```
-<img width="1081" height="546" alt="image" src="https://github.com/user-attachments/assets/54afa944-049a-46ef-b36e-eb6363c8ecab" />
+## Usage
 
 ### Plugin Manager
 Install any plugin from [nixpkgs](https://search.nixos.org/packages?channel=unstable&query=vimPlugins), most vim plugins are prefixed with `vimPlugins.`,
@@ -73,21 +67,19 @@ require("nix").setup({
   plugin_manager = {
     enabled = true,
     plugins = {
-      { pkg = "vimPlugins.<plugin1-name>" },
-      { pkg = "vimPlugins.<plugin2-name>" }
+      { name = "oil-nvim", config = function()
+        require("oil").setup()
+      end},
     }
   }
 })
+
+-- keymap to open the Plugin Manager UI
+vim.keymap.set("n", "<leader>P", "<cmd>NixPluginManager<cr>", { noremap = true, silent = true })
 ```
 
 You can also use the UI to install or remove plugins interactivley (this only applies to plugins installed throught nix.nvim)
 <img width="816" height="643" alt="image" src="https://github.com/user-attachments/assets/9d5e9bcb-3880-472c-8f1a-e7896dea2498" />
-
-For example, set a keymap to open the Plugin Manager:
-
-```lua
-vim.keymap.set("n", "<leader>P", require("nix.plugin-manager.ui").open)
-```
 
 ### LSP Manager
 A simple UI for enabling / disabling LSP servers, press `?` in the LSP Manager for keybindings.
@@ -108,89 +100,75 @@ require("nix").setup({
   }
 })
 
--- To open the LSP Manager window you can call `require("nix.lsp-manager.ui").open()`
--- there are also `close()` and `toggle()` functions, to set a keymap for this:
-vim.keymap.set("n", "<leader>lsp", require("nix.lsp-manager.ui").toggle, { desc = "Toggle LSP Manager" })
+vim.keymap.set("n", "<leader>L", "<cmd>NixLspManager<cr>", { noremap = true, silent = true })
 ```
 
 ### Nixpkgs
-By default this plugin uses your system's nixpkgs channel, and does not allow unfree packages.
+By default this plugin uses your system's nixpkgs channel.
 You can change the nixpkgs version using a URL for example, to use the unstable channel and allow unfree packages:
 
 ```lua
 require("nix").setup {
-  nixpkgs = {
-    url = "github:NixOS/nixpkgs/nixos-unstable",
-    allow_unfree = true
+  nix = {
+    nixpkgs = "github:NixOS/nixpkgs/nixos-unstable",
   }
 }
-```
-
-You can also set a specific nixpkgs URL while building a command, the NixShellCmd global is reference to the `build_nix_shell_cmd` function:
-
-```lua
-NixShellCmd(cowsay, {"cowsay", "--version"}, { nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable" }})
 ```
 
 ### Configuration
 This is the default configuration (no need to call setup if you use the defaults):
 ```lua
 {
-  -- nix.nvim data directory, defaults to `stdpath("data")/nix.nvim`
-  data_dir = data_dir,
-  ---@type NixConfigLspManager
-  -- LSP module configuration
-  lsp_manager = {
-    -- Enable the LSP module to automatically enable cached LSP servers.
-    -- Can also be a list of servers to always enable on startup.
-    -- e.g. `enabled = { "lua_ls", "pyright" }` or `enabled = true`
-    enabled = false,
-    -- Path to the cache file for language servers.
-    -- This file will be used to store the enabled language servers.
-    -- Defaults to `data_dir/language-servers.json`
-    -- If the file does not exist, it will be created.
-    cache_file = string.format("%s/language-servers.json", data_dir),
-    -- LSP Manager UI window options
-    window = {
-      -- Window width dimension
-      width = 60,
-      -- Window height dimension
-      height = 20,
-      -- Window border style
-      border = "rounded",
-      -- Window title
-      title = " LSP Manager ",
-      -- Header lines, these can be set to `false` to disable
-      headers = { "", "Servers" },
-      -- The icons used for enabled/disabled servers
-      icons = {
-        enabled = "⬤",
-        disabled = "○",
-      },
-      -- Key mappings for the LSP manager window
-      keys = {
-        close_window = { "<Esc>", "q" },
-        disable_server = { "d", "x" },
-        enable_server = { "i", "e" },
-        show_help = { "?" },
-        toggle_server = { "<Enter>" },
-      }
-    },
-  },
-  ---@type NixConfigNixpkgs
-  -- nixpkgs configuration
-  -- https://nixos.wiki/wiki/Nixpkgs
-  nixpkgs = {
-    -- The default nixpkgs url to use.
-    -- Default 'nixpkgs' will use your system's default.
-    -- You can use a specific branch or commit hash, e.g.:
-    -- url = "github:NixOS/nixpkgs/nixos-unstable"
-    -- or a specific commit hash, e.g.:
-    -- url = "github:NixOS/nixpkgs/c5e2e42c112de623adfd662b3e51f0805bf9ff83
-    url = "nixpkgs",
-    -- Allow unfree packages
-    -- https://nixos.wiki/wiki/Unfree_Software
+  data_dir = vim.fn.stdpath("data") .. "/nix",
+  nix = {
+    command = { "nix", "--experimental-features", "nix-command flakes" },
+    nixpkgs = "nixpkgs",
     allow_unfree = false,
-  }
+    outlink_dir = vim.fn.stdpath("data") .. "/site/pack/nix/opt",
+  },
+  plugin_manager = {
+    enabled = true,
+    plugins = {},
+    window = {
+      width = 0.6,
+      height = 0.6,
+      border = "rounded",
+      title = "Plugin Manager",
+      icons = {
+        checked = "◼",
+        unchecked = "◻",
+      },
+      keys = {
+        check = { "i" },
+        uncheck = { "u" },
+        toggle = { "<CR>" },
+        sort = { "s" },
+        help = { "?" },
+        close = { "q", "<Esc>" },
+      }
+    }
+  },
+  lsp_manager = {
+    enabled = false,
+    servers = {},
+    window = {
+      width = 0.6,
+      height = 0.6,
+      border = "rounded",
+      title = "LSP Manager",
+      icons = {
+        checked = "◼",
+        unchecked = "◻",
+      },
+      keys = {
+        check = { "i" },
+        uncheck = { "u" },
+        toggle = { "<CR>" },
+        sort = { "s" },
+        help = { "?" },
+        close = { "q", "<Esc>" },
+      }
+    }
+  },
 }
 ```
