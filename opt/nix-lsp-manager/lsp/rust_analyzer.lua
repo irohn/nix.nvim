@@ -54,7 +54,7 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd("rustup", { "rust-analyzer" }),
+  cmd = NixLspShellCmd("rust-analyzer", { "rust-analyzer" }),
   filetypes = { 'rust' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
