@@ -20,9 +20,9 @@ Adapter.__index = Adapter
 
 -- Default configuration
 local DEFAULT_CONFIG = {
-  width = 0.6,
-  height = 0.6,
-  border = "rounded",
+  width = 0.4,
+  height = 0.4,
+  border = { "", " ", "", "", "", "", "", "" },
   title = "Nix UI Template",
   sort = {
     checked_first = true,

@@ -8,7 +8,7 @@ local function get_registry()
 end
 
 M.config = {
-	title = "Nix LSP Manager",
+	title = "LSP",
 	concurrency = math.max(1, math.floor((vim.uv or vim.loop).available_parallelism() / 2)), -- ensure concurrency is never 0
 	debounce = 40,
 }

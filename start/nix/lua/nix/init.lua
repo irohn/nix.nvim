@@ -29,4 +29,18 @@ function M.setup(opts)
   require("nix.commands").setup()
 end
 
+function M.run(pkgs, args, use_first_pkg_as_first_arg)
+  use_first_pkg_as_first_arg = use_first_pkg_as_first_arg or true
+  assert(pkgs, "Package name is required")
+  if type(pkgs) == "string" then pkgs = { pkgs } end
+  if use_first_pkg_as_first_arg then
+    args = args or {}
+    table.insert(args, 1, pkgs[1])
+  end
+  local shell = require("nix.lib.shell"):new({ packages = pkgs })
+  local cmd = shell:generate_command(args or {})
+  local out = vim.system(cmd):wait()
+  return out.stdout
+end
+
 return M
