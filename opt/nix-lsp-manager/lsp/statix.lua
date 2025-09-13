@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('statix', { 'statix', 'check', '--stdin' }),
-  filetypes = { 'nix' },
-  root_markers = { 'flake.nix', '.git' },
+	cmd = NixLspShellCmd("statix", { "statix", "check", "--stdin" }),
+	filetypes = { "nix" },
+	root_markers = { "flake.nix", ".git" },
 }

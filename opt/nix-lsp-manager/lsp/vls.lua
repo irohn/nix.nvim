@@ -8,7 +8,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('vlang', { 'v', 'ls' }),
-  filetypes = { 'v', 'vlang' },
-  root_markers = { 'v.mod', '.git' },
+	cmd = NixLspShellCmd("vlang", { "v", "ls" }),
+	filetypes = { "v", "vlang" },
+	root_markers = { "v.mod", ".git" },
 }

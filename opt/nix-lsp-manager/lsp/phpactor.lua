@@ -6,8 +6,8 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('phpactor', { 'phpactor', 'language-server' }),
-  filetypes = { 'php' },
-  root_markers = { '.git', 'composer.json', '.phpactor.json', '.phpactor.yml' },
-  workspace_required = true,
+	cmd = NixLspShellCmd("phpactor", { "phpactor", "language-server" }),
+	filetypes = { "php" },
+	root_markers = { ".git", "composer.json", ".phpactor.json", ".phpactor.yml" },
+	workspace_required = true,
 }

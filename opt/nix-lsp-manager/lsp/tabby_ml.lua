@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('tabby-agent', { 'tabby-agent', '--lsp', '--stdio' }),
-  filetypes = {},
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("tabby-agent", { "tabby-agent", "--lsp", "--stdio" }),
+	filetypes = {},
+	root_markers = { ".git" },
 }

@@ -10,17 +10,17 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('shopify-cli', {
-    'shopify',
-    'theme',
-    'language-server',
-  }),
-  filetypes = { 'liquid' },
-  root_markers = {
-    '.shopifyignore',
-    '.theme-check.yml',
-    '.theme-check.yaml',
-    'shopify.theme.toml',
-  },
-  settings = {},
+	cmd = NixLspShellCmd("shopify-cli", {
+		"shopify",
+		"theme",
+		"language-server",
+	}),
+	filetypes = { "liquid" },
+	root_markers = {
+		".shopifyignore",
+		".theme-check.yml",
+		".theme-check.yaml",
+		"shopify.theme.toml",
+	},
+	settings = {},
 }

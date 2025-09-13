@@ -11,10 +11,10 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('jsonnet-language-server'),
-  filetypes = {
-    'jsonnet',
-    'libsonnet',
-  },
-  root_markers = { 'jsonnetfile.json', '.git' },
+	cmd = NixLspShellCmd("jsonnet-language-server"),
+	filetypes = {
+		"jsonnet",
+		"libsonnet",
+	},
+	root_markers = { "jsonnetfile.json", ".git" },
 }

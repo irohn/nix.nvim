@@ -5,21 +5,21 @@ local M = {}
 M.registry = require("nix-plugin-manager.lib.registry")
 
 function M.setup()
-  -- load installed plugins
-  M.registry.load_installed()
+	-- load installed plugins
+	M.registry.load_installed()
 
-  plugins_handler.scan_plugins(false, function(success)
-    if success then
-      vim.schedule(function()
-        M.registry.bootstrap()
+	plugins_handler.scan_plugins(false, function(success)
+		if success then
+			vim.schedule(function()
+				M.registry.bootstrap()
 
-        -- Expose command to open Plugin manager UI
-        vim.api.nvim_create_user_command("NixPluginManager", function()
-          require("nix.view").open_plugin_manager()
-        end, { desc = "Open Nix Plugin Manager UI" })
-      end)
-    end
-  end)
+				-- Expose command to open Plugin manager UI
+				vim.api.nvim_create_user_command("NixPluginManager", function()
+					require("nix.view").open_plugin_manager()
+				end, { desc = "Open Nix Plugin Manager UI" })
+			end)
+		end
+	end)
 end
 
 return M

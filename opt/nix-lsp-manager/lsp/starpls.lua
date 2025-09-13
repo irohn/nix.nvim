@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('starpls'),
-  filetypes = { 'bzl' },
-  root_markers = { 'WORKSPACE', 'WORKSPACE.bazel', 'MODULE.bazel' },
+	cmd = NixLspShellCmd("starpls"),
+	filetypes = { "bzl" },
+	root_markers = { "WORKSPACE", "WORKSPACE.bazel", "MODULE.bazel" },
 }

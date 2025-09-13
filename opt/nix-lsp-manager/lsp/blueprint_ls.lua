@@ -9,14 +9,14 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('blueprint-compiler', { 'blueprint-compiler', 'lsp' }),
-  cmd_env = {
-    -- Prevent recursive scanning which will cause issues when opening a file
-    -- directly in the home directory (e.g. ~/foo.sh).
-    --
-    -- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
-    GLOB_PATTERN = vim.env.GLOB_PATTERN or '*@(.blp)',
-  },
-  filetypes = { 'blueprint' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("blueprint-compiler", { "blueprint-compiler", "lsp" }),
+	cmd_env = {
+		-- Prevent recursive scanning which will cause issues when opening a file
+		-- directly in the home directory (e.g. ~/foo.sh).
+		--
+		-- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
+		GLOB_PATTERN = vim.env.GLOB_PATTERN or "*@(.blp)",
+	},
+	filetypes = { "blueprint" },
+	root_markers = { ".git" },
 }

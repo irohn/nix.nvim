@@ -8,23 +8,23 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('perl', {
-    'perl',
-    '-MPerl::LanguageServer',
-    '-e',
-    'Perl::LanguageServer::run',
-    '--',
-    '--port 13603',
-    '--nostdio 0',
-  }),
-  settings = {
-    perl = {
-      perlCmd = 'perl',
-      perlInc = ' ',
-      fileFilter = { '.pm', '.pl' },
-      ignoreDirs = '.git',
-    },
-  },
-  filetypes = { 'perl' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("perl", {
+		"perl",
+		"-MPerl::LanguageServer",
+		"-e",
+		"Perl::LanguageServer::run",
+		"--",
+		"--port 13603",
+		"--nostdio 0",
+	}),
+	settings = {
+		perl = {
+			perlCmd = "perl",
+			perlInc = " ",
+			fileFilter = { ".pm", ".pl" },
+			ignoreDirs = ".git",
+		},
+	},
+	filetypes = { "perl" },
+	root_markers = { ".git" },
 }

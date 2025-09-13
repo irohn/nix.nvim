@@ -6,7 +6,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('pest-ide-tools', { 'pest-language-server' }),
-  filetypes = { 'pest' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("pest-ide-tools", { "pest-language-server" }),
+	filetypes = { "pest" },
+	root_markers = { ".git" },
 }

@@ -12,25 +12,25 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'smarty-language-server', '--stdio' }),
-  filetypes = { 'smarty' },
-  root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
-    local cwd = assert(vim.uv.cwd())
-    local root = vim.fs.root(fname, { 'composer.json', '.git' })
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "smarty-language-server", "--stdio" }),
+	filetypes = { "smarty" },
+	root_dir = function(bufnr, on_dir)
+		local fname = vim.api.nvim_buf_get_name(bufnr)
+		local cwd = assert(vim.uv.cwd())
+		local root = vim.fs.root(fname, { "composer.json", ".git" })
 
-    -- prefer cwd if root is a descendant
-    on_dir(root and vim.fs.relpath(cwd, root) and cwd)
-  end,
-  settings = {
-    smarty = {
-      pluginDirs = {},
-    },
-    css = {
-      validate = true,
-    },
-  },
-  init_options = {
-    storageDir = nil,
-  },
+		-- prefer cwd if root is a descendant
+		on_dir(root and vim.fs.relpath(cwd, root) and cwd)
+	end,
+	settings = {
+		smarty = {
+			pluginDirs = {},
+		},
+		css = {
+			validate = true,
+		},
+	},
+	init_options = {
+		storageDir = nil,
+	},
 }

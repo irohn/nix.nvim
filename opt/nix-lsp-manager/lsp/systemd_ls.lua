@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('systemd-language-server'),
-  filetypes = { 'systemd' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("systemd-language-server"),
+	filetypes = { "systemd" },
+	root_markers = { ".git" },
 }

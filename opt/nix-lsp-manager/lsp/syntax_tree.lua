@@ -15,7 +15,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('rubyPackages_3_4.syntax_tree', { 'stree', 'lsp' }),
-  filetypes = { 'ruby' },
-  root_markers = { '.streerc', 'Gemfile', '.git' },
+	cmd = NixLspShellCmd("rubyPackages_3_4.syntax_tree", { "stree", "lsp" }),
+	filetypes = { "ruby" },
+	root_markers = { ".streerc", "Gemfile", ".git" },
 }

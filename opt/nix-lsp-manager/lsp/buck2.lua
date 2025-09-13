@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('buck2', { 'buck2', 'lsp' }),
-  filetypes = { 'bzl' },
-  root_markers = { '.buckconfig' },
+	cmd = NixLspShellCmd("buck2", { "buck2", "lsp" }),
+	filetypes = { "bzl" },
+	root_markers = { ".buckconfig" },
 }

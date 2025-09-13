@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('roc', { 'roc_language_server' }),
-  filetypes = { 'roc' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("roc", { "roc_language_server" }),
+	filetypes = { "roc" },
+	root_markers = { ".git" },
 }

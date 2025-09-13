@@ -17,7 +17,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('vacuum-go', { 'vacuum', 'language-server' }),
-  filetypes = { 'yaml.openapi', 'json.openapi' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("vacuum-go", { "vacuum", "language-server" }),
+	filetypes = { "yaml.openapi", "json.openapi" },
+	root_markers = { ".git" },
 }

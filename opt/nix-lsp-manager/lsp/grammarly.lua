@@ -12,15 +12,15 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'grammarly-languageserver', '--stdio' }),
-  filetypes = { 'markdown' },
-  root_markers = { '.git' },
-  handlers = {
-    ['$/updateDocumentState'] = function()
-      return ''
-    end,
-  },
-  init_options = {
-    clientId = 'client_BaDkMgx4X19X9UxxYRCXZo',
-  },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "grammarly-languageserver", "--stdio" }),
+	filetypes = { "markdown" },
+	root_markers = { ".git" },
+	handlers = {
+		["$/updateDocumentState"] = function()
+			return ""
+		end,
+	},
+	init_options = {
+		clientId = "client_BaDkMgx4X19X9UxxYRCXZo",
+	},
 }

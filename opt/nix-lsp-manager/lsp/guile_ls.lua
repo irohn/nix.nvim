@@ -13,9 +13,9 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('guile-lsp-server'),
-  filetypes = {
-    'scheme.guile',
-  },
-  root_markers = { 'guix.scm', '.git' },
+	cmd = NixLspShellCmd("guile-lsp-server"),
+	filetypes = {
+		"scheme.guile",
+	},
+	root_markers = { "guix.scm", ".git" },
 }

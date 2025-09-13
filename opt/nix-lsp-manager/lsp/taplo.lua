@@ -11,7 +11,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('taplo', { 'taplo', 'lsp', 'stdio' }),
-  filetypes = { 'toml' },
-  root_markers = { '.taplo.toml', 'taplo.toml', '.git' },
+	cmd = NixLspShellCmd("taplo", { "taplo", "lsp", "stdio" }),
+	filetypes = { "toml" },
+	root_markers = { ".taplo.toml", "taplo.toml", ".git" },
 }

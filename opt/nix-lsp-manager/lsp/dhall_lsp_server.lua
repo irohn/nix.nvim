@@ -12,7 +12,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('dhall-lsp-server'),
-  filetypes = { 'dhall' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("dhall-lsp-server"),
+	filetypes = { "dhall" },
+	root_markers = { ".git" },
 }

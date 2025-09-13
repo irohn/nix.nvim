@@ -20,6 +20,6 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('efm-langserver'),
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("efm-langserver"),
+	root_markers = { ".git" },
 }

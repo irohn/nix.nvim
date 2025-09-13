@@ -6,17 +6,17 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('swi-prolog', {
-    'swipl',
-    '-g',
-    'use_module(library(lsp_server)).',
-    '-g',
-    'lsp_server:main',
-    '-t',
-    'halt',
-    '--',
-    'stdio',
-  }),
-  filetypes = { 'prolog' },
-  root_markers = { 'pack.pl' },
+	cmd = NixLspShellCmd("swi-prolog", {
+		"swipl",
+		"-g",
+		"use_module(library(lsp_server)).",
+		"-g",
+		"lsp_server:main",
+		"-t",
+		"halt",
+		"--",
+		"stdio",
+	}),
+	filetypes = { "prolog" },
+	root_markers = { "pack.pl" },
 }

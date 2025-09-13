@@ -18,7 +18,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('slint-lsp'),
-  filetypes = { 'slint' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("slint-lsp"),
+	filetypes = { "slint" },
+	root_markers = { ".git" },
 }

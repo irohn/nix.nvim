@@ -23,10 +23,10 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd("vscode-langservers-extracted", { "vscode-json-language-server", "--stdio" }),
-  filetypes = { 'json', 'jsonc' },
-  init_options = {
-    provideFormatter = true,
-  },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("vscode-langservers-extracted", { "vscode-json-language-server", "--stdio" }),
+	filetypes = { "json", "jsonc" },
+	init_options = {
+		provideFormatter = true,
+	},
+	root_markers = { ".git" },
 }

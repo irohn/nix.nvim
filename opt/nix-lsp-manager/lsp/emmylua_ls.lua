@@ -12,13 +12,13 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('emmylua_ls'),
-  filetypes = { 'lua' },
-  root_markers = {
-    '.luarc.json',
-    '.emmyrc.json',
-    '.luacheckrc',
-    '.git',
-  },
-  workspace_required = false,
+	cmd = NixLspShellCmd("emmylua_ls"),
+	filetypes = { "lua" },
+	root_markers = {
+		".luarc.json",
+		".emmyrc.json",
+		".luacheckrc",
+		".git",
+	},
+	workspace_required = false,
 }

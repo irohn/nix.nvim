@@ -15,7 +15,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('beamMinimal27Packages.erlang-ls', { 'erlang_ls' }),
-  filetypes = { 'erlang' },
-  root_markers = { 'rebar.config', 'erlang.mk', '.git' },
+	cmd = NixLspShellCmd("beamMinimal27Packages.erlang-ls", { "erlang_ls" }),
+	filetypes = { "erlang" },
+	root_markers = { "rebar.config", "erlang.mk", ".git" },
 }

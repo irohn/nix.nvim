@@ -14,7 +14,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', { 'npx', '--no-install', 'flow', 'lsp' }),
-  filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx' },
-  root_markers = { '.flowconfig' },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "--no-install", "flow", "lsp" }),
+	filetypes = { "javascript", "javascriptreact", "javascript.jsx" },
+	root_markers = { ".flowconfig" },
 }

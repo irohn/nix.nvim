@@ -4,7 +4,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('coqPackages.coq-lsp', { 'coq-lsp' }),
-  filetypes = { 'coq' },
-  root_markers = { '_CoqProject', '.git' },
+	cmd = NixLspShellCmd("coqPackages.coq-lsp", { "coq-lsp" }),
+	filetypes = { "coq" },
+	root_markers = { "_CoqProject", ".git" },
 }

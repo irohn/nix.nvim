@@ -12,14 +12,14 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('nodejs_24', {'npx', 'rome', 'lsp-proxy' }),
-  filetypes = {
-    'javascript',
-    'javascriptreact',
-    'json',
-    'typescript',
-    'typescript.tsx',
-    'typescriptreact',
-  },
-  root_markers = { 'package.json', 'node_modules', '.git' },
+	cmd = NixLspShellCmd("nodejs_24", { "npx", "rome", "lsp-proxy" }),
+	filetypes = {
+		"javascript",
+		"javascriptreact",
+		"json",
+		"typescript",
+		"typescript.tsx",
+		"typescriptreact",
+	},
+	root_markers = { "package.json", "node_modules", ".git" },
 }

@@ -23,8 +23,8 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('glasgow'),
-  filetypes = { 'wgsl' },
-  root_markers = { '.git' },
-  settings = {},
+	cmd = NixLspShellCmd("glasgow"),
+	filetypes = { "wgsl" },
+	root_markers = { ".git" },
+	settings = {},
 }

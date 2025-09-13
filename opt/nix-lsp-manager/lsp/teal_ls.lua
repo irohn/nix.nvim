@@ -14,11 +14,11 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('luajitPackages.teal-language-server', {
-    'teal-language-server',
-  }),
-  filetypes = {
-    'teal',
-  },
-  root_markers = { 'tlconfig.lua' },
+	cmd = NixLspShellCmd("luajitPackages.teal-language-server", {
+		"teal-language-server",
+	}),
+	filetypes = {
+		"teal",
+	},
+	root_markers = { "tlconfig.lua" },
 }

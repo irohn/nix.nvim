@@ -9,7 +9,7 @@
 
 ---@type vim.lsp.Config
 return {
-  cmd = NixLspShellCmd('dafny', { 'dafny', 'server' }),
-  filetypes = { 'dfy', 'dafny' },
-  root_markers = { '.git' },
+	cmd = NixLspShellCmd("dafny", { "dafny", "server" }),
+	filetypes = { "dfy", "dafny" },
+	root_markers = { ".git" },
 }
